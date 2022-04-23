@@ -146,10 +146,10 @@ public class ServThread implements Runnable{
 		dbh.deleteEntry(id);
 		dbh.udpdateIDs();
 		}
-		else if(!dbh.getPriv(id)){
+		/*else if(!dbh.getPriv(id)){
 			dbh.deleteEntry(id);
 			dbh.udpdateIDs();
-		}
+		}*/
 	}
 	
 }
