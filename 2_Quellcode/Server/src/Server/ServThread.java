@@ -26,6 +26,7 @@ public class ServThread implements Runnable{
 	    	this.dbh = dbh;
 	        this.clientsocket = clientSocket;
 	        this.adminLoggedIn = admin;
+	        System.out.println("Admin: " + admin);
 	        fehler = new DateiHandler("THREADerrLog.txt");
 	        try {
 				reader = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
@@ -129,12 +130,13 @@ public class ServThread implements Runnable{
 		String date = attr[2];
 		String state = attr[3];
 		String prot = attr[4];
-		if(!this.adminLoggedIn) {
-		String buffPriv = Boolean.toString(dbh.getPriv(id));
-		dbh.modifyEntry(id, bezeichner, date, state, buffPriv);
-		}
-		else {
+		
+		
+		if(dbh.getPriv(id) && this.adminLoggedIn) {
 			dbh.modifyEntry(id, bezeichner, date, state, prot);
+		}
+		else if(!this.adminLoggedIn && !dbh.getPriv(id)) {
+			dbh.modifyEntry(id, bezeichner, date, state, "false");
 		}
 	}
 	
