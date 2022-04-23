@@ -5,13 +5,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
-public class dateiHandler {
+public class DateiHandler {
 	private String dateiname;
 	private FileWriter writer;
 	private BufferedReader leser;
 	private Calendar timeStamp;
 
-	public dateiHandler(String dateiname) {
+	public DateiHandler(String dateiname) {
 		this.dateiname = dateiname;
 		timeStamp = Calendar.getInstance(); 
 	}
@@ -104,7 +104,7 @@ public class dateiHandler {
 	}
 	
 	public void writeToLegacy(String eventstr) {
-		dateiHandler leg = new dateiHandler(".\\todo\\legacy.dat");
+		DateiHandler leg = new DateiHandler(".\\todo\\legacy.dat");
 		leg.openDatei(true);
 		leg.write(eventstr);
 		leg.close();
