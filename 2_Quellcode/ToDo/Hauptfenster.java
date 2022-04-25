@@ -86,7 +86,7 @@ public class Hauptfenster {
 		scrollPane.setBounds(36, 97, 697, 386);
 		frmTodoListe.getContentPane().add(scrollPane);
 		
-		JLabel Eintraege = new JLabel("Eintr‰ge");
+		JLabel Eintraege = new JLabel("Eintr√§ge");
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		scrollPane.setColumnHeaderView(Eintraege);
 		
@@ -116,7 +116,7 @@ public class Hauptfenster {
 	                    selectedElem += "\n" + elem;
 	                    
 	                }
-	                JOptionPane.showMessageDialog(null,"Du hast " + selectedElem+ " ausgew‰hlt!");
+	                JOptionPane.showMessageDialog(null,"Du hast " + selectedElem+ " ausgew√§hlt!");
 
 			}
 		});
@@ -130,5 +130,3 @@ public class Hauptfenster {
 	
 	}
 }
-
-
