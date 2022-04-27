@@ -1,0 +1,10 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:Main,org.eclipse.launchbar.core.descriptorType.default\:NeuerEintrag (1),org.eclipse.launchbar.core.descriptorType.default\:NeuerEintrag,org.eclipse.launchbar.core.descriptorType.default\:HauptFenster,org.eclipse.launchbar.core.descriptorType.default\:Fenster
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:Fenster/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:Fenster/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:HauptFenster/activeLaunchMode=run
+org.eclipse.launchbar.core.descriptorType.default\:HauptFenster/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:NeuerEintrag\ (1)/activeLaunchMode=run

@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\AlexF\Documents\Studium\Semester\Semester 2\DV-Projekt\Programm\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
+4229870023.index
+3121381974.index

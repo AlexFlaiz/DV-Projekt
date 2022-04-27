@@ -1,0 +1,401 @@
+package Test;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+
+import java.awt.Font;
+
+
+
+import javax.swing.JButton;
+
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+
+import javax.swing.SwingConstants;
+import javax.swing.JInternalFrame;
+import javax.swing.JTextField;
+import java.awt.Color;
+import javax.swing.JTextArea;
+import javax.swing.DropMode;
+
+
+
+public class Hauptfenster {
+	
+	private String neuEintrag;
+	private String Eintrag;
+	private String TagE;
+	private String MonatE;
+	private String JahrE;
+	private String TagErled;
+	private String MonatErled;
+	private String JahrErled;
+	private String Ein;
+	
+	
+	private JFrame frmTodoListe;
+	private JTextField tFTagErst;
+	private JTextField tFMonatErst;
+	private JTextField tFJahrErst;
+	private JTextField tFTagErled;
+	private JTextField tFMonatErled;
+	private JTextField tFJahrErled;
+	
+	
+	ArrayList <String> listEintraege=new ArrayList<String>();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Hauptfenster window = new Hauptfenster();
+					window.frmTodoListe.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public Hauptfenster() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmTodoListe = new JFrame();
+		frmTodoListe.setTitle("ToDo Liste");
+		frmTodoListe.setBounds(100, 100, 802, 631);
+		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmTodoListe.getContentPane().setLayout(null);
+		
+		final int MAX = 10;
+        String[] listElems = new String[MAX];			//	Beispielliste zum testen
+        for (int i = 1; i < MAX; i++) {
+            listElems[i] = "0"+i+".02.2022  Test Eintrag" ;
+		
+        }
+		//Fenster Neuer Eintrag
+		JInternalFrame NeuerEintrag = new JInternalFrame("NeuerEintrag");
+		NeuerEintrag.setResizable(true);
+		NeuerEintrag.setBounds(24, 10, 729, 493);
+		frmTodoListe.getContentPane().add(NeuerEintrag);
+		NeuerEintrag.getContentPane().setLayout(null);
+		
+		JLabel lblNeuerEintrag = new JLabel("Neuer Eintrag");
+		lblNeuerEintrag.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 34));
+		lblNeuerEintrag.setBounds(10, 21, 697, 58);
+		NeuerEintrag.getContentPane().add(lblNeuerEintrag);
+		
+		tFTagErst = new JTextField();
+		tFTagErst.setToolTipText("");
+		tFTagErst.setText("Tag");
+		tFTagErst.setForeground(Color.LIGHT_GRAY);
+		tFTagErst.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFTagErst.setColumns(10);
+		tFTagErst.setBounds(30, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFTagErst);
+		
+		tFMonatErst = new JTextField();
+		tFMonatErst.setText("Monat");
+		tFMonatErst.setForeground(Color.LIGHT_GRAY);
+		tFMonatErst.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFMonatErst.setColumns(10);
+		tFMonatErst.setBounds(89, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFMonatErst);
+		
+		tFJahrErst = new JTextField();
+		tFJahrErst.setText("Jahr");
+		tFJahrErst.setForeground(Color.LIGHT_GRAY);
+		tFJahrErst.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFJahrErst.setColumns(10);
+		tFJahrErst.setBounds(148, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFJahrErst);
+		
+		JLabel lblErstellung = new JLabel("Erstellung");
+		lblErstellung.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblErstellung.setBounds(30, 106, 178, 25);
+		NeuerEintrag.getContentPane().add(lblErstellung);
+		
+		JButton btnAbbrechen = new JButton("Abbrechen");
+		btnAbbrechen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+				NeuerEintrag.setVisible(false);
+			}
+		});
+		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnAbbrechen.setBounds(487, 409, 178, 30);
+		NeuerEintrag.getContentPane().add(btnAbbrechen);
+		
+		JLabel lblErledigungsdatum = new JLabel("Erledigungsdatum");
+		lblErledigungsdatum.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblErledigungsdatum.setBounds(299, 106, 178, 25);
+		NeuerEintrag.getContentPane().add(lblErledigungsdatum);
+		
+		tFTagErled = new JTextField();
+		tFTagErled.setToolTipText("");
+		tFTagErled.setText("Tag");
+		tFTagErled.setForeground(Color.LIGHT_GRAY);
+		tFTagErled.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFTagErled.setColumns(10);
+		tFTagErled.setBounds(299, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFTagErled);
+		
+		tFMonatErled = new JTextField();
+		tFMonatErled.setText("Monat");
+		tFMonatErled.setForeground(Color.LIGHT_GRAY);
+		tFMonatErled.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFMonatErled.setColumns(10);
+		tFMonatErled.setBounds(358, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFMonatErled);
+		
+		tFJahrErled = new JTextField();
+		tFJahrErled.setText("Jahr");
+		tFJahrErled.setForeground(Color.LIGHT_GRAY);
+		tFJahrErled.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tFJahrErled.setColumns(10);
+		tFJahrErled.setBounds(417, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFJahrErled);
+		
+		JLabel lblEintrag = new JLabel("Eintrag");
+		lblEintrag.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblEintrag.setBounds(30, 185, 80, 25);
+		NeuerEintrag.getContentPane().add(lblEintrag);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(30, 220, 633, 174);
+		NeuerEintrag.getContentPane().add(scrollPane_1);
+		
+		JTextArea tAEintrag = new JTextArea();
+		scrollPane_1.setViewportView(tAEintrag);
+		
+		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");
+		btnEintragHinzufuegen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				Ein=tAEintrag.getText();
+				NeuEintrag();
+				
+				for (int i=0; i<listEintraege.size();i++)
+				{
+				System.out.println(listEintraege.get(i));
+				}
+			}
+		});
+		btnEintragHinzufuegen.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnEintragHinzufuegen.setBounds(30, 409, 178, 30);
+		NeuerEintrag.getContentPane().add(btnEintragHinzufuegen);
+		
+		JButton btnLeeren = new JButton("Leeren");
+		btnLeeren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				leeren();
+				tAEintrag.setText("");
+			}
+		});
+		btnLeeren.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnLeeren.setBounds(218, 409, 120, 30);
+		NeuerEintrag.getContentPane().add(btnLeeren);
+		NeuerEintrag.setVisible(false);
+		
+		
+		
+		
+		
+		
+		
+		
+		//Fenster mit To Do Liste
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 93, 768, 375);
+		frmTodoListe.getContentPane().add(scrollPane);
+		
+		JList list = new JList(listElems);
+		scrollPane.setViewportView(list);
+		list.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		
+		JLabel Eintraege = new JLabel("Einträge");
+		scrollPane.setColumnHeaderView(Eintraege);
+		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		
+		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
+		btnNeuerEintrag.setBounds(37, 511, 151, 31);
+		frmTodoListe.getContentPane().add(btnNeuerEintrag);
+		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+
+		JButton btnErledigt = new JButton("erledigt");
+		btnErledigt.setBounds(613, 511, 130, 31);
+		frmTodoListe.getContentPane().add(btnErledigt);
+		btnErledigt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				   String selectedElem = "";
+	                int selectedIndices[] = list.getSelectedIndices();
+	                for (int j = 0; j < selectedIndices.length; j++) {
+	                    String elem =
+	                            (String) list.getModel().getElementAt(selectedIndices[j]);
+	                    selectedElem += "\n" + elem;
+	                    
+	                }
+	                JOptionPane.showMessageDialog(null,"Du hast " + selectedElem+ " ausgewählt!");
+
+			}
+		});
+		btnErledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		
+		
+		
+		//JLabel
+		
+		JLabel lblToDoList = new JLabel("To Do Liste");
+		lblToDoList.setHorizontalAlignment(SwingConstants.CENTER);
+		lblToDoList.setBounds(0, 22, 788, 65);
+		frmTodoListe.getContentPane().add(lblToDoList);
+		lblToDoList.setFont(new Font("Tahoma", Font.PLAIN, 34));
+		btnNeuerEintrag.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				NeuerEintrag.setVisible(true);
+			}
+		});
+		
+		JMenuBar menuBar = new JMenuBar();
+		frmTodoListe.setJMenuBar(menuBar);
+		
+		JMenu mnDatei = new JMenu("Datei");
+		menuBar.add(mnDatei);
+		
+		JMenuItem mntmBeenden = new JMenuItem("Beenden");
+		mntmBeenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				System.exit(0);
+			}
+		});
+		mnDatei.add(mntmBeenden);
+	
+	
+	}
+	
+	public String getEintraege()
+	{
+		return Eintrag;
+	}
+	
+	
+	
+	
+	public String getErstellung()
+	{
+	
+	String Erstellung= TagE +"."+MonatE+"."+JahrE;
+	
+		return Erstellung;	
+		
+	}
+	
+	public String getErledigt()
+	{
+		String Erledigt= TagErled +"."+MonatErled+"."+JahrErled;
+		return Erledigt;
+	}
+	
+	public void Eintrag()
+	{
+		neuEintrag = "Erstellungsdatum: "+getErstellung()+"   "+"Erledigungsdatum: "+getErledigt()+"   "+"Eintrag: "+getEintraege(); 
+	}
+	
+	
+	public void NeuEintrag() 
+	{
+	
+		int TE,Ter,ME,Mer,JE,Jer;
+		
+		TE= Integer.parseInt(tFTagErst.getText());
+		Ter= Integer.parseInt(tFTagErled.getText());
+		ME= Integer.parseInt(tFMonatErst.getText());
+		Mer= Integer.parseInt(tFMonatErled.getText());
+		JE=Integer.parseInt(tFJahrErst.getText());
+		Jer=Integer.parseInt(tFJahrErled.getText());
+		
+		
+		if (TE>0 && Ter>0 && TE<32 && Ter<32)
+		{		
+		TagE= tFTagErst.getText();
+		TagErled= tFTagErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Tag", "Fehler",JOptionPane.ERROR_MESSAGE );
+			return;
+		}
+		
+		
+		if (ME>0 && Mer>0 && ME<13 && Mer<13)
+		{		
+			MonatE=tFMonatErst.getText();
+			MonatErled=tFMonatErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Monat", "Fehler", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		
+		if (JE>2021 && Jer>2021 && JE<2100 && Jer<2100)
+		{
+			JahrE=tFJahrErst.getText();
+			JahrErled=tFJahrErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Jahr", "Fehler", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		Eintrag=Ein;
+		Eintrag();
+		
+		listEintraege.add(neuEintrag);
+		
+	}
+	
+	public void leeren()
+	{
+		tFTagErst.setText("");
+		tFTagErled.setText("");
+		tFMonatErst.setText("");
+		tFMonatErled.setText("");
+		tFJahrErst.setText("");
+		tFJahrErled.setText("");
+	}
+}
+
+
