@@ -60,22 +60,27 @@ public class ServThread implements Runnable{
 	}
 	
 	public  void procCMD(String cmd) {
-		if(Parser.parseCMD(cmd) == 1){
+		switch(Parser.parseCMD(cmd)) {
+		case 1:
 			doUpdate2DB(); // /UPDATE/
-		}
-		else if(Parser.parseCMD(cmd) == 2) {
-			newEvent2DB(cmd); // /INSERT/Bzeichner/tt-mm-jjjj/state
-		}
-		else if(Parser.parseCMD(cmd) == 3) {
+			break;
+		case 2:
+			newEvent2DB(cmd); // /INSERT/Bezeichner/tt-mm-jjjj/state
+			break;
+		case 3:
 			modifiyEvent2DB(cmd); // /MODIFY/id/Bzeichner/tt-mm-jjjj/state
-		}
-		else if(Parser.parseCMD(cmd) == 4) {
+			break;
+		case 4:
 			deleteEntry2DB(cmd); // /DELETE/id
+			break;
+		default:
+			break;
 		}
-		else {}
+		
 		try {
 			putStr("END");
-		} catch (IOException e) {
+			}
+		catch (IOException e) {
 			fehler.openDatei(true);
 			fehler.writeErr(e.getMessage()+ "\n");
 			fehler.close();
