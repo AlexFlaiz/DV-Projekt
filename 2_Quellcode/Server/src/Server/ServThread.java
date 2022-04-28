@@ -17,18 +17,23 @@ public class ServThread implements Runnable{
 	 protected String serverText   = null;
 	 private BufferedReader reader;
 	 private PrintWriter printWriter;
-	 private dateiHandler fehler;
-	 private  dataBaseHandler dbh ;
+	 private DateiHandler fehler;
+	 private  DataBaseHandler dbh ;
+	 private boolean adminLoggedIn;
 	 
 
-	    public ServThread(java.net.Socket clientSocket, dataBaseHandler dbh) {
+	    public ServThread(java.net.Socket clientSocket, DataBaseHandler dbh, boolean admin) {
 	    	this.dbh = dbh;
 	        this.clientsocket = clientSocket;
+	        this.adminLoggedIn = admin;
+	        System.out.println("Admin: " + admin);
+	        fehler = new DateiHandler("THREADerrLog.txt");
 	        try {
 				reader = new BufferedReader(new InputStreamReader(clientsocket.getInputStream()));
 				printWriter = new PrintWriter(new OutputStreamWriter(clientsocket.getOutputStream()));
-				fehler = new dateiHandler("THREADerrLog.txt");
+				
 			} catch (IOException e) {
+				
 				fehler.openDatei(true);
 				fehler.writeErr(e.getMessage()+ "\n");
 				fehler.close();
@@ -59,6 +64,7 @@ public class ServThread implements Runnable{
 		printWriter.flush();
 	}
 	
+
 	public  void procCMD(String cmd) {
 		switch(Parser.parseCMD(cmd)) {
 		case 1:
@@ -79,24 +85,24 @@ public class ServThread implements Runnable{
 		
 		try {
 			putStr("END");
-		}
-		
-		catch (IOException e) {
+		} catch (IOException e) {
 			fehler.openDatei(true);
 			fehler.writeErr(e.getMessage()+ "\n");
 			fehler.close();
 		}
-	}
+	}	
+	
+	
+	
 	
 	public void doUpdate2DB() {
 		int i = 1;
-		System.out.println("UPDATE");
 		String buffer[] = new String[4];
 		try {
 			buffer = dbh.getEntry(i);
 			while(!(buffer[0] == null)) {
 				i++;
-				putStr("," +buffer[0]+ "," + buffer[1] + "," + buffer[2]+ "," + "\n");
+				putStr("," +buffer[0]+ "," + buffer[1] + "," + buffer[2]+ "," + buffer[3] + "," + "\n");
 				buffer = dbh.getEntry(i);
 			}
 			
@@ -114,8 +120,14 @@ public class ServThread implements Runnable{
 		String bezeichner = attr[1];
 		String date = attr[2];
 		String state = attr[3];
+		String prot = attr[4];
 		int id = dbh.getNumRows()+1;
-		dbh.insertEntry(id, bezeichner, date, state);
+		if(!this.adminLoggedIn) {
+			dbh.insertEntry(id, bezeichner, date, state, "false");
+		}
+		else {
+			dbh.insertEntry(id, bezeichner, date, state, prot);
+		}
 	}
 	
 	public void modifiyEvent2DB(String cmd) {
@@ -125,13 +137,27 @@ public class ServThread implements Runnable{
 		String bezeichner = attr[1];
 		String date = attr[2];
 		String state = attr[3];
-		dbh.modifyEntry(id, bezeichner, date, state);
+		String prot = attr[4];
+		
+		
+		if(dbh.getPriv(id) && this.adminLoggedIn) {
+			dbh.modifyEntry(id, bezeichner, date, state, prot);
+		}
+		else if(!this.adminLoggedIn && !dbh.getPriv(id)) {
+			dbh.modifyEntry(id, bezeichner, date, state, "false");
+		}
 	}
 	
 	public void deleteEntry2DB(String cmd) {
 		int id = Parser.getID(cmd);
+		if(dbh.getPriv(id) && this.adminLoggedIn) {
 		dbh.deleteEntry(id);
 		dbh.udpdateIDs();
+		}
+		/*else if(!dbh.getPriv(id)){
+			dbh.deleteEntry(id);
+			dbh.udpdateIDs();
+		}*/
 	}
 	
 }
