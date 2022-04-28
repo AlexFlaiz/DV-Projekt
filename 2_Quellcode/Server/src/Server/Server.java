@@ -14,8 +14,8 @@ public class Server {
 	}
 	
 	public static void normalMode() {
-		dataBaseHandler dbh;
-		dbh = new dataBaseHandler("jdbc:sqlite:TODO.db");
+		DataBaseHandler dbh;
+		dbh = new DataBaseHandler("jdbc:sqlite:TODO.db");
 		ServSock server = new ServSock(1112, dbh);
 		System.out.println("Server gestartet!");
 		while(server.login()) {}

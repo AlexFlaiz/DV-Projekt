@@ -69,6 +69,7 @@ public class ServThread implements Runnable{
 		switch(Parser.parseCMD(cmd)) {
 		case 1:
 			doUpdate2DB(); // /UPDATE/
+
 			break;
 		case 2:
 			newEvent2DB(cmd); // /INSERT/Bezeichner/tt-mm-jjjj/state

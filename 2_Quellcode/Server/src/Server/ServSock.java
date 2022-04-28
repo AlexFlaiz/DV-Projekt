@@ -5,6 +5,7 @@ import java.io.*;
 
 public class ServSock {
 	private String id;
+	private String adminID;
 	private int port;
 	private java.net.Socket client;
 	private java.net.ServerSocket server;
@@ -12,18 +13,22 @@ public class ServSock {
 	private PrintWriter printWriter;
 	private int thraedCount = 0;
 	private String nameOfThread;
-	private dateiHandler fehler;
-	private  dataBaseHandler dbh ;
-	private dateiHandler authGet;
+	private DateiHandler fehler;
+	private DataBaseHandler dbh ;
+	private DateiHandler authGet;
+	private DateiHandler adminGet;
+	private boolean adminLoggedIn = false;
 	
-	public ServSock(int port, dataBaseHandler dbh) {
+	public ServSock(int port, DataBaseHandler dbh) {
 		this.port = port;
-		fehler = new dateiHandler("errLog.txt");
-		this.authGet = new dateiHandler("AuthKey.txt");
+		fehler = new DateiHandler("SERVSOCKerrLog.txt");
+		this.authGet = new DateiHandler("AuthKey.txt");
+		this.adminGet = new DateiHandler("AdminAuthKey.txt");
 		this.dbh = dbh;
 		authGet.openDatei(false);
 		id = authGet.read();
-		
+		adminGet.openDatei(false);
+		adminID = adminGet.read();
 	}
 	
 	public boolean startConnection() throws IOException {
@@ -37,6 +42,11 @@ public class ServSock {
 		
 		
 		if(verifyStr.equals(id)) {
+			this.adminLoggedIn = false;
+			return true;
+		}
+		else if(verifyStr.equals(adminID)) {
+			this.adminLoggedIn = true;
 			return true;
 		}
 		else {
@@ -80,7 +90,7 @@ public class ServSock {
 					System.out.println("Verbindung mit Client akzeptiert!" + " auf Port: " + this.port);
 					this.close();
 					this.nameOfThread = String.format("Con-%d", this.thraedCount);
-					new Thread(new ServThread(client, dbh), this.nameOfThread).start();
+					new Thread(new ServThread(client, dbh, adminLoggedIn), this.nameOfThread).start();
 					this.thraedCount++;
 					return true;
 				}

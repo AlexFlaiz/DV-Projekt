@@ -91,7 +91,7 @@ public class Parser {
 	public static String getNewInsert(String command) {
 		String teilStr[];
 		teilStr = command.split("/");
-		String eventStr= ","+ teilStr[2] + "," + teilStr[3]+  "," + teilStr[4] + ",";
+		String eventStr= ","+ teilStr[2] + "," + teilStr[3]+  "," + teilStr[4] + "," + teilStr[5] + ",";
 		return eventStr;
 	}
 	
@@ -105,7 +105,20 @@ public class Parser {
 	public static String getModifyStr(String command) {
 		String teilStr[];
 		teilStr = command.split("/");
-		String eventStr= ","+ teilStr[3] + "," + teilStr[4]+  "," + teilStr[5] + ",";
+		String eventStr= ","+ teilStr[3] + "," + teilStr[4]+  "," + teilStr[5] + "," + teilStr[6] + ",";
+		System.out.println(eventStr);
 		return eventStr;
+	}
+	
+	public static boolean getPriv(String command) {
+		String teilStr[];
+		teilStr = command.split("/");
+		String priv = teilStr[4];
+		if(priv.equals("true")) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 }
