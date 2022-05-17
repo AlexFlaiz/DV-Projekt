@@ -85,7 +85,7 @@ public class ServThread implements Runnable{
 		}
 		
 		try {
-			putStr("END");
+			putStr("/END/");
 		} catch (IOException e) {
 			fehler.openDatei(true);
 			fehler.writeErr(e.getMessage()+ "\n");
