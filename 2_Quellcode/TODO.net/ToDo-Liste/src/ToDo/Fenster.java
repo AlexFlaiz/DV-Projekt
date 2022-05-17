@@ -12,7 +12,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -38,9 +37,6 @@ public class Fenster {
 	private int index;
 	private String neuEintrag;
 	private String Eintrag;
-	private String TagE;
-	private String MonatE;
-	private String JahrE;
 	private String TagErled;
 	private String MonatErled;
 	private String JahrErled;
@@ -48,17 +44,13 @@ public class Fenster {
 	
 	
 	private JFrame frmTodoListe;
-	private JTextField tFTagErst;
-	private JTextField tFMonatErst;
-	private JTextField tFJahrErst;
 	private JTextField tFTagErled;
 	private JTextField tFMonatErled;
 	private JTextField tFJahrErled;
 	
 	
-	ArrayList <String> listEintraege=new ArrayList<String>();
-	String[] listE = listEintraege.toArray(new String[listEintraege.size()]);
 	DefaultListModel<String>Eintraege;
+
 	
 	/**
 	 * Launch the application.
@@ -111,37 +103,6 @@ public class Fenster {
 		lblNeuerEintrag.setBounds(10, 21, 697, 71);
 		NeuerEintrag.getContentPane().add(lblNeuerEintrag);
 		
-		tFTagErst = new JTextField();
-		tFTagErst.setHorizontalAlignment(SwingConstants.CENTER);
-		tFTagErst.setToolTipText("");
-		tFTagErst.setForeground(Color.BLACK);
-		tFTagErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		tFTagErst.setColumns(10);
-		tFTagErst.setBounds(30, 141, 60, 30);
-		NeuerEintrag.getContentPane().add(tFTagErst);
-		
-		tFMonatErst = new JTextField();
-		tFMonatErst.setHorizontalAlignment(SwingConstants.CENTER);
-		tFMonatErst.setForeground(Color.BLACK);
-		tFMonatErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		tFMonatErst.setColumns(10);
-		tFMonatErst.setBounds(89, 141, 60, 30);
-		NeuerEintrag.getContentPane().add(tFMonatErst);
-		
-		tFJahrErst = new JTextField();
-		tFJahrErst.setHorizontalAlignment(SwingConstants.CENTER);
-		tFJahrErst.setForeground(Color.BLACK);
-		tFJahrErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		tFJahrErst.setColumns(10);
-		tFJahrErst.setBounds(148, 141, 60, 30);
-		NeuerEintrag.getContentPane().add(tFJahrErst);
-		
-		JLabel lblErstellung = new JLabel("Erstellung");
-		lblErstellung.setHorizontalAlignment(SwingConstants.CENTER);
-		lblErstellung.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
-		lblErstellung.setBounds(30, 89, 178, 25);
-		NeuerEintrag.getContentPane().add(lblErstellung);
-		
 		JButton btnAbbrechen = new JButton("Abbrechen");
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -156,9 +117,9 @@ public class Fenster {
 		NeuerEintrag.getContentPane().add(btnAbbrechen);
 		
 		JLabel lblErledigungsdatum = new JLabel("Erledigungsdatum");
-		lblErledigungsdatum.setHorizontalAlignment(SwingConstants.CENTER);
+		lblErledigungsdatum.setHorizontalAlignment(SwingConstants.LEFT);
 		lblErledigungsdatum.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
-		lblErledigungsdatum.setBounds(486, 89, 198, 25);
+		lblErledigungsdatum.setBounds(30, 90, 199, 25);
 		NeuerEintrag.getContentPane().add(lblErledigungsdatum);
 		
 		tFTagErled = new JTextField();
@@ -167,7 +128,7 @@ public class Fenster {
 		tFTagErled.setForeground(Color.BLACK);
 		tFTagErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFTagErled.setColumns(10);
-		tFTagErled.setBounds(497, 141, 60, 30);
+		tFTagErled.setBounds(30, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFTagErled);
 		
 		tFMonatErled = new JTextField();
@@ -175,7 +136,7 @@ public class Fenster {
 		tFMonatErled.setForeground(Color.BLACK);
 		tFMonatErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFMonatErled.setColumns(10);
-		tFMonatErled.setBounds(556, 141, 60, 30);
+		tFMonatErled.setBounds(89, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFMonatErled);
 		
 		tFJahrErled = new JTextField();
@@ -183,7 +144,7 @@ public class Fenster {
 		tFJahrErled.setForeground(Color.BLACK);
 		tFJahrErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFJahrErled.setColumns(10);
-		tFJahrErled.setBounds(615, 141, 60, 30);
+		tFJahrErled.setBounds(148, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFJahrErled);
 		
 		JLabel lblEintrag = new JLabel("Eintrag");
@@ -206,11 +167,6 @@ public class Fenster {
 			{
 				Ein=tAEintrag.getText();
 				NeuEintrag();
-				
-				for (int i=0; i<listEintraege.size();i++)
-				{
-				System.out.println(listEintraege.get(i));
-				}
 			
 				NeuerEintrag.setVisible(false);
 			}
@@ -231,34 +187,19 @@ public class Fenster {
 		btnLeeren.setBounds(218, 409, 120, 30);
 		NeuerEintrag.getContentPane().add(btnLeeren);
 		
-		JLabel lblTag = new JLabel("Tag");
-		lblTag.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTag.setBounds(30, 124, 60, 13);
-		NeuerEintrag.getContentPane().add(lblTag);
-		
-		JLabel lblMonat = new JLabel("Monat");
-		lblMonat.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblMonat.setBounds(89, 124, 60, 13);
-		NeuerEintrag.getContentPane().add(lblMonat);
-		
-		JLabel lblJahr = new JLabel("Jahr");
-		lblJahr.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblJahr.setBounds(148, 124, 60, 13);
-		NeuerEintrag.getContentPane().add(lblJahr);
-		
 		JLabel lblTag_1 = new JLabel("Tag");
 		lblTag_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTag_1.setBounds(497, 124, 60, 13);
+		lblTag_1.setBounds(30, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblTag_1);
 		
 		JLabel lblMonat_1 = new JLabel("Monat");
 		lblMonat_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblMonat_1.setBounds(556, 124, 60, 13);
+		lblMonat_1.setBounds(89, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblMonat_1);
 		
 		JLabel lblJahr_1 = new JLabel("Jahr");
 		lblJahr_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblJahr_1.setBounds(615, 124, 60, 13);
+		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
 		NeuerEintrag.setVisible(false);
 		
@@ -283,7 +224,7 @@ public class Fenster {
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JLabel Eintraege = new JLabel("Eintrag | Erstellungsdatum |  Erledigungsdatum");
+		JLabel Eintraege = new JLabel("Erledigungsdatum | Eintrag");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
@@ -316,7 +257,10 @@ public class Fenster {
 		
 	if (response==JOptionPane.YES_OPTION) 
 	{
+		//String Str=Fenster.this.Eintraege.get(index);
 		Fenster.this.Eintraege.remove(index);
+		//erledigt=true;
+		//Fenster.this.Eintraege.add(index, Str);
 	}
 	
 
@@ -373,17 +317,6 @@ public class Fenster {
 	}
 	
 	
-	
-	
-	public String getErstellung()
-	{
-	
-	String Erstellung= TagE +"."+MonatE+"."+JahrE;
-	
-		return Erstellung;	
-		
-	}
-	
 	public String getErledigt()
 	{
 		String Erledigt= TagErled +"."+MonatErled+"."+JahrErled;
@@ -392,26 +325,23 @@ public class Fenster {
 	
 	public void Eintrag()
 	{
-		neuEintrag = getEintraege()+"     "+getErstellung()+" | "+getErledigt(); 
+		//neuEintrag = getErledigt()+"   "+getStatus()+"     "+getEintraege(); 
+		neuEintrag = getErledigt()+"    "+getEintraege(); 
 	}
 	
 	
 	public void NeuEintrag() 
 	{
 	
-		int TE,Ter,ME,Mer,JE,Jer;
+		int Ter,Mer,Jer;
 		
-		TE= Integer.parseInt(tFTagErst.getText());
 		Ter= Integer.parseInt(tFTagErled.getText());
-		ME= Integer.parseInt(tFMonatErst.getText());
 		Mer= Integer.parseInt(tFMonatErled.getText());
-		JE=Integer.parseInt(tFJahrErst.getText());
 		Jer=Integer.parseInt(tFJahrErled.getText());
 		
 		
-		if (TE>0 && Ter>0 && TE<32 && Ter<32)
+		if (Ter>0 && Ter<32)
 		{		
-		TagE= tFTagErst.getText();
 		TagErled= tFTagErled.getText();
 		}
 		else
@@ -421,9 +351,8 @@ public class Fenster {
 		}
 		
 		
-		if (ME>0 && Mer>0 && ME<13 && Mer<13)
+		if (Mer>0 && Mer<13)
 		{		
-			MonatE=tFMonatErst.getText();
 			MonatErled=tFMonatErled.getText();
 		}
 		else
@@ -433,9 +362,8 @@ public class Fenster {
 		}
 		
 		
-		if (JE>2021 && Jer>2021 && JE<2100 && Jer<2100)
+		if (Jer>2021 && Jer<2100)
 		{
-			JahrE=tFJahrErst.getText();
 			JahrErled=tFJahrErled.getText();
 		}
 		else
@@ -447,20 +375,34 @@ public class Fenster {
 		Eintrag=Ein;
 		Eintrag();
 		
-		listEintraege.add(neuEintrag);
 		Eintraege.addElement(neuEintrag);
 	
 	}
 	
 	public void leeren()
 	{
-		tFTagErst.setText("");
+		
 		tFTagErled.setText("");
-		tFMonatErst.setText("");
 		tFMonatErled.setText("");
-		tFJahrErst.setText("");
 		tFJahrErled.setText("");
+		
 	}
+	
+
+	
+	public int getTag()
+	{
+		return Integer.parseInt(tFTagErled.getText());
+	}
+	public int getMonat()
+	{
+		return Integer.parseInt(tFMonatErled.getText());
+	}
+	public int getJahr()
+	{
+		return Integer.parseInt(tFJahrErled.getText());
+	}
+	
 	
 	
 	
