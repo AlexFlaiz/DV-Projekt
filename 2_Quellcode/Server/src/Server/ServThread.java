@@ -141,7 +141,7 @@ public class ServThread implements Runnable{
 		String prot = attr[4];
 		
 		
-		if(dbh.getPriv(id) && this.adminLoggedIn) {
+		if( this.adminLoggedIn) {
 			dbh.modifyEntry(id, bezeichner, date, state, prot);
 		}
 		else if(!this.adminLoggedIn && !dbh.getPriv(id)) {
