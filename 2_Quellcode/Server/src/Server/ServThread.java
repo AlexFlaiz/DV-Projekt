@@ -151,7 +151,7 @@ public class ServThread implements Runnable{
 	
 	public void deleteEntry2DB(String cmd) {
 		int id = Parser.getID(cmd);
-		if(dbh.getPriv(id) && this.adminLoggedIn) {
+		if(this.adminLoggedIn) {
 		dbh.deleteEntry(id);
 		dbh.udpdateIDs();
 		}

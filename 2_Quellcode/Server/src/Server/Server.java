@@ -18,7 +18,9 @@ public class Server {
 		dbh = new DataBaseHandler("jdbc:sqlite:TODO.db");
 		ServSock server = new ServSock(1112, dbh);
 		System.out.println("Server gestartet!");
-		while(server.login()) {}
+		while(true) {
+			server.login();
+		}
 	}
 
 }
