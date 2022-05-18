@@ -41,16 +41,17 @@ public class ServThread implements Runnable{
 	    }
 	
 	public void run() {
-		
-		try {
-			String str = getStr();
-			putStr(str);
-			System.out.println(Thread.currentThread().getName() + " String: " + str);
-			procCMD(str);
-		} catch (IOException e) {
-			fehler.openDatei(true);
-			fehler.writeErr(e.getMessage()+ "\n");
-			fehler.close();
+		while(true) {
+			try {
+				String str = getStr();
+				putStr(str);
+				System.out.println(Thread.currentThread().getName() + " String: " + str);
+				procCMD(str);
+			} catch (IOException e) {
+				fehler.openDatei(true);
+				fehler.writeErr(e.getMessage()+ "\n");
+				fehler.close();
+			}
 		}
 	}
 	
@@ -79,6 +80,17 @@ public class ServThread implements Runnable{
 			break;
 		case 4:
 			deleteEntry2DB(cmd); // /DELETE/id
+			break;
+		case 5:
+			try {
+				clientsocket.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				fehler.openDatei(true);
+				fehler.writeErr(e1.getMessage()+ "\n");
+				fehler.close();
+			}
+			Thread.currentThread().stop();
 			break;
 		default:
 			break;
