@@ -1,4 +1,4 @@
-package ToDo;
+package Test;
 
 import java.awt.EventQueue;
 
@@ -60,7 +60,7 @@ public class Fenster {
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
 	static String foo;
-	ClientParser pars=new ClientParser();
+	Parser pars=new Parser();
 	/**
 	 * Launch the application.
 	 */
@@ -608,3 +608,4 @@ public class Fenster {
 		
 	}
 }
+
