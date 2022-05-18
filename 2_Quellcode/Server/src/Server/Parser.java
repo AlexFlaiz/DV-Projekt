@@ -85,6 +85,9 @@ public class Parser {
 			else if(teilStr[1].equals("DELETE")) {
 				cmd = 4;
 			}
+			else if(teilStr[1].equals("ENDCON")){
+				cmd = 5;
+			}
 		return cmd;
 	}
 	
