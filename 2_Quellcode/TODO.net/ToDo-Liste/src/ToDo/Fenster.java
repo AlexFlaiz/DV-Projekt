@@ -39,11 +39,7 @@ public class Fenster {
 	
 
 	private  int index;
-	private String neuEintrag;
 	private String Eintrag;
-	private String TagErled;
-	private String MonatErled;
-	private String JahrErled;
 	private String Ein;
 	
 	
@@ -51,7 +47,6 @@ public class Fenster {
 	private JTextField tFTagErled;
 	private JTextField tFMonatErled;
 	private JTextField tFJahrErled;
-	private boolean Status;
 	private static java.net.Socket socket;
 	private static String authkey;
 	
@@ -60,6 +55,7 @@ public class Fenster {
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
 	ClientParser pars=new ClientParser();
+	TODOs todo= new TODOs();
 	/**
 	 * Launch the application.
 	 */
@@ -349,86 +345,28 @@ public class Fenster {
 	
 	}
 	
-	public String getEintraege()
-	{
-		return Eintrag;
-	}
-	
-	
-	public String getErledigt()
-	{
-		String Erledigt= TagErled +"."+MonatErled+"."+JahrErled;
-		return Erledigt;
-	}
-	
-	public void Eintrag()
-	{
-		neuEintrag = getErledigt()+"    "+getEintraege(); 
-	}
-	
 	
 	public void NeuEintrag() 
 	{
-	
-		int Ter,Mer,Jer;
+		String Datum;
+		String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
+		String Da= todo.getDate(D);
+		boolean Status = todo.statDatum(Da);
 		
-		Ter= Integer.parseInt(tFTagErled.getText());
-		Mer= Integer.parseInt(tFMonatErled.getText());
-		Jer=Integer.parseInt(tFJahrErled.getText());
-		
-		
-		if (Ter>0 && Ter<32)
-		{	
-			if (Ter<10)
-			{
-				TagErled= "0" + tFTagErled.getText();
-			}	
-			else
-			{
-				TagErled= tFTagErled.getText();
-			}
+		if (Status == true)
+		{
+			Datum=Da;
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Tag", "Fehler",JOptionPane.ERROR_MESSAGE );
-			return;
-		}
-		
-		
-		if (Mer>0 && Mer<13)
-		{	
-			if (Ter<10)
-			{
-				MonatErled="0"+tFMonatErled.getText();
-			}	
-			else
-			{
-				MonatErled=tFMonatErled.getText();
-			}
-			
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Monat", "Fehler", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		
-		if (Jer>2021 && Jer<2100)
-		{
-			JahrErled=tFJahrErled.getText();
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Jahr", "Fehler", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe", "Fehler",JOptionPane.ERROR_MESSAGE );
 			return;
 		}
 		
 		Eintrag=Ein;
-		Eintrag();
 		Status = false;
 		
-		sendTodos(socket,TagErled,MonatErled,JahrErled,Eintrag, Status);
+		sendTodos(socket,Datum,Eintrag, Status);
 		Aktualisieren();
 	}
 	
@@ -499,17 +437,17 @@ public class Fenster {
 		
 	
 	
-	public static void sendTodos(java.net.Socket socket, String t,String m,String j, String Eintrag, boolean S)
+	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)
 	{
 		
 		String Nachricht;
 		if (authkey.equals("veryGoodAdminAuthKey")) 
 		{
-			Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+true+"\n";
+			Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+true+"\n";
 		}
 		else
 		{
-		Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+false+"\n";
+		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+false+"\n";
 		}
 		schreibeNachricht(socket,Nachricht);
 		
@@ -584,7 +522,7 @@ public class Fenster {
 		teilstr = Notiz.split(",");
 		String Eintrag= teilstr[1];
 
-		sendTodos(socket,pars.getTag(Notiz),pars.getMonat(Notiz),pars.getJahr(Notiz),Eintrag, Status);
+		sendTodos(socket,pars.getDatum(Notiz),Eintrag, Status);
 		loescheTodo(socket,i+1);
 		
 		Aktualisieren();

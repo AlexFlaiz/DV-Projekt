@@ -49,31 +49,12 @@ public class ClientParser {
 		}
 			
 		
-		public String getTag(String str) {
+		public String getDatum(String str) {
 			String teilstr[];
 			teilstr = str.split(",");
-			String teilstr2[];
-			teilstr2 = teilstr[2].split("-");
 			
-			return teilstr2[0];
+			return teilstr[2];
 		}
-		public String getMonat(String str) {
-			String teilstr[];
-			teilstr = str.split(",");
-			String teilstr2[];
-			teilstr2 = teilstr[2].split("-");
-			
-			return teilstr2[1];
-		}
-		public String getJahr(String str) {
-			String teilstr[];
-			teilstr = str.split(",");
-			String teilstr2[];
-			teilstr2 = teilstr[2].split("-");
-			
-			return teilstr2[2];
-		}
-		
 	
 	
 }
