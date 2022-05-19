@@ -233,14 +233,14 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index= list.getSelectedIndex();
-				//System.out.print(index);
+				
+				index=list.getSelectedIndex();
 			}
 		});
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JLabel Eintraege = new JLabel("Eintrag | Erledigungsdatum | Status");
+		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
@@ -257,16 +257,15 @@ public class Fenster {
 		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-                  
-				if(authkey.equals("veryGoodAdminAuthKey"))
+                 if (authkey.equals("veryGoodAdminAuthKey")) 
+				//if(pars.getAdmin(eint.get(index))==true)
 				{
 	              
 	int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 	if (response==JOptionPane.YES_OPTION) 
 	{
 		
-		int i=index+1;
-		loescheTodo(socket,i);
+		loescheTodo(socket,(index+1));
 		Aktualisieren();
 	}
 				}		
@@ -291,8 +290,10 @@ public class Fenster {
 		btnerledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				aendereNachricht(index);
-			}
+			
+					aendereNachricht();
+		
+		}
 		});
 		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnerledigt.setBounds(499, 513, 117, 31);
@@ -428,7 +429,7 @@ public class Fenster {
 			{
 			empfangeneNachricht = leseNachricht(socket);
 			eint.add(empfangeneNachricht);
-			System.out.println(empfangeneNachricht);
+		
 			
 		}
 
@@ -441,14 +442,15 @@ public class Fenster {
 	{
 		
 		String Nachricht;
+		boolean b=false;
 		if (authkey.equals("veryGoodAdminAuthKey")) 
 		{
-			Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+true+"\n";
+			b=true;
+			
 		}
-		else
-		{
-		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+false+"\n";
-		}
+		
+		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+b+"\n";
+	
 		schreibeNachricht(socket,Nachricht);
 		
 		String empfangeneNachricht = leseNachricht(socket);
@@ -512,9 +514,10 @@ public class Fenster {
 		fuelleListe();
 	}
 	
-	public void aendereNachricht(int i)
+	public void aendereNachricht()
 	{
-		
+		int i=(index);
+		int a= (index+1);
 		String Notiz=eint.get(i);
 		boolean Status=pars.getNewStatus(Notiz);
 		
@@ -523,8 +526,10 @@ public class Fenster {
 		String Eintrag= teilstr[1];
 
 		sendTodos(socket,pars.getDatum(Notiz),Eintrag, Status);
-		loescheTodo(socket,i+1);
 		
+		loescheTodo(socket,a);
+		
+		loescheListe();
 		Aktualisieren();
 		
 	}

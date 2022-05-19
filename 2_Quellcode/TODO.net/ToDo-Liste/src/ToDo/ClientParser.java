@@ -11,10 +11,10 @@ public class ClientParser {
 				teilstr[3] = "erledigt";
 			}
 			else {
-				teilstr[3] = "offen";
+				teilstr[3] = "offen   ";
 			}
 			
-			eventstr = teilstr[1]+"     " + teilstr[2]+"   " + teilstr[3];
+			eventstr = teilstr[2]+"   " + teilstr[3]+"     " + teilstr[1];
 			
 			return eventstr;
 		}
@@ -56,5 +56,18 @@ public class ClientParser {
 			return teilstr[2];
 		}
 	
+		public boolean getAdmin(String str)
+		{
+			String teilstr[];
+			teilstr = str.split(",");
+			
+			if(teilstr[4].equals("true"))
+			{
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
 	
 }
