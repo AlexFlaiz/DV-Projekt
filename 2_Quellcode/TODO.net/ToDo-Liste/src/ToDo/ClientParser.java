@@ -11,7 +11,7 @@ public class ClientParser {
 				teilstr[3] = "erledigt";
 			}
 			else {
-				teilstr[3] = "unerledigt";
+				teilstr[3] = "offen";
 			}
 			
 			eventstr = teilstr[1]+"     " + teilstr[2]+"   " + teilstr[3];
@@ -55,7 +55,7 @@ public class ClientParser {
 			String teilstr2[];
 			teilstr2 = teilstr[2].split("-");
 			
-			return teilstr2[1];
+			return teilstr2[0];
 		}
 		public String getMonat(String str) {
 			String teilstr[];
@@ -63,7 +63,7 @@ public class ClientParser {
 			String teilstr2[];
 			teilstr2 = teilstr[2].split("-");
 			
-			return teilstr2[2];
+			return teilstr2[1];
 		}
 		public String getJahr(String str) {
 			String teilstr[];
@@ -71,7 +71,7 @@ public class ClientParser {
 			String teilstr2[];
 			teilstr2 = teilstr[2].split("-");
 			
-			return teilstr2[3];
+			return teilstr2[2];
 		}
 		
 	

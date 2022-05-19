@@ -59,7 +59,6 @@ public class Fenster {
 	DefaultListModel<String>Eintraege;
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
-	static String foo;
 	ClientParser pars=new ClientParser();
 	/**
 	 * Launch the application.
@@ -69,25 +68,20 @@ public class Fenster {
 		String ip = "127.0.0.1";
 		authkey= "veryGoodAdminAuthKey";
 		eint=new ArrayList<>();
-		
-		try {
 	
-			socket = new java.net.Socket(ip,port);
-			schreibeNachricht(socket,authkey);
-			foo=leseNachricht(socket);
-			getTodos(socket);
-			
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return;
-		}
+		
+	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
+					socket = new java.net.Socket(ip,port);
+					schreibeNachricht(socket,authkey);
+					
 					Fenster window = new Fenster();
 					window.frmTodoListe.setVisible(true);
+					window.Aktualisieren();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -113,9 +107,7 @@ public class Fenster {
 		frmTodoListe.getContentPane().setLayout(null);
 		
 		
-        
-		
-        
+  
         //Fenster Neuer Eintrag
         
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
@@ -279,8 +271,7 @@ public class Fenster {
 		
 		int i=index+1;
 		loescheTodo(socket,i);
-		
-		//Aktualisieren();
+		Aktualisieren();
 	}
 				}		
 				else
@@ -288,10 +279,6 @@ public class Fenster {
 					JOptionPane.showMessageDialog(btnLoeschen , "Sie haben keine Admin Rechte" , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
-				
-
-				//String i=Integer.toString(index+1);
-				//loescheTodo(socket,i);	
 			}		
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -358,26 +345,6 @@ public class Fenster {
 			}
 		});
 		mnListe.add(mntmAktualisieren);
-		
-		JMenuItem mntmListeLeeren = new JMenuItem("Liste Leeren");
-		mntmListeLeeren.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				loescheListe();
-			}
-		});
-		mnListe.add(mntmListeLeeren);
-		
-		JMenuItem mntmgetListServer = new JMenuItem("Liste vom Server");
-		mntmgetListServer.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				
-					getTodos(socket);
-			
-			}
-		});
-		mnListe.add(mntmgetListServer);
 	
 	
 	}
@@ -462,7 +429,7 @@ public class Fenster {
 		Status = false;
 		
 		sendTodos(socket,TagErled,MonatErled,JahrErled,Eintrag, Status);
-		//Aktualisieren();
+		Aktualisieren();
 	}
 	
 	public void leeren()
@@ -526,7 +493,7 @@ public class Fenster {
 			System.out.println(empfangeneNachricht);
 			
 		}
-	
+
 	}
 	
 		
@@ -534,6 +501,7 @@ public class Fenster {
 	
 	public static void sendTodos(java.net.Socket socket, String t,String m,String j, String Eintrag, boolean S)
 	{
+		
 		String Nachricht;
 		if (authkey.equals("veryGoodAdminAuthKey")) 
 		{
@@ -544,15 +512,29 @@ public class Fenster {
 		Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+false+"\n";
 		}
 		schreibeNachricht(socket,Nachricht);
-		foo=leseNachricht(socket);
+		
+		String empfangeneNachricht = leseNachricht(socket);
+		
+		while(!empfangeneNachricht.contains("/END/"))
+		{
+			empfangeneNachricht = leseNachricht(socket);
+		}
+		
+		
 	}
 	
 	public static void loescheTodo(java.net.Socket socket,int i)
 	{
 		
+
 		String Nachricht="/DELETE/"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
-		foo=leseNachricht(socket);
+		String empfangeneNachricht = leseNachricht(socket);
+		
+		while(!empfangeneNachricht.contains("/END/"))
+		{
+			empfangeneNachricht = leseNachricht(socket);
+		}
 		
 	
 	}
@@ -585,9 +567,9 @@ public class Fenster {
 	
 	public void Aktualisieren()
 	{
-		//loescheListe();
+		loescheListe();
 		
-		//getTodos(socket);
+		getTodos(socket);
 		
 		fuelleListe();
 	}
@@ -601,10 +583,11 @@ public class Fenster {
 		String teilstr[];
 		teilstr = Notiz.split(",");
 		String Eintrag= teilstr[1];
-		loescheListe();
+
 		sendTodos(socket,pars.getTag(Notiz),pars.getMonat(Notiz),pars.getJahr(Notiz),Eintrag, Status);
-		getTodos(socket);
-		fuelleListe();
+		loescheTodo(socket,i+1);
+		
+		Aktualisieren();
 		
 	}
 }

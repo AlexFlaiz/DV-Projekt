@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.io.*;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 
@@ -55,7 +56,7 @@ public class Fenster {
 	private static java.net.Socket socket;
 	private static String authkey;
 	
-	static ArrayList <String> eint;
+	ArrayList <String> eint;
 	DefaultListModel<String>Eintraege;
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
@@ -65,29 +66,25 @@ public class Fenster {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Fenster client=new Fenster();
 		int port = 1112;
 		String ip = "127.0.0.1";
 		authkey= "veryGoodAdminAuthKey";
-		eint=new ArrayList<>();
 		
-		try {
-	
-			socket = new java.net.Socket(ip,port);
-			schreibeNachricht(socket,authkey);
-			foo=leseNachricht(socket);
-			getTodos(socket);
-			
-			
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return;
-		}
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
+					socket = new java.net.Socket(ip,port);
+					client.schreibeNachricht(socket,authkey);
+					
+					
+					
 					Fenster window = new Fenster();
 					window.frmTodoListe.setVisible(true);
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -278,9 +275,14 @@ public class Fenster {
 	{
 		
 		int i=index+1;
-		loescheTodo(socket,i);
+		try {
+			loescheTodo(socket,i);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		//Aktualisieren();
+		Aktualisieren();
 	}
 				}		
 				else
@@ -289,9 +291,6 @@ public class Fenster {
 							JOptionPane.ERROR_MESSAGE );
 				}
 				
-
-				//String i=Integer.toString(index+1);
-				//loescheTodo(socket,i);	
 			}		
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -373,7 +372,12 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 				
-					getTodos(socket);
+					try {
+						getTodos(socket);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 			
 			}
 		});
@@ -462,7 +466,7 @@ public class Fenster {
 		Status = false;
 		
 		sendTodos(socket,TagErled,MonatErled,JahrErled,Eintrag, Status);
-		//Aktualisieren();
+		Aktualisieren();
 	}
 	
 	public void leeren()
@@ -475,7 +479,7 @@ public class Fenster {
 	}
 	
 	
-	 static void schreibeNachricht(java.net.Socket socket, String nachricht)  {
+	/* void schreibeNachricht(java.net.Socket socket, String nachricht)  {
 		
 		try {
 			printWriter = new PrintWriter(
@@ -488,10 +492,17 @@ public class Fenster {
 			e.printStackTrace();
 		}
 		
+	}*/
+	void schreibeNachricht(java.net.Socket socket, String nachricht) throws IOException {
+		PrintWriter printWriter =
+			new PrintWriter(
+				new OutputStreamWriter(
+					socket.getOutputStream()));
+		printWriter.print(nachricht);
+ 		printWriter.flush();
 	}
 	
-	
-	static String leseNachricht(java.net.Socket socket)  {
+  /* String leseNachricht(java.net.Socket socket)  {
 	
 		try {
 			bufferedReader = new BufferedReader(
@@ -501,24 +512,36 @@ public class Fenster {
 		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
 		String nachricht = new String(buffer, 0, anzahlZeichen);
 		return nachricht;
-		} 
+		}
+	
 	catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "";
-		}
+		}*/
+	
+	String leseNachricht(java.net.Socket socket) throws IOException {
+		BufferedReader bufferedReader =
+			new BufferedReader(
+				new InputStreamReader(
+					socket.getInputStream()));
+		char[] buffer = new char[200];
+		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
+		String nachricht = new String(buffer, 0, anzahlZeichen);
+		return nachricht;
+	
 		
 	}
 	
+  void getTodos(java.net.Socket socket) throws IOException{
 	
-	public static void getTodos(java.net.Socket socket) 
-	{ 
 		
+	  
 		
 		schreibeNachricht(socket,"/UPDATE/\n");
 		String empfangeneNachricht = leseNachricht(socket);
 			
-			
+		eint=new ArrayList<>();
 			while(!empfangeneNachricht.contains("/END/"))
 			{
 			empfangeneNachricht = leseNachricht(socket);
@@ -532,7 +555,7 @@ public class Fenster {
 		
 	
 	
-	public static void sendTodos(java.net.Socket socket, String t,String m,String j, String Eintrag, boolean S)
+	public void sendTodos(java.net.Socket socket, String t,String m,String j, String Eintrag, boolean S)
 	{
 		String Nachricht;
 		if (authkey.equals("veryGoodAdminAuthKey")) 
@@ -543,17 +566,37 @@ public class Fenster {
 		{
 		Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+false+"\n";
 		}
-		schreibeNachricht(socket,Nachricht);
-		foo=leseNachricht(socket);
+		try {
+			schreibeNachricht(socket,Nachricht);
+			String empfangeneNachricht = leseNachricht(socket);
+			
+			while(!empfangeneNachricht.contains("/END/"))
+			{
+				empfangeneNachricht = leseNachricht(socket);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public static void loescheTodo(java.net.Socket socket,int i)
+	void loescheTodo(java.net.Socket socket,int i) throws IOException{
 	{
+		
 		
 		String Nachricht="/DELETE/"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
-		foo=leseNachricht(socket);
+		String empfangeneNachricht = leseNachricht(socket);
 		
+		while(!empfangeneNachricht.contains("/END/"))
+		{
+			empfangeneNachricht = leseNachricht(socket);
+		}
+		
+		
+	}
 	
 	}
 	
@@ -585,9 +628,14 @@ public class Fenster {
 	
 	public void Aktualisieren()
 	{
-		//loescheListe();
+		loescheListe();
 		
-		//getTodos(socket);
+		try {
+			getTodos(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		fuelleListe();
 	}
@@ -603,7 +651,12 @@ public class Fenster {
 		String Eintrag= teilstr[1];
 		loescheListe();
 		sendTodos(socket,pars.getTag(Notiz),pars.getMonat(Notiz),pars.getJahr(Notiz),Eintrag, Status);
-		getTodos(socket);
+		try {
+			getTodos(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		fuelleListe();
 		
 	}
