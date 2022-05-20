@@ -1,10 +1,10 @@
-package ToDo;
+package Test;
 
 
 public class Parser {
 
 	
-	public static String setStatus(String eventstr, boolean erledigt) {
+	public  String setStatus(String eventstr, boolean erledigt) {
 		String teilstr[];
 		teilstr = eventstr.split(",");
 		
@@ -15,10 +15,74 @@ public class Parser {
 			teilstr[3] = "unerledigt";
 		}
 		
-		eventstr = ","+ teilstr[1] + "," + teilstr[2]+  "," + teilstr[3] + ",";
+		eventstr = teilstr[1]+"     " + teilstr[2]+"   " + teilstr[3];
 		
 		return eventstr;
 	}
+	
+	public boolean getStatus(String str)
+	{
+		String teilstr[];
+		teilstr = str.split(",");
+		
+		if(teilstr[3].equals("true"))
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	public boolean getNewStatus(String str)
+	{
+		String teilstr[];
+		teilstr = str.split(",");
+		
+		if(teilstr[3].equals("true"))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		
+	}
+		
+	
+	public String getTag(String str) {
+		String teilstr[];
+		teilstr = str.split(",");
+		String teilstr2[];
+		teilstr2 = teilstr[2].split("-");
+		
+		return teilstr2[1];
+	}
+	public String getMonat(String str) {
+		String teilstr[];
+		teilstr = str.split(",");
+		String teilstr2[];
+		teilstr2 = teilstr[2].split("-");
+		
+		return teilstr2[2];
+	}
+	public String getJahr(String str) {
+		String teilstr[];
+		teilstr = str.split(",");
+		String teilstr2[];
+		teilstr2 = teilstr[2].split("-");
+		
+		return teilstr2[3];
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////
+	
+	
+	
+	
+	
+	
 	
 	public static String[] getAttr(String eventstr) {
 		String teilstr[];
@@ -26,19 +90,9 @@ public class Parser {
 		return teilstr;
 	}
 	
-	public static int[] getDate(String eventstr) {
-		int daten[] = new int[3];
-		String teilstrings[] = new String[5];
-		String datum[];
-		teilstrings = getAttr(eventstr);
-		datum = teilstrings[2].split("-");
-		daten[0] = Integer.parseInt(datum[0]);
-		daten[1] = Integer.parseInt(datum[1]);
-		daten[2] = Integer.parseInt(datum[2]);
-		return daten;
-	}
 	
-	public static boolean getStatus(String eventstr) {
+	
+	public static boolean getStatus1(String eventstr) {
 		String teilstr[] = eventstr.split(",");
 		if(teilstr[3].equals("true")) {
 			return true;

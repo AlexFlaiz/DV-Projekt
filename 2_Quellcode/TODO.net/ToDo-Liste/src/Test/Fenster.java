@@ -1,4 +1,4 @@
-package ToDo;
+package Test;
 
 import java.awt.EventQueue;
 
@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import java.io.*;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 
@@ -39,7 +40,11 @@ public class Fenster {
 	
 
 	private  int index;
+	private String neuEintrag;
 	private String Eintrag;
+	private String TagErled;
+	private String MonatErled;
+	private String JahrErled;
 	private String Ein;
 	
 	
@@ -47,36 +52,38 @@ public class Fenster {
 	private JTextField tFTagErled;
 	private JTextField tFMonatErled;
 	private JTextField tFJahrErled;
+	private boolean Status;
 	private static java.net.Socket socket;
 	private static String authkey;
 	
-	static ArrayList <String> eint;
+	ArrayList <String> eint;
 	DefaultListModel<String>Eintraege;
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
-	ClientParser pars=new ClientParser();
-	TODOs todo= new TODOs();
+	static String foo;
+	Parser pars=new Parser();
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Fenster client=new Fenster();
 		int port = 1112;
 		String ip = "127.0.0.1";
 		authkey= "veryGoodAdminAuthKey";
-		eint=new ArrayList<>();
-	
 		
-	
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					
 					socket = new java.net.Socket(ip,port);
-					schreibeNachricht(socket,authkey);
+					client.schreibeNachricht(socket,authkey);
+					
+					
 					
 					Fenster window = new Fenster();
 					window.frmTodoListe.setVisible(true);
-					window.Aktualisieren();
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -103,7 +110,9 @@ public class Fenster {
 		frmTodoListe.getContentPane().setLayout(null);
 		
 		
-  
+        
+		
+        
         //Fenster Neuer Eintrag
         
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
@@ -233,14 +242,14 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				
-				index=list.getSelectedIndex();
+				index= list.getSelectedIndex();
+				//System.out.print(index);
 			}
 		});
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
+		JLabel Eintraege = new JLabel("Eintrag | Erledigungsdatum | Status");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
@@ -257,15 +266,22 @@ public class Fenster {
 		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-                 if (authkey.equals("veryGoodAdminAuthKey")) 
-				//if(pars.getAdmin(eint.get(index))==true)
+                  
+				if(authkey.equals("veryGoodAdminAuthKey"))
 				{
 	              
 	int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 	if (response==JOptionPane.YES_OPTION) 
 	{
 		
-		loescheTodo(socket,(index+1));
+		int i=index+1;
+		try {
+			loescheTodo(socket,i);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		Aktualisieren();
 	}
 				}		
@@ -274,6 +290,7 @@ public class Fenster {
 					JOptionPane.showMessageDialog(btnLoeschen , "Sie haben keine Admin Rechte" , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
+				
 			}		
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -290,10 +307,8 @@ public class Fenster {
 		btnerledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-			
-					aendereNachricht();
-		
-		}
+				aendereNachricht(index);
+			}
 		});
 		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnerledigt.setBounds(499, 513, 117, 31);
@@ -342,32 +357,115 @@ public class Fenster {
 			}
 		});
 		mnListe.add(mntmAktualisieren);
+		
+		JMenuItem mntmListeLeeren = new JMenuItem("Liste Leeren");
+		mntmListeLeeren.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				loescheListe();
+			}
+		});
+		mnListe.add(mntmListeLeeren);
+		
+		JMenuItem mntmgetListServer = new JMenuItem("Liste vom Server");
+		mntmgetListServer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				
+					try {
+						getTodos(socket);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			
+			}
+		});
+		mnListe.add(mntmgetListServer);
 	
 	
+	}
+	
+	public String getEintraege()
+	{
+		return Eintrag;
+	}
+	
+	
+	public String getErledigt()
+	{
+		String Erledigt= TagErled +"."+MonatErled+"."+JahrErled;
+		return Erledigt;
+	}
+	
+	public void Eintrag()
+	{
+		neuEintrag = getErledigt()+"    "+getEintraege(); 
 	}
 	
 	
 	public void NeuEintrag() 
 	{
-		String Datum;
-		String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
-		String Da= todo.getDate(D);
-		boolean Status = todo.statDatum(Da);
+	
+		int Ter,Mer,Jer;
 		
-		if (Status == true)
-		{
-			Datum=Da;
+		Ter= Integer.parseInt(tFTagErled.getText());
+		Mer= Integer.parseInt(tFMonatErled.getText());
+		Jer=Integer.parseInt(tFJahrErled.getText());
+		
+		
+		if (Ter>0 && Ter<32)
+		{	
+			if (Ter<10)
+			{
+				TagErled= "0" + tFTagErled.getText();
+			}	
+			else
+			{
+				TagErled= tFTagErled.getText();
+			}
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe", "Fehler",JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Tag", "Fehler",JOptionPane.ERROR_MESSAGE );
+			return;
+		}
+		
+		
+		if (Mer>0 && Mer<13)
+		{	
+			if (Ter<10)
+			{
+				MonatErled="0"+tFMonatErled.getText();
+			}	
+			else
+			{
+				MonatErled=tFMonatErled.getText();
+			}
+			
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Monat", "Fehler", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		
+		if (Jer>2021 && Jer<2100)
+		{
+			JahrErled=tFJahrErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Jahr", "Fehler", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
 		Eintrag=Ein;
+		Eintrag();
 		Status = false;
 		
-		sendTodos(socket,Datum,Eintrag, Status);
+		sendTodos(socket,TagErled,MonatErled,JahrErled,Eintrag, Status);
 		Aktualisieren();
 	}
 	
@@ -381,7 +479,7 @@ public class Fenster {
 	}
 	
 	
-	 static void schreibeNachricht(java.net.Socket socket, String nachricht)  {
+	/* void schreibeNachricht(java.net.Socket socket, String nachricht)  {
 		
 		try {
 			printWriter = new PrintWriter(
@@ -394,10 +492,17 @@ public class Fenster {
 			e.printStackTrace();
 		}
 		
+	}*/
+	void schreibeNachricht(java.net.Socket socket, String nachricht) throws IOException {
+		PrintWriter printWriter =
+			new PrintWriter(
+				new OutputStreamWriter(
+					socket.getOutputStream()));
+		printWriter.print(nachricht);
+ 		printWriter.flush();
 	}
 	
-	
-	static String leseNachricht(java.net.Socket socket)  {
+  /* String leseNachricht(java.net.Socket socket)  {
 	
 		try {
 			bufferedReader = new BufferedReader(
@@ -407,66 +512,80 @@ public class Fenster {
 		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
 		String nachricht = new String(buffer, 0, anzahlZeichen);
 		return nachricht;
-		} 
+		}
+	
 	catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "";
-		}
+		}*/
+	
+	String leseNachricht(java.net.Socket socket) throws IOException {
+		BufferedReader bufferedReader =
+			new BufferedReader(
+				new InputStreamReader(
+					socket.getInputStream()));
+		char[] buffer = new char[200];
+		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
+		String nachricht = new String(buffer, 0, anzahlZeichen);
+		return nachricht;
+	
 		
 	}
 	
+  void getTodos(java.net.Socket socket) throws IOException{
 	
-	public static void getTodos(java.net.Socket socket) 
-	{ 
 		
+	  
 		
 		schreibeNachricht(socket,"/UPDATE/\n");
 		String empfangeneNachricht = leseNachricht(socket);
 			
-			
+		eint=new ArrayList<>();
 			while(!empfangeneNachricht.contains("/END/"))
 			{
 			empfangeneNachricht = leseNachricht(socket);
 			eint.add(empfangeneNachricht);
-		
+			System.out.println(empfangeneNachricht);
 			
 		}
-
+	
 	}
 	
 		
 	
 	
-	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)
+	public void sendTodos(java.net.Socket socket, String t,String m,String j, String Eintrag, boolean S)
 	{
-		
 		String Nachricht;
-		boolean b=false;
 		if (authkey.equals("veryGoodAdminAuthKey")) 
 		{
-			b=true;
-			
+			Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+true+"\n";
 		}
-		
-		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+b+"\n";
-	
-		schreibeNachricht(socket,Nachricht);
-		
-		String empfangeneNachricht = leseNachricht(socket);
-		
-		while(!empfangeneNachricht.contains("/END/"))
+		else
 		{
-			empfangeneNachricht = leseNachricht(socket);
+		Nachricht="/INSERT/"+Eintrag+"/"+t+"-"+m+"-"+j+"/"+S+"/"+false+"\n";
 		}
-		
+		try {
+			schreibeNachricht(socket,Nachricht);
+			String empfangeneNachricht = leseNachricht(socket);
+			
+			while(!empfangeneNachricht.contains("/END/"))
+			{
+				empfangeneNachricht = leseNachricht(socket);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
-	public static void loescheTodo(java.net.Socket socket,int i)
+	void loescheTodo(java.net.Socket socket,int i) throws IOException{
 	{
 		
-
+		
 		String Nachricht="/DELETE/"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
@@ -476,6 +595,8 @@ public class Fenster {
 			empfangeneNachricht = leseNachricht(socket);
 		}
 		
+		
+	}
 	
 	}
 	
@@ -509,28 +630,35 @@ public class Fenster {
 	{
 		loescheListe();
 		
-		getTodos(socket);
+		try {
+			getTodos(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		fuelleListe();
 	}
 	
-	public void aendereNachricht()
+	public void aendereNachricht(int i)
 	{
-		int i=(index);
-		int a= (index+1);
+		
 		String Notiz=eint.get(i);
 		boolean Status=pars.getNewStatus(Notiz);
 		
 		String teilstr[];
 		teilstr = Notiz.split(",");
 		String Eintrag= teilstr[1];
-
-		sendTodos(socket,pars.getDatum(Notiz),Eintrag, Status);
-		
-		loescheTodo(socket,a);
-		
 		loescheListe();
-		Aktualisieren();
+		sendTodos(socket,pars.getTag(Notiz),pars.getMonat(Notiz),pars.getJahr(Notiz),Eintrag, Status);
+		try {
+			getTodos(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		fuelleListe();
 		
 	}
 }
+

@@ -1,4 +1,4 @@
-package ToDo;
+package Test;
 
 import java.awt.EventQueue;
 
@@ -12,6 +12,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -28,56 +29,46 @@ import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import java.io.*;
-import java.util.ArrayList;
 
 
 
-
-
-public class Fenster {
+public class Hauptfenster {
 	
 
-	private  int index;
+	private int index;
+	private String neuEintrag;
 	private String Eintrag;
+	private String TagE;
+	private String MonatE;
+	private String JahrE;
+	private String TagErled;
+	private String MonatErled;
+	private String JahrErled;
 	private String Ein;
 	
 	
 	private JFrame frmTodoListe;
+	private JTextField tFTagErst;
+	private JTextField tFMonatErst;
+	private JTextField tFJahrErst;
 	private JTextField tFTagErled;
 	private JTextField tFMonatErled;
 	private JTextField tFJahrErled;
-	private static java.net.Socket socket;
-	private static String authkey;
 	
-	static ArrayList <String> eint;
+	
+	ArrayList <String> listEintraege=new ArrayList<String>();
+	String[] listE = listEintraege.toArray(new String[listEintraege.size()]);
 	DefaultListModel<String>Eintraege;
-	static BufferedReader bufferedReader;
-	static PrintWriter printWriter;
-	ClientParser pars=new ClientParser();
-	TODOs todo= new TODOs();
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		int port = 1112;
-		String ip = "127.0.0.1";
-		authkey= "veryGoodAdminAuthKey";
-		eint=new ArrayList<>();
-	
-		
-	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					
-					socket = new java.net.Socket(ip,port);
-					schreibeNachricht(socket,authkey);
-					
-					Fenster window = new Fenster();
+					Hauptfenster window = new Hauptfenster();
 					window.frmTodoListe.setVisible(true);
-					window.Aktualisieren();
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -88,7 +79,7 @@ public class Fenster {
 	/**
 	 * Create the application.
 	 */
-	public Fenster() {
+	public Hauptfenster() {
 		initialize();
 	}
 
@@ -103,7 +94,9 @@ public class Fenster {
 		frmTodoListe.getContentPane().setLayout(null);
 		
 		
-  
+        
+		
+        
         //Fenster Neuer Eintrag
         
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
@@ -117,6 +110,37 @@ public class Fenster {
 		lblNeuerEintrag.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
 		lblNeuerEintrag.setBounds(10, 21, 697, 71);
 		NeuerEintrag.getContentPane().add(lblNeuerEintrag);
+		
+		tFTagErst = new JTextField();
+		tFTagErst.setHorizontalAlignment(SwingConstants.CENTER);
+		tFTagErst.setToolTipText("");
+		tFTagErst.setForeground(Color.BLACK);
+		tFTagErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tFTagErst.setColumns(10);
+		tFTagErst.setBounds(30, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFTagErst);
+		
+		tFMonatErst = new JTextField();
+		tFMonatErst.setHorizontalAlignment(SwingConstants.CENTER);
+		tFMonatErst.setForeground(Color.BLACK);
+		tFMonatErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tFMonatErst.setColumns(10);
+		tFMonatErst.setBounds(89, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFMonatErst);
+		
+		tFJahrErst = new JTextField();
+		tFJahrErst.setHorizontalAlignment(SwingConstants.CENTER);
+		tFJahrErst.setForeground(Color.BLACK);
+		tFJahrErst.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		tFJahrErst.setColumns(10);
+		tFJahrErst.setBounds(148, 141, 60, 30);
+		NeuerEintrag.getContentPane().add(tFJahrErst);
+		
+		JLabel lblErstellung = new JLabel("Erstellung");
+		lblErstellung.setHorizontalAlignment(SwingConstants.CENTER);
+		lblErstellung.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
+		lblErstellung.setBounds(30, 89, 178, 25);
+		NeuerEintrag.getContentPane().add(lblErstellung);
 		
 		JButton btnAbbrechen = new JButton("Abbrechen");
 		btnAbbrechen.addActionListener(new ActionListener() {
@@ -132,9 +156,9 @@ public class Fenster {
 		NeuerEintrag.getContentPane().add(btnAbbrechen);
 		
 		JLabel lblErledigungsdatum = new JLabel("Erledigungsdatum");
-		lblErledigungsdatum.setHorizontalAlignment(SwingConstants.LEFT);
+		lblErledigungsdatum.setHorizontalAlignment(SwingConstants.CENTER);
 		lblErledigungsdatum.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
-		lblErledigungsdatum.setBounds(30, 90, 199, 25);
+		lblErledigungsdatum.setBounds(486, 89, 198, 25);
 		NeuerEintrag.getContentPane().add(lblErledigungsdatum);
 		
 		tFTagErled = new JTextField();
@@ -143,7 +167,7 @@ public class Fenster {
 		tFTagErled.setForeground(Color.BLACK);
 		tFTagErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFTagErled.setColumns(10);
-		tFTagErled.setBounds(30, 141, 60, 30);
+		tFTagErled.setBounds(497, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFTagErled);
 		
 		tFMonatErled = new JTextField();
@@ -151,7 +175,7 @@ public class Fenster {
 		tFMonatErled.setForeground(Color.BLACK);
 		tFMonatErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFMonatErled.setColumns(10);
-		tFMonatErled.setBounds(89, 141, 60, 30);
+		tFMonatErled.setBounds(556, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFMonatErled);
 		
 		tFJahrErled = new JTextField();
@@ -159,7 +183,7 @@ public class Fenster {
 		tFJahrErled.setForeground(Color.BLACK);
 		tFJahrErled.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		tFJahrErled.setColumns(10);
-		tFJahrErled.setBounds(148, 141, 60, 30);
+		tFJahrErled.setBounds(615, 141, 60, 30);
 		NeuerEintrag.getContentPane().add(tFJahrErled);
 		
 		JLabel lblEintrag = new JLabel("Eintrag");
@@ -182,6 +206,11 @@ public class Fenster {
 			{
 				Ein=tAEintrag.getText();
 				NeuEintrag();
+				
+				for (int i=0; i<listEintraege.size();i++)
+				{
+				System.out.println(listEintraege.get(i));
+				}
 			
 				NeuerEintrag.setVisible(false);
 			}
@@ -202,19 +231,34 @@ public class Fenster {
 		btnLeeren.setBounds(218, 409, 120, 30);
 		NeuerEintrag.getContentPane().add(btnLeeren);
 		
+		JLabel lblTag = new JLabel("Tag");
+		lblTag.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblTag.setBounds(30, 124, 60, 13);
+		NeuerEintrag.getContentPane().add(lblTag);
+		
+		JLabel lblMonat = new JLabel("Monat");
+		lblMonat.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblMonat.setBounds(89, 124, 60, 13);
+		NeuerEintrag.getContentPane().add(lblMonat);
+		
+		JLabel lblJahr = new JLabel("Jahr");
+		lblJahr.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblJahr.setBounds(148, 124, 60, 13);
+		NeuerEintrag.getContentPane().add(lblJahr);
+		
 		JLabel lblTag_1 = new JLabel("Tag");
 		lblTag_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTag_1.setBounds(30, 124, 60, 13);
+		lblTag_1.setBounds(497, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblTag_1);
 		
 		JLabel lblMonat_1 = new JLabel("Monat");
 		lblMonat_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblMonat_1.setBounds(89, 124, 60, 13);
+		lblMonat_1.setBounds(556, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblMonat_1);
 		
 		JLabel lblJahr_1 = new JLabel("Jahr");
 		lblJahr_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblJahr_1.setBounds(148, 124, 60, 13);
+		lblJahr_1.setBounds(615, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
 		NeuerEintrag.setVisible(false);
 		
@@ -233,14 +277,13 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				
-				index=list.getSelectedIndex();
+				index= list.getSelectedIndex();
 			}
 		});
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
-		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
+		JLabel Eintraege = new JLabel("Eintrag | Erstellungsdatum |  Erledigungsdatum");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
@@ -251,32 +294,36 @@ public class Fenster {
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 
-		JButton btnLoeschen = new JButton("l\u00F6schen");
-		btnLoeschen.setBounds(626, 513, 117, 31);
-		frmTodoListe.getContentPane().add(btnLoeschen);
-		btnLoeschen.addActionListener(new ActionListener() {
+		JButton btnErledigt = new JButton("erledigt");
+		btnErledigt.setBounds(613, 511, 130, 31);
+		frmTodoListe.getContentPane().add(btnErledigt);
+		btnErledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-                 if (authkey.equals("veryGoodAdminAuthKey")) 
-				//if(pars.getAdmin(eint.get(index))==true)
-				{
+				   
+				String selectedElem = "";
+	                int selectedIndices[] = list.getSelectedIndices();
+	                for (int j = 0; j < selectedIndices.length; j++) {
+	                   String elem =
+	                            (String) list.getModel().getElementAt(selectedIndices[j]);
+	                  selectedElem += "\n" + elem;
+	                    
+	                }
 	              
-	int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				
+			//	JOptionPane.showMessageDialog(null,"Du hast " + selectedElem+ " ausgewählt!");
+	int response = JOptionPane.showConfirmDialog(btnErledigt, "Ist der Eintrag erledigt?  " + "' "+Eintrag+" '", "To-do Erledigt", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+		
 	if (response==JOptionPane.YES_OPTION) 
 	{
-		
-		loescheTodo(socket,(index+1));
-		Aktualisieren();
+		Hauptfenster.this.Eintraege.remove(index);
 	}
-				}		
-				else
-				{
-					JOptionPane.showMessageDialog(btnLoeschen , "Sie haben keine Admin Rechte" , "Fehler",
-							JOptionPane.ERROR_MESSAGE );
-				}
-			}		
+	
+
+				
+			}
 		});
-		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnErledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 		
 		
@@ -285,19 +332,6 @@ public class Fenster {
 		lblToDoList.setBounds(0, 22, 788, 65);
 		frmTodoListe.getContentPane().add(lblToDoList);
 		lblToDoList.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
-		
-		JButton btnerledigt = new JButton("erledigt");
-		btnerledigt.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-			
-					aendereNachricht();
-		
-		}
-		});
-		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnerledigt.setBounds(499, 513, 117, 31);
-		frmTodoListe.getContentPane().add(btnerledigt);
 		
 		btnNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
@@ -319,7 +353,6 @@ public class Fenster {
 				System.exit(0);
 			}
 		});
-		mnDatei.add(mntmBeenden);
 		
 		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
@@ -329,208 +362,107 @@ public class Fenster {
 			}
 		});
 		mnDatei.add(mntmNeuerEintrag);
-		
-		
-		JMenu mnListe = new JMenu("Liste");
-		menuBar.add(mnListe);
-		
-		JMenuItem mntmAktualisieren = new JMenuItem("Aktualisieren");
-		mntmAktualisieren.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				Aktualisieren();
-			}
-		});
-		mnListe.add(mntmAktualisieren);
+		mnDatei.add(mntmBeenden);
 	
 	
+	}
+	
+	public String getEintraege()
+	{
+		return Eintrag;
+	}
+	
+	
+	
+	
+	public String getErstellung()
+	{
+	
+	String Erstellung= TagE +"."+MonatE+"."+JahrE;
+	
+		return Erstellung;	
+		
+	}
+	
+	public String getErledigt()
+	{
+		String Erledigt= TagErled +"."+MonatErled+"."+JahrErled;
+		return Erledigt;
+	}
+	
+	public void Eintrag()
+	{
+		neuEintrag = getEintraege()+"     "+getErstellung()+" | "+getErledigt(); 
 	}
 	
 	
 	public void NeuEintrag() 
 	{
-		String Datum;
-		String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
-		String Da= todo.getDate(D);
-		boolean Status = todo.statDatum(Da);
+	
+		int TE,Ter,ME,Mer,JE,Jer;
 		
-		if (Status == true)
-		{
-			Datum=Da;
+		TE= Integer.parseInt(tFTagErst.getText());
+		Ter= Integer.parseInt(tFTagErled.getText());
+		ME= Integer.parseInt(tFMonatErst.getText());
+		Mer= Integer.parseInt(tFMonatErled.getText());
+		JE=Integer.parseInt(tFJahrErst.getText());
+		Jer=Integer.parseInt(tFJahrErled.getText());
+		
+		
+		if (TE>0 && Ter>0 && TE<32 && Ter<32)
+		{		
+		TagE= tFTagErst.getText();
+		TagErled= tFTagErled.getText();
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe", "Fehler",JOptionPane.ERROR_MESSAGE );
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Tag", "Fehler",JOptionPane.ERROR_MESSAGE );
+			return;
+		}
+		
+		
+		if (ME>0 && Mer>0 && ME<13 && Mer<13)
+		{		
+			MonatE=tFMonatErst.getText();
+			MonatErled=tFMonatErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Monat", "Fehler", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		
+		if (JE>2021 && Jer>2021 && JE<2100 && Jer<2100)
+		{
+			JahrE=tFJahrErst.getText();
+			JahrErled=tFJahrErled.getText();
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe: Jahr", "Fehler", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 		
 		Eintrag=Ein;
-		Status = false;
+		Eintrag();
 		
-		sendTodos(socket,Datum,Eintrag, Status);
-		Aktualisieren();
+		listEintraege.add(neuEintrag);
+		Eintraege.addElement(neuEintrag);
+	
 	}
 	
 	public void leeren()
 	{
-		
+		tFTagErst.setText("");
 		tFTagErled.setText("");
+		tFMonatErst.setText("");
 		tFMonatErled.setText("");
+		tFJahrErst.setText("");
 		tFJahrErled.setText("");
-		
 	}
 	
 	
-	 static void schreibeNachricht(java.net.Socket socket, String nachricht)  {
-		
-		try {
-			printWriter = new PrintWriter(
-				new OutputStreamWriter(
-					socket.getOutputStream()));
-		printWriter.print(nachricht);
- 		printWriter.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 	
-	
-	static String leseNachricht(java.net.Socket socket)  {
-	
-		try {
-			bufferedReader = new BufferedReader(
-				new InputStreamReader(
-					socket.getInputStream()));
-			char[] buffer = new char[200];
-		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
-		String nachricht = new String(buffer, 0, anzahlZeichen);
-		return nachricht;
-		} 
-	catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
-		}
-		
-	}
-	
-	
-	public static void getTodos(java.net.Socket socket) 
-	{ 
-		
-		
-		schreibeNachricht(socket,"/UPDATE/\n");
-		String empfangeneNachricht = leseNachricht(socket);
-			
-			
-			while(!empfangeneNachricht.contains("/END/"))
-			{
-			empfangeneNachricht = leseNachricht(socket);
-			eint.add(empfangeneNachricht);
-		
-			
-		}
-
-	}
-	
-		
-	
-	
-	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)
-	{
-		
-		String Nachricht;
-		boolean b=false;
-		if (authkey.equals("veryGoodAdminAuthKey")) 
-		{
-			b=true;
-			
-		}
-		
-		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+b+"\n";
-	
-		schreibeNachricht(socket,Nachricht);
-		
-		String empfangeneNachricht = leseNachricht(socket);
-		
-		while(!empfangeneNachricht.contains("/END/"))
-		{
-			empfangeneNachricht = leseNachricht(socket);
-		}
-		
-		
-	}
-	
-	public static void loescheTodo(java.net.Socket socket,int i)
-	{
-		
-
-		String Nachricht="/DELETE/"+i+"\n";
-		schreibeNachricht(socket,Nachricht);
-		String empfangeneNachricht = leseNachricht(socket);
-		
-		while(!empfangeneNachricht.contains("/END/"))
-		{
-			empfangeneNachricht = leseNachricht(socket);
-		}
-		
-	
-	}
-	
-	public void fuelleListe()
-	{
-		
-	
-		for (int i=0; i<(eint.size()-1);i++)
-		{
-			
-			
-			String Notiz= pars.setStatus(eint.get(i), pars.getStatus(eint.get(i)));
-			
-			Eintraege.addElement(Notiz);
-			
-			
-			
-		}
-		 //Liste in GUI neu befüllen 
-	}
-	
-	public void loescheListe()
-	{
-		
-		Eintraege.clear();
-		eint.clear();
-		
-	}
-	
-	public void Aktualisieren()
-	{
-		loescheListe();
-		
-		getTodos(socket);
-		
-		fuelleListe();
-	}
-	
-	public void aendereNachricht()
-	{
-		int i=(index);
-		int a= (index+1);
-		String Notiz=eint.get(i);
-		boolean Status=pars.getNewStatus(Notiz);
-		
-		String teilstr[];
-		teilstr = Notiz.split(",");
-		String Eintrag= teilstr[1];
-
-		sendTodos(socket,pars.getDatum(Notiz),Eintrag, Status);
-		
-		loescheTodo(socket,a);
-		
-		loescheListe();
-		Aktualisieren();
-		
-	}
 }
+
