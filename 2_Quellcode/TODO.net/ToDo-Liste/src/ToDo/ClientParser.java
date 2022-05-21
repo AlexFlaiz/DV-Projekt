@@ -11,10 +11,13 @@ public class ClientParser {
 				teilstr[3] = "erledigt";
 			}
 			else {
-				teilstr[3] = "offen   ";
+				teilstr[3] = "offen    ";
 			}
 			
-			eventstr = teilstr[2]+"   " + teilstr[3]+"     " + teilstr[1];
+			String Datum[];
+			Datum = teilstr[2].split("-");
+			
+			eventstr = Datum[0]+"."+Datum[1]+"."+Datum[2]+"   " + teilstr[3]+"     " + teilstr[1];
 			
 			return eventstr;
 		}
