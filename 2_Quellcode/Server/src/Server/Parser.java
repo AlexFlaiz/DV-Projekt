@@ -16,7 +16,7 @@ public class Parser {
 	 * Setzt den Status einer ToDo auf erledigt oder unerledigt.
 	 * 
 	 * @param eventstr 	Befehlsstring
-	 * @param erledigt	Neuer Wert für Erledigt oder Unerledigt
+	 * @param erledigt	Neuer Wert fuer Erledigt oder Unerledigt
 	 * @return			Aktualisierter Befehlsstring
 	 */
 	public static String setStatus(String eventstr, boolean erledigt) {
