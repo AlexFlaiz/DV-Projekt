@@ -19,7 +19,7 @@ import java.util.*;
 
 
 /**
- * In dieser Klasse wird der von der GUI erstellte StringBefehl im Server verarbeitet und die dazugeh�rige Funktion gestartet.
+ * In dieser Klasse wird der von der GUI erstellte StringBefehl im Server verarbeitet und die dazugehoerige Funktion gestartet.
  */
 public class ServThread implements Runnable{
 	 protected java.net.Socket clientsocket = null;
@@ -31,7 +31,7 @@ public class ServThread implements Runnable{
 	 private boolean adminLoggedIn;
 	 
 	 /**
-	  * Konstruktor f�r die Klasse ServThread. 
+	  * Konstruktor fuer die Klasse ServThread. 
 	  * Wird von ServSock gestartet wenn Verbindung erfolgreich.
 	  * 
 	  * @param clientSocket 	
@@ -58,9 +58,9 @@ public class ServThread implements Runnable{
 	    }
 	
 	/**
-	 *     Startet f�r jeden User einen neuen Thread im Server.
-	 *     Variable str wird �ber getStr der Befehlsstring zugewiesen der vom GUI an den Server gesendet wird. 
-	 *     gibt die Variable an putStr weiter als �berpr�fungsfunktion.
+	 *     Startet fuer jeden User einen neuen Thread im Server.
+	 *     Variable str wird ueber getStr der Befehlsstring zugewiesen der vom GUI an den Server gesendet wird. 
+	 *     gibt die Variable an putStr weiter als ueberpruefungsfunktion.
 	 *	   gibt die Variable an procCMD weiter 
 	 *     
 	 */
@@ -80,7 +80,7 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * liest eine Zeile des InputStream und gibt diesen als String zur�ck. Eine Zeile ist ein Server Befehl.
+	 * liest eine Zeile des InputStream und gibt diesen als String zurueck. Eine Zeile ist ein Server Befehl.
 	 * 
 	 * @return str		Befehlsstring 
 	 * @throws IOException
@@ -103,9 +103,9 @@ public class ServThread implements Runnable{
 	
 	/**
 	 * Startet Parser.parseCMD
-	 * �ber Parser.parseCMD wird der erste Teil des Befehlsstrings ausgelesen. 
-	 * R�ckgabe wert ist eine Integer zwischen 1 bis 5.
-	 * Je nach r�ckgabewert wird die dazugeh�rige Methode gestartet. 
+	 * ueber Parser.parseCMD wird der erste Teil des Befehlsstrings ausgelesen. 
+	 * Rueckgabe wert ist eine Integer zwischen 1 bis 5.
+	 * Je nach rueckgabewert wird die dazugehoerige Methode gestartet. 
 	 * 
 	 * @param cmd Befehlsstring von run
 	 */
@@ -153,8 +153,8 @@ public class ServThread implements Runnable{
 	
 	/**
 	 * Wird von procCMD gestartet. 
-	 * Der User hat �ber Befehlsstring ein Update gefordert. 
-	 * Bekommt von DataBaseHandler Die aktuellen Daten �bergeben und Baut den String der an das GUI geschickt wird.
+	 * Der User hat ueber Befehlsstring ein Update gefordert. 
+	 * Bekommt von DataBaseHandler Die aktuellen Daten uebergeben und Baut den String der an das GUI geschickt wird.
 	 * 
 	 */
 	private void doUpdate2DB() {
@@ -178,7 +178,7 @@ public class ServThread implements Runnable{
 	
 	/**
 	 * Methode zur erstellung eines neuen ToDos
-	 * Der Befehlsstring wird von getNewInsert in die auf Serverseite verwendete schreibweise auf Trennung mit Komma Umgewandelt.
+	 * Der Befehlsstring wird von getNewInsert in die auf Serverseite verwendete schreibweise auf Trennung mit :: Umgewandelt.
 	 * Der Befehlsstring wird von getAttr aufgeteilt und in Einzeltrings gespeichert. 
 	 * Wenn ein Addmin eingeloggt ist kann eine AdminToDO oder BenutzerToDo erstellt werden sonst nur Benutzer ToDo.
 	 * 
@@ -201,9 +201,9 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * Methode zur ver�nderung einer ToDo 
-	 * Von getID wird die ID der zu �ndernden ToDo ermittelt. 
-	 * Danach wird auf dem Platz der Vorheringen ToDO die ge�nderte ToDo gespeichert und die alte Todo �berschrieben.
+	 * Methode zur veraenderung einer ToDo 
+	 * Von getID wird die ID der zu aendernden ToDo ermittelt. 
+	 * Danach wird auf dem Platz der Vorheringen ToDO die geaenderte ToDo gespeichert und die alte Todo ueberschrieben.
 	 * 
 	 * @param cmd	Befehlsstring von run
 	 */
@@ -226,9 +226,9 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * Methode zur l�schung eines ToDos.
-	 * Admins k�nnen alle ToDos l�schen.
-	 * Bei Benutzern wird �berpr�ft ob ToDo eine BenutzerToDo ist.
+	 * Methode zur loeschung eines ToDos.
+	 * Admins koennen alle ToDos loeschen.
+	 * Bei Benutzern wird ueberprueft ob ToDo eine BenutzerToDo ist.
 	 * 
 	 * @param cmd 	Befehlsstring von run
 	 */
