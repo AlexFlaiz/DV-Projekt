@@ -19,7 +19,7 @@ import java.util.*;
 
 
 /**
- * In dieser Klasse wird der von der GUI erstellte StringBefehl im Server verarbeitet und die dazugehörige Funktion gestartet.
+ * In dieser Klasse wird der von der GUI erstellte StringBefehl im Server verarbeitet und die dazugehï¿½rige Funktion gestartet.
  */
 public class ServThread implements Runnable{
 	 protected java.net.Socket clientsocket = null;
@@ -31,7 +31,7 @@ public class ServThread implements Runnable{
 	 private boolean adminLoggedIn;
 	 
 	 /**
-	  * Konstruktor für die Klasse ServThread. 
+	  * Konstruktor fï¿½r die Klasse ServThread. 
 	  * Wird von ServSock gestartet wenn Verbindung erfolgreich.
 	  * 
 	  * @param clientSocket 	
@@ -58,9 +58,9 @@ public class ServThread implements Runnable{
 	    }
 	
 	/**
-	 *     Startet für jeden User einen neuen Thread im Server.
-	 *     Variable str wird über getStr der Befehlsstring zugewiesen der vom GUI an den Server gesendet wird. 
-	 *     gibt die Variable an putStr weiter als überprüfungsfunktion.
+	 *     Startet fï¿½r jeden User einen neuen Thread im Server.
+	 *     Variable str wird ï¿½ber getStr der Befehlsstring zugewiesen der vom GUI an den Server gesendet wird. 
+	 *     gibt die Variable an putStr weiter als ï¿½berprï¿½fungsfunktion.
 	 *	   gibt die Variable an procCMD weiter 
 	 *     
 	 */
@@ -80,12 +80,12 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * liest eine Zeile des InputStream und gibt diesen als String zurück. Eine Zeile ist ein Server Befehl.
+	 * liest eine Zeile des InputStream und gibt diesen als String zurï¿½ck. Eine Zeile ist ein Server Befehl.
 	 * 
 	 * @return str		Befehlsstring 
 	 * @throws IOException
 	 */
-	public String getStr() throws IOException {
+	private String getStr() throws IOException {
 		String str = reader.readLine();
 		return str;
 	}
@@ -96,20 +96,20 @@ public class ServThread implements Runnable{
 	 * @param stringToSend	String der an GUI gesendet wird. 
 	 * @throws IOException
 	 */
-	public void putStr( String stringToSend) throws IOException {
+	private void putStr( String stringToSend) throws IOException {
 		printWriter.print(stringToSend);
 		printWriter.flush();
 	}
 	
 	/**
 	 * Startet Parser.parseCMD
-	 * Über Parser.parseCMD wird der erste Teil des Befehlsstrings ausgelesen. 
-	 * Rückgabe wert ist eine Integer zwischen 1 bis 5.
-	 * Je nach rückgabewert wird die dazugehörige Methode gestartet. 
+	 * ï¿½ber Parser.parseCMD wird der erste Teil des Befehlsstrings ausgelesen. 
+	 * Rï¿½ckgabe wert ist eine Integer zwischen 1 bis 5.
+	 * Je nach rï¿½ckgabewert wird die dazugehï¿½rige Methode gestartet. 
 	 * 
 	 * @param cmd Befehlsstring von run
 	 */
-	public  void procCMD(String cmd) {
+	private  void procCMD(String cmd) {
 		switch(Parser.parseCMD(cmd)) {
 		case 1:
 			doUpdate2DB(); // /UPDATE/
@@ -127,19 +127,21 @@ public class ServThread implements Runnable{
 			try {
 				clientsocket.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				fehler.openDatei(true);
 				fehler.writeErr(e1.getMessage()+ "\n");
 				fehler.close();
 			}
 			Thread.currentThread().stop();
 			break;
+		case 6:
+			getAdmin();
+			break;
 		default:
 			break;
 		}
 		
 		try {
-			putStr("/END/");
+			putStr("//END//");
 		} catch (IOException e) {
 			fehler.openDatei(true);
 			fehler.writeErr(e.getMessage()+ "\n");
@@ -151,18 +153,18 @@ public class ServThread implements Runnable{
 	
 	/**
 	 * Wird von procCMD gestartet. 
-	 * Der User hat über Befehlsstring ein Update gefordert. 
-	 * Bekommt von DataBaseHandler Die aktuellen Daten übergeben und Baut den String der an das GUI geschickt wird.
+	 * Der User hat ï¿½ber Befehlsstring ein Update gefordert. 
+	 * Bekommt von DataBaseHandler Die aktuellen Daten ï¿½bergeben und Baut den String der an das GUI geschickt wird.
 	 * 
 	 */
-	public void doUpdate2DB() {
+	private void doUpdate2DB() {
 		int i = 1;
 		String buffer[] = new String[4];
 		try {
 			buffer = dbh.getEntry(i);
 			while(!(buffer[0] == null)) {
 				i++;
-				putStr("," +buffer[0]+ "," + buffer[1] + "," + buffer[2]+ "," + buffer[3] + "," + "\n");
+				putStr("::" +buffer[0]+ "::" + buffer[1] + "::" + buffer[2]+ "::" + buffer[3] + "::" + "\n");
 				buffer = dbh.getEntry(i);
 			}
 			
@@ -182,7 +184,7 @@ public class ServThread implements Runnable{
 	 * 
 	 * @param cmd	Befehlsstring 
 	 */
-	public void newEvent2DB(String cmd){
+	private void newEvent2DB(String cmd){
 		String buffer = Parser.getNewInsert(cmd);
 		String attr[] = Parser.getAttr(buffer);
 		String bezeichner = attr[1];
@@ -199,13 +201,13 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * Methode zur veränderung einer ToDo 
-	 * Von getID wird die ID der zu ändernden ToDo ermittelt. 
-	 * Danach wird auf dem Platz der Vorheringen ToDO die geänderte ToDo gespeichert und die alte Todo überschrieben.
+	 * Methode zur verï¿½nderung einer ToDo 
+	 * Von getID wird die ID der zu ï¿½ndernden ToDo ermittelt. 
+	 * Danach wird auf dem Platz der Vorheringen ToDO die geï¿½nderte ToDo gespeichert und die alte Todo ï¿½berschrieben.
 	 * 
 	 * @param cmd	Befehlsstring von run
 	 */
-	public void modifiyEvent2DB(String cmd) {
+	private void modifiyEvent2DB(String cmd) {
 		int id = Parser.getID(cmd);
 		String buffer = Parser.getModifyStr(cmd);
 		String attr[] = Parser.getAttr(buffer);
@@ -224,13 +226,13 @@ public class ServThread implements Runnable{
 	}
 	
 	/**
-	 * Methode zur löschung eines ToDos.
-	 * Admins können alle ToDos löschen.
-	 * Bei Benutzern wird überprüft ob ToDo eine BenutzerToDo ist.
+	 * Methode zur lï¿½schung eines ToDos.
+	 * Admins kï¿½nnen alle ToDos lï¿½schen.
+	 * Bei Benutzern wird ï¿½berprï¿½ft ob ToDo eine BenutzerToDo ist.
 	 * 
 	 * @param cmd 	Befehlsstring von run
 	 */
-	public void deleteEntry2DB(String cmd) {
+	private void deleteEntry2DB(String cmd) {
 		int id = Parser.getID(cmd);
 		if(this.adminLoggedIn) {
 		dbh.deleteEntry(id);
@@ -239,6 +241,20 @@ public class ServThread implements Runnable{
 		else if(!dbh.getPriv(id)){
 			dbh.deleteEntry(id);
 			dbh.udpdateIDs();
+		}
+	}
+	
+	/**
+	 * Methode zur Abfrage ob Admin angemeldet ist
+	 * 
+	 */
+	private void getAdmin() {
+		try {
+			putStr("//"+ Boolean.toString(this.adminLoggedIn) + "//\n");
+		} catch (IOException e1) {
+			fehler.openDatei(true);
+			fehler.writeErr(e1.getMessage()+ "\n");
+			fehler.close();
 		}
 	}
 	
