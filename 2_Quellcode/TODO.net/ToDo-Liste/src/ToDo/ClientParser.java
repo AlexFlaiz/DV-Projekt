@@ -5,7 +5,7 @@ public class ClientParser {
 		
 		public  String setStatus(String eventstr, boolean erledigt) {
 			String teilstr[];
-			teilstr = eventstr.split(",");
+			teilstr = eventstr.split("::");
 			
 			if(erledigt == true ) {
 				teilstr[3] = "erledigt";
@@ -25,7 +25,7 @@ public class ClientParser {
 		public boolean getStatus(String str)
 		{
 			String teilstr[];
-			teilstr = str.split(",");
+			teilstr = str.split("::");
 			
 			if(teilstr[3].equals("true"))
 			{
@@ -38,7 +38,7 @@ public class ClientParser {
 		public boolean getNewStatus(String str)
 		{
 			String teilstr[];
-			teilstr = str.split(",");
+			teilstr = str.split("::");
 			
 			if(teilstr[3].equals("true"))
 			{
@@ -54,7 +54,7 @@ public class ClientParser {
 		
 		public String getDatum(String str) {
 			String teilstr[];
-			teilstr = str.split(",");
+			teilstr = str.split("::");
 			
 			return teilstr[2];
 		}
@@ -62,7 +62,7 @@ public class ClientParser {
 		public boolean getAdmin(String str)
 		{
 			String teilstr[];
-			teilstr = str.split(",");
+			teilstr = str.split("::");
 			
 			if(teilstr[4].equals("true"))
 			{

@@ -1,5 +1,6 @@
 package ToDo;
 
+
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -31,7 +32,6 @@ import javax.swing.JFileChooser;
 
 public class Fenster {
 	
-
 	private JList<String> list;
 	private  int index;
 	private String Eintrag;
@@ -42,31 +42,27 @@ public class Fenster {
 	private static java.net.Socket socket;
 	static String buffer;
 	private static String authkey;
-	private static int port ;
+	private static int port;
 	static ArrayList <String> eint;
 	DefaultListModel<String>Eintraege;
 	static BufferedReader bufferedReader;
 	static PrintWriter printWriter;
 	ClientParser pars=new ClientParser();
 	TODOs todo= new TODOs();
-	private String   offeneListe;
-	
-	
-	
-	
-	
-	//static DateiHandler Key;
+	private String offeneListe;
+	private static boolean priv;
+	private static boolean AdminBox;
+
+	static DateiHandler Key;
 	static DateiHandler Port;
 	static DateiHandler ip;
-	/**
-	 * Launch the application.
-	 */
+
 	public static void main(String[] args) {
-		//String Dateiname = "AuthKey.txt";
-		//Key= new DateiHandler(Dateiname);
-		//Key.openDatei(false);
-		//authkey= Key.read();
-		authkey="veryGoodAdminAuthKey";
+
+		String Dateiname = "AuthKey.txt";		
+		Key= new DateiHandler(Dateiname);
+		Key.openDatei(false);
+		authkey= Key.read();
 		
 		String PortDatei = "Port.txt";
 		Port= new DateiHandler(PortDatei);
@@ -77,19 +73,31 @@ public class Fenster {
 		ip= new DateiHandler(IPaddress);
 		ip.openDatei(false);
 		String IP =ip.read();
-		
 		eint=new ArrayList<>();
-	
-		EventQueue.invokeLater(new Runnable() {
+		AdminBox=false;
+		
+		
+			EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
-					
+	
+					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
+					schreibeNachricht(socket,Nachricht);
+					String empfangeneNachricht = leseNachricht(socket);
+					empfangeneNachricht = leseNachricht(socket);
+					empfangeneNachricht = leseNachricht(socket);
+					String [] SplidAdmin = empfangeneNachricht.split("//");
+					priv=Boolean.parseBoolean(SplidAdmin[1]);		//Speichert Admin Status in priv
+		
 					Fenster window = new Fenster();
 					window.frmTodoListe.setVisible(true);
+
 					window.Aktualisieren();
 					window.Aktualisieren();
+					window.Aktualisieren();
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -128,8 +136,7 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);
-				
+				Liste.setVisible(false);				//schließt Fenster Liste
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -144,8 +151,13 @@ public class Fenster {
 		tAListe.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		tAListe.setEditable(false);
 		scrollPane_2.setViewportView(tAListe);
+		
+		JLabel lblEintraegeListe = new JLabel("Datum | Status | Eintrag");
+		lblEintraegeListe.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		scrollPane_2.setColumnHeaderView(lblEintraegeListe);
 		Liste.setVisible(false);
 
+		
 		
         //Fenster Neuer Eintrag
         
@@ -167,7 +179,7 @@ public class Fenster {
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				NeuerEintrag.setVisible(false);	
+				NeuerEintrag.setVisible(false);				//schließt fenster NeuerEintrag
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -259,17 +271,26 @@ public class Fenster {
 		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
 		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
+		CBAdminTodo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (CBAdminTodo.isSelected()==true)
+				{
+					AdminBox=true;
+				}
+			}
+		});
 		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		CBAdminTodo.setBounds(30, 189, 178, 21);
 		NeuerEintrag.getContentPane().add(CBAdminTodo);
 		CBAdminTodo.setVisible(false);
-		if (authkey.equals("veryGoodAdminAuthKey"))
+		if (priv==true)
 		{
 		CBAdminTodo.setVisible(true);	
 		}
 		
 		NeuerEintrag.setVisible(false);
+		
 		
 		
 		//Fenster mit To Do Liste
@@ -306,7 +327,7 @@ public class Fenster {
 		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-                 if (pars.getAdmin(eint.get(index))==true && authkey.equals("veryGoodAuthKey"))
+                 if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
                 	 JOptionPane.showMessageDialog(btnLoeschen , "Admin Einträge können nicht gelöscht werden." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
@@ -318,7 +339,6 @@ public class Fenster {
 					
 					if (response==JOptionPane.YES_OPTION) 
 					{
-		
 						loescheTodo(socket,(index+1));
 						Aktualisieren();
 					}
@@ -326,7 +346,6 @@ public class Fenster {
 			}			
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		
 		
 		JLabel lblToDoList = new JLabel("To-do Liste");
 		lblToDoList.setHorizontalAlignment(SwingConstants.CENTER);
@@ -339,7 +358,7 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 			aendereStatus();
-				if (pars.getAdmin(eint.get(index))==true && authkey.equals("veryGoodAuthKey"))
+				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
 					JOptionPane.showMessageDialog(btnLoeschen , "Admin Einträge können nicht bearbeitet werden." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
@@ -350,6 +369,17 @@ public class Fenster {
 		btnerledigt.setBounds(499, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnerledigt);
 		
+		JLabel lblAdmin = new JLabel("Admin");
+		lblAdmin.setForeground(Color.LIGHT_GRAY);
+		lblAdmin.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAdmin.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblAdmin.setBounds(727, -1, 61, 22);
+		frmTodoListe.getContentPane().add(lblAdmin);
+		lblAdmin.setVisible(false);
+		if (priv==true)
+		{
+		lblAdmin.setVisible(true);	
+		}
 		
 		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geöffnet
 			public void actionPerformed(ActionEvent e) 
@@ -373,26 +403,37 @@ public class Fenster {
 		});
 		mnDatei.add(mntmNeuerEintrag);
 		
-		JMenuItem mntmSpeichern = new JMenuItem("Speichern");
-		mntmSpeichern.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				Speichern();
-			}
-		});
-		mnDatei.add(mntmSpeichern);
-		
 		
 		JMenuItem mntmOeffnen = new JMenuItem("\u00D6ffnen");
 		mntmOeffnen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				load();
+				Laden();
 				tAListe.setText(offeneListe);
 				Liste.setVisible(true);	
 			}
 		});
-		mnDatei.add(mntmOeffnen);
 		
+		JMenu mnSpeichern = new JMenu("Speichern");
+		mnDatei.add(mnSpeichern);
+		
+		JMenuItem mntmAlle = new JMenuItem("Alle Eintr\u00E4ge");
+		mntmAlle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				SpeichernAlle();
+			}
+		});
+		mnSpeichern.add(mntmAlle);
+		
+		JMenuItem mntmOffene = new JMenuItem("Offene Eintr\u00E4ge");
+		mntmOffene.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				SpeichernOffene();
+			}
+		});
+		mnSpeichern.add(mntmOffene);
+		mnDatei.add(mntmOeffnen);
 		
 		JSeparator separator = new JSeparator();
 		mnDatei.add(separator);
@@ -405,8 +446,6 @@ public class Fenster {
 			}
 		});
 		mnDatei.add(mntmBeenden);
-		
-		
 		
 		JMenu mnListe = new JMenu("Liste");
 		menuBar.add(mnListe);
@@ -422,11 +461,9 @@ public class Fenster {
 	}
 	
 	
-	protected static void setVisible(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
+	//Methoden der Klasse
+	
 	public void NeuEintrag() 		//Neues ToDo wird erstellt
 	{
 		String Datum;
@@ -456,15 +493,14 @@ public class Fenster {
 		tFJahrErled.setText("");	
 	}
 	
-	
 	 static void schreibeNachricht(java.net.Socket socket, String nachricht) //Nachricht wird an Server geschickt  
 	 {	
 		try {
 			printWriter = new PrintWriter(
 				new OutputStreamWriter(
 					socket.getOutputStream()));
-		printWriter.print(nachricht);
- 		printWriter.flush();
+			printWriter.print(nachricht);
+			printWriter.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -491,45 +527,45 @@ public class Fenster {
 	
 	public static void getTodos(java.net.Socket socket) 	//Liste der Todos wird vom Server geholt und in ArrayList gespeichert
 	{ 
-		schreibeNachricht(socket,"/UPDATE/\n");
+		schreibeNachricht(socket,"//UPDATE//\n");
 		String empfangeneNachricht = leseNachricht(socket);
 			
-			while(!empfangeneNachricht.contains("/END/"))
+			while(!empfangeneNachricht.contains("//END//"))
 			{
-			empfangeneNachricht = leseNachricht(socket);
-			eint.add(empfangeneNachricht);	
+				empfangeneNachricht = leseNachricht(socket);
+				eint.add(empfangeneNachricht);	
 			}
 	}
 	
 	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)  //Neue ToDos werden an den Server geschickt
 	{
 		String Nachricht;
-		boolean b=false;
-		if (authkey.equals("veryGoodAdminAuthKey")) 
-			{
-				b=true;
-			
-			}
-		
-		Nachricht="/INSERT/"+Eintrag+"/"+Datum+"/"+S+"/"+b+"\n";
+		if (AdminBox==true)
+		{
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+false+"\n";
+		}
+		else
+		{
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+true+"\n";
+		}
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
 		
-			while(!empfangeneNachricht.contains("/END/"))
+			while(!empfangeneNachricht.contains("//END//"))
 			{
-			empfangeneNachricht = leseNachricht(socket);
+				empfangeneNachricht = leseNachricht(socket);
 			}	
 	}
 	
 	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelöscht
 	{
-		String Nachricht="/DELETE/"+i+"\n";
+		String Nachricht="//DELETE//"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
 		
-			while(!empfangeneNachricht.contains("/END/"))
+			while(!empfangeneNachricht.contains("//END//"))
 			{
-			empfangeneNachricht = leseNachricht(socket);
+				empfangeneNachricht = leseNachricht(socket);
 			}
 	}
 	
@@ -562,43 +598,45 @@ public class Fenster {
 		String Notiz=eint.get(i);
 		String Datum=pars.getDatum(Notiz);
 		boolean Stat=pars.getNewStatus(Notiz);
+		boolean priv = pars.getAdmin(Notiz);
 		String Nachricht;
 		
 		String teilstr[];
-		teilstr = Notiz.split(",");
+		teilstr = Notiz.split("::");
 		String Eintrag= teilstr[1];
 		
-		Nachricht="/MODIFY/"+j+"/"+Eintrag+"/"+Datum+"/"+Stat+"/"+port+"\n";
+		Nachricht="//MODIFY//"+j+"//"+Eintrag+"//"+Datum+"//"+Stat+"//"+priv+"\n";
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
 		
-			while(!empfangeneNachricht.contains("/END/"))
+			while(!empfangeneNachricht.contains("//END//"))
 			{
-			empfangeneNachricht = leseNachricht(socket);
+				empfangeneNachricht = leseNachricht(socket);
 			}
-			
 		Aktualisieren();
 	}
 	
-	
-	protected void Speichern()						//Speichere Liste
+	protected void SpeichernAlle()						//Speichere alle ToDos in Liste
 	{
 		final JFileChooser fc = new JFileChooser();
 		int returnVal= fc.showSaveDialog(list);
 		
-		if(returnVal == JFileChooser.APPROVE_OPTION){
+		if(returnVal == JFileChooser.APPROVE_OPTION)
+		{
 			File file = fc.getSelectedFile();
-			saveText(file);
-			}
+			saveTextalle(file);
+		}
 }
-		private void saveText(File file) {
+	
+		private void saveTextalle(File file) 
+		{
 			try {
 				FileWriter writer =new FileWriter(file);
 				
 				for (int i=0; i<Eintraege.getSize();i++)
 				{
-				String text = Eintraege.get(i)+"\n";
-				writer.write(text);
+					String text = Eintraege.get(i)+"\n";
+					writer.write(text);
 				}
 				writer.flush();
 				writer.close();
@@ -608,10 +646,43 @@ public class Fenster {
 			}
 		}
 		
-		protected void load()				//Öffne Datei
+		protected void SpeichernOffene()						//Speichere alle ToDos in Liste
 		{
 			final JFileChooser fc = new JFileChooser();
-			int returnVal = fc.showOpenDialog(list);   // jFrame durch getParent() frame ersetzt
+			int returnVal= fc.showSaveDialog(list);
+			
+			if(returnVal == JFileChooser.APPROVE_OPTION)
+			{
+				File file = fc.getSelectedFile();
+				saveTextoffene(file);
+			}
+	}
+		
+			private void saveTextoffene(File file) 
+			{
+				try {
+					FileWriter writer =new FileWriter(file);
+					
+					for (int i=0; i<Eintraege.getSize();i++)
+					{
+						if (pars.getStatus(eint.get(i))==false)
+						{
+							String text = Eintraege.get(i)+"\n";
+							writer.write(text);
+						}
+					}
+					writer.flush();
+					writer.close();
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		
+		protected void Laden()				//Öffnet gespeicherte Dateien
+		{
+			final JFileChooser fc = new JFileChooser();
+			int returnVal = fc.showOpenDialog(list);   
 			if(returnVal == JFileChooser.APPROVE_OPTION)
 			{
 				File file = fc.getSelectedFile();
