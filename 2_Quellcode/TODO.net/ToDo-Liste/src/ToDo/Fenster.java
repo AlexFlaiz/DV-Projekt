@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -23,6 +25,10 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
@@ -49,10 +55,12 @@ public class Fenster {
 	static PrintWriter printWriter;
 	ClientParser pars=new ClientParser();
 	TODOs todo= new TODOs();
-	private String offeneListe;
+	private static String offeneListe;
 	private static String Adminpriv;
 	private static boolean priv;
 	private static boolean AdminBox;
+	ArrayList <String> Drucktext;
+
 
 	static DateiHandler Key;
 	static DateiHandler Port;
@@ -83,8 +91,8 @@ public class Fenster {
 				try {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
-	
-					String Nachricht="//GETADMIN//\n";		//Frï¿½gt Admin Status beim Server nach
+					
+					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
 					schreibeNachricht(socket,Nachricht);
 					String empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
@@ -141,7 +149,7 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);				//schlieï¿½t Fenster Liste
+				Liste.setVisible(false);				//schließt Fenster Liste
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -160,6 +168,16 @@ public class Fenster {
 		JLabel lblEintraegeListe = new JLabel("Datum | Status | Eintrag");
 		lblEintraegeListe.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane_2.setColumnHeaderView(lblEintraegeListe);
+		
+		JButton btnDrucken = new JButton("Drucken");
+		btnDrucken.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drucken();
+			}
+		});
+		btnDrucken.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnDrucken.setBounds(10, 424, 138, 30);
+		Liste.getContentPane().add(btnDrucken);
 		Liste.setVisible(false);
 
 		
@@ -184,7 +202,7 @@ public class Fenster {
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				NeuerEintrag.setVisible(false);				//schlieï¿½t fenster NeuerEintrag
+				NeuerEintrag.setVisible(false);				//schließt fenster NeuerEintrag
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -236,7 +254,7 @@ public class Fenster {
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(tAEintrag);
 		
-		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufï¿½gen
+		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufügen
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -249,7 +267,7 @@ public class Fenster {
 		btnEintragHinzufuegen.setBounds(30, 409, 178, 30);
 		NeuerEintrag.getContentPane().add(btnEintragHinzufuegen);
 		
-		JButton btnLeeren = new JButton("Leeren");				//Leere Eintrï¿½ge in Fenster Neuer Eintrag
+		JButton btnLeeren = new JButton("Leeren");				//Leere Einträge in Fenster Neuer Eintrag
 		btnLeeren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -276,7 +294,7 @@ public class Fenster {
 		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
 		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox fï¿½r Admin
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
 		CBAdminTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (CBAdminTodo.isSelected()==true)
@@ -309,7 +327,7 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();					//Index des ausgewï¿½hlten ToDos
+				index=list.getSelectedIndex();					//Index des ausgewählten ToDos
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -326,7 +344,7 @@ public class Fenster {
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 
-		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelï¿½scht
+		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelöscht
 		btnLoeschen.setBounds(626, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
 		btnLoeschen.addActionListener(new ActionListener() {
@@ -339,7 +357,7 @@ public class Fenster {
  				}
 				else 
 				{
-				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelï¿½scht werden?  " + "","Eintrag lï¿½schen",
+				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
 							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
 					
 					if (response==JOptionPane.YES_OPTION) 
@@ -358,7 +376,7 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(lblToDoList);
 		lblToDoList.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
 		
-		JButton btnerledigt = new JButton("Erledigt");					//Stratus wird geï¿½ndert
+		JButton btnerledigt = new JButton("Erledigt");					//Stratus wird geändert
 		btnerledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -386,7 +404,7 @@ public class Fenster {
 		lblAdmin.setVisible(true);	
 		}
 		
-		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geï¿½ffnet
+		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geöffnet
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(true);
@@ -399,7 +417,7 @@ public class Fenster {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
-		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");	//Fenster neuer Eintrag wird geï¿½ffnet (in Menï¿½leiste)
+		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");	//Fenster neuer Eintrag wird geöffnet (in Menüleiste)
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -562,7 +580,7 @@ public class Fenster {
 			}	
 	}
 	
-	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelï¿½scht
+	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelöscht
 	{
 		String Nachricht="//DELETE//"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
@@ -574,7 +592,7 @@ public class Fenster {
 			}
 	}
 	
-	public void fuelleListe()					//Liste in GUI neu befï¿½llen
+	public void fuelleListe()					//Liste in GUI neu befüllen
 	{
 		for (int i=0; i<(eint.size()-1);i++)
 		{
@@ -596,7 +614,7 @@ public class Fenster {
 		fuelleListe();
 	}
 	
-	public void aendereStatus()	//Erledigungsstatus der ToDos werden geï¿½ndert
+	public void aendereStatus()	//Erledigungsstatus der ToDos werden geändert
 	{
 		int i=index;
 		int j= (index+1);
@@ -684,7 +702,7 @@ public class Fenster {
 				}
 			}
 		
-		protected void Laden()				//ï¿½ffnet gespeicherte Dateien
+		protected void Laden()				//Öffnet gespeicherte Dateien
 		{
 			final JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(list);   
@@ -696,7 +714,8 @@ public class Fenster {
 		}
 		
 		private void showText (File file)
-		{
+		{	
+			Drucktext=new ArrayList<>();
 			StringBuffer buf = new StringBuffer();
 			if (file.exists())
 			{
@@ -707,6 +726,7 @@ public class Fenster {
 					while ((line = reader.readLine( )) != null)
 					{
 						buf.append(line+"\n");
+						Drucktext.add(line);
 					}
 					reader.close();
 				}
@@ -722,4 +742,50 @@ public class Fenster {
 			
 			  offeneListe= buf.toString();
 		}
-}
+		
+		
+		public void drucken(){						//Druckt Dateien aus
+
+			 PrinterJob pj = PrinterJob.getPrinterJob();
+			 pj.setJobName(" Drucke Liste ");
+
+			 pj.setPrintable (new Printable() {    
+			  public int print(Graphics pg, PageFormat pf, int pageNum){
+			   if (pageNum > 0){
+			   return Printable.NO_SUCH_PAGE;
+			   }
+			   
+			   Graphics2D g2 = (Graphics2D) pg;
+			   g2.translate(pf.getImageableX(), pf.getImageableY());
+			   
+			   int Zeilenabstand= 10;
+			   g2.drawString("To-do Liste:", 50, 70);
+			   for (int i=0;i<Drucktext.size();i++)
+			   {
+				   if (Drucktext.get(i).length()<75)
+				   {
+				   g2.drawString(Drucktext.get(i)+"\n", 50, 100+Zeilenabstand); 
+				  Zeilenabstand = Zeilenabstand+20;
+				   }
+				   else
+				   { 
+					   g2.drawString(Drucktext.get(i).substring(0, 120)+"\n", 50, 100+Zeilenabstand);
+					   Zeilenabstand = Zeilenabstand+20;
+					   g2.drawString(Drucktext.get(i).substring(121)+"\n", 50, 100+Zeilenabstand);
+					   Zeilenabstand = Zeilenabstand+20;
+				   }
+			   }
+			   
+			   return Printable.PAGE_EXISTS;
+			  }
+			 });
+			 if (pj.printDialog() == false)
+			 return;
+
+			 try {
+			    pj.print();
+			 } catch (PrinterException ex) {
+			    // handle exception
+			 }
+			}
+	}
