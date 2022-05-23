@@ -116,7 +116,7 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		frmTodoListe.setTitle("Todo.net");
+		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 802, 631);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
