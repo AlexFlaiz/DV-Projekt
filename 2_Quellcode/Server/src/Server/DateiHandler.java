@@ -5,17 +5,48 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
+/**
+ * Klasse zum Erstellen von Objekten zu Dateizugriffen
+ * @author Lukas Rumpel
+ * @author Tobias Ohnmacht
+ * @version 1.0
+ */
 public class DateiHandler {
+	
+	/**
+	 * Name der Datei, welche geoeffnet wird 
+	 */
 	private String dateiname;
+	
+	/**
+	 * FileWrite fuer zu schreibende Daten
+	 */
 	private FileWriter writer;
+	
+	/**
+	 * Buffererd Reader fuer TCP/IP Verbindung
+	 */
 	private BufferedReader leser;
+	
+	/**
+	 * Zeitstempel fuer Fehler Logbuch
+	 */
 	private Calendar timeStamp;
 
+	
+	/**
+	 * Konstruktor, initialisiert Dateizugriff, wie Zeitstempel
+	 * @param dateiname Name der Datei
+	 */
 	public DateiHandler(String dateiname) {
 		this.dateiname = dateiname;
 		timeStamp = Calendar.getInstance(); 
 	}
 	
+	/**
+	 * Oeffnet Datei, wenn write=true zum Schreibzugriff ansonsten als Lesezugriff  
+	 * @param write Parameter ob schreiben oder lesen
+	 */
 	public void openDatei(boolean write){
 		if (write== true) {
 		try {
@@ -37,6 +68,10 @@ public class DateiHandler {
 		}
 	}
 	
+	/**
+	 * haengt Zeilenweise Strings an der Datei an
+	 * @param data der String der geschrieben wird
+	 */
 	public void write(String data) {
 		try {
 			
@@ -47,6 +82,10 @@ public class DateiHandler {
 		}
 	}
 	
+	/**
+	 * Liest den String Zeilenweise aus der Datei aus
+	 * @return Den String aus der Datei
+	 */
 	public String read() {
 		try {
 			return leser.readLine();
@@ -55,6 +94,9 @@ public class DateiHandler {
 		}
 	}
 	
+	/**
+	 * Schließt die Datei
+	 */
 	public void close() {
 		try {
 			writer.close();
@@ -64,6 +106,9 @@ public class DateiHandler {
 		}
 	}
 	
+	/**
+	 * Leert die Datei
+	 */
 	public void delete() {
 		try {
 			writer = new FileWriter(dateiname);
@@ -76,6 +121,11 @@ public class DateiHandler {
 		
 	}
 	
+	/**
+	 * Erstellt String Arrays für Aufgabenelemente
+	 * @param elements die Aufgaben
+	 * @return str den String der Elemente
+	 */
 	public String[] getStrings(int elements) {
 		String str[] = new String[elements];
 		int i = 0;
@@ -90,6 +140,11 @@ public class DateiHandler {
 		return str;
 	}
 	
+	/**
+	 * Erstellt die Aufgaben mit ihrem Erledigungsstatus
+	 * @param str Array von String der Elemente 
+	 * @param write Array Erledigt nicht erledigt
+	 */
 	public  void writeNewStrings(String [] str, boolean write[]) {
 		int b = 0;
 		while(str[b] != null) {
@@ -103,6 +158,10 @@ public class DateiHandler {
 		}
 	}
 	
+	/**
+	 * Verarbeitet den Eventstring der Aufgabe
+	 * @param eventstr String mit Aufgabe 
+	 */
 	public void writeToLegacy(String eventstr) {
 		DateiHandler leg = new DateiHandler(".\\todo\\legacy.dat");
 		leg.openDatei(true);
@@ -110,6 +169,10 @@ public class DateiHandler {
 		leg.close();
 	}
 	
+	/**
+	 * schreibt formatierten Fehler in Fehler Log-Datei
+	 * @param data Fehler Datei
+	 */
 	public void writeErr(String data) {
 		write(timeStamp.get(Calendar.HOUR)+ ":"  + timeStamp.get(Calendar.MINUTE)+ "|" + +timeStamp.get( Calendar.DATE)+ "-" +timeStamp.get(Calendar.MONTH)+ "-" + timeStamp.get(Calendar.YEAR) +":   " + data );
 	}
