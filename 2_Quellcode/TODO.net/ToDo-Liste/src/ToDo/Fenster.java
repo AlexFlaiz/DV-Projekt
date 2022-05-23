@@ -84,7 +84,7 @@ public class Fenster {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
 	
-					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
+					String Nachricht="//GETADMIN//\n";		//Frï¿½gt Admin Status beim Server nach
 					schreibeNachricht(socket,Nachricht);
 					String empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
@@ -141,7 +141,7 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);				//schließt Fenster Liste
+				Liste.setVisible(false);				//schlieï¿½t Fenster Liste
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -184,7 +184,7 @@ public class Fenster {
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				NeuerEintrag.setVisible(false);				//schließt fenster NeuerEintrag
+				NeuerEintrag.setVisible(false);				//schlieï¿½t fenster NeuerEintrag
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -236,7 +236,7 @@ public class Fenster {
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(tAEintrag);
 		
-		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufügen
+		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufï¿½gen
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -249,7 +249,7 @@ public class Fenster {
 		btnEintragHinzufuegen.setBounds(30, 409, 178, 30);
 		NeuerEintrag.getContentPane().add(btnEintragHinzufuegen);
 		
-		JButton btnLeeren = new JButton("Leeren");				//Leere Einträge in Fenster Neuer Eintrag
+		JButton btnLeeren = new JButton("Leeren");				//Leere Eintrï¿½ge in Fenster Neuer Eintrag
 		btnLeeren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -276,7 +276,7 @@ public class Fenster {
 		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
 		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox fï¿½r Admin
 		CBAdminTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (CBAdminTodo.isSelected()==true)
@@ -309,7 +309,7 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();					//Index des ausgewählten ToDos
+				index=list.getSelectedIndex();					//Index des ausgewï¿½hlten ToDos
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -326,7 +326,7 @@ public class Fenster {
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
 
-		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelöscht
+		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelï¿½scht
 		btnLoeschen.setBounds(626, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
 		btnLoeschen.addActionListener(new ActionListener() {
@@ -339,7 +339,7 @@ public class Fenster {
  				}
 				else 
 				{
-				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
+				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelï¿½scht werden?  " + "","Eintrag lï¿½schen",
 							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
 					
 					if (response==JOptionPane.YES_OPTION) 
@@ -358,14 +358,14 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(lblToDoList);
 		lblToDoList.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
 		
-		JButton btnerledigt = new JButton("Erledigt");					//Stratus wird geändert
+		JButton btnerledigt = new JButton("Erledigt");					//Stratus wird geï¿½ndert
 		btnerledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
 			aendereStatus();
 				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
-					JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+					JOptionPane.showMessageDialog(btnerledigt , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
 		}
@@ -386,7 +386,7 @@ public class Fenster {
 		lblAdmin.setVisible(true);	
 		}
 		
-		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geöffnet
+		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geï¿½ffnet
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(true);
@@ -399,7 +399,7 @@ public class Fenster {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
-		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");	//Fenster neuer Eintrag wird geöffnet (in Menüleiste)
+		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");	//Fenster neuer Eintrag wird geï¿½ffnet (in Menï¿½leiste)
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -562,7 +562,7 @@ public class Fenster {
 			}	
 	}
 	
-	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelöscht
+	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelï¿½scht
 	{
 		String Nachricht="//DELETE//"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
@@ -574,7 +574,7 @@ public class Fenster {
 			}
 	}
 	
-	public void fuelleListe()					//Liste in GUI neu befüllen
+	public void fuelleListe()					//Liste in GUI neu befï¿½llen
 	{
 		for (int i=0; i<(eint.size()-1);i++)
 		{
@@ -596,7 +596,7 @@ public class Fenster {
 		fuelleListe();
 	}
 	
-	public void aendereStatus()	//Erledigungsstatus der ToDos werden geändert
+	public void aendereStatus()	//Erledigungsstatus der ToDos werden geï¿½ndert
 	{
 		int i=index;
 		int j= (index+1);
@@ -684,7 +684,7 @@ public class Fenster {
 				}
 			}
 		
-		protected void Laden()				//Öffnet gespeicherte Dateien
+		protected void Laden()				//ï¿½ffnet gespeicherte Dateien
 		{
 			final JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(list);   
