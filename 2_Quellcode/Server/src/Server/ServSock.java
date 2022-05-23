@@ -3,22 +3,90 @@ package Server;
 import java.util.*;
 import java.io.*;
 
+/**
+ * Diese Klasse ist die Schnittstelle zur Anmeldung und Kommunikation mit Client
+ * @author Lukas Rumpel
+ * @author Tobias Ohnmacht
+ * @version 1.0
+ */
 public class ServSock {
+	
+	/**
+	 * Identifikationsschluessel normaler Nutzer
+	 */
 	private String id;
+	
+	/**
+	 * Identifikatinsschluessel Admin
+	 */
 	private String adminID;
+	
+	/**
+	 * Adresse zur Kommunikatin zwischen Server und Client
+	 */
 	private int port;
+	
+	/**
+	 * TCP/IP-Verbindung Client
+	 */
 	private java.net.Socket client;
+	
+	/**
+	 * TCP/IP-Verbindung Server 
+	 */
 	private java.net.ServerSocket server;
+	
+	/**
+	 *BufferedReader für TCP/IT-Verbindung
+	 */
 	private BufferedReader reader;
+	
+	/**
+	 * erstellt Ausgabedaten in allgemein lesbaren Textform
+	 */
 	private PrintWriter printWriter;
+	
+	/**
+	 * Nummer des Threads
+	 */
 	private int thraedCount = 0;
+	
+	/**
+	 * Name des Threads
+	 */
 	private String nameOfThread;
+	
+	/**
+	 * DateiHandler der Fehler in Datei schreibt
+	 */
 	private DateiHandler fehler;
+	
+	/**
+	 * DataBaseHandler 
+	 */
 	private DataBaseHandler dbh ;
+	
+	/**
+	 * Schluessel für die Anmeldung als normaler Nutzer
+	 */
 	private DateiHandler authGet;
+	
+	/**
+	 * Schluessel für die Anmeldung als Admin
+	 */
 	private DateiHandler adminGet;
+	
+	/**
+	 * ist Admin- oder Normaler- Zugriff
+	 */
 	private boolean adminLoggedIn = false;
 	
+	
+	/**
+	 * Konstruktor zur erstellung der Anmeldschluessel
+	 * @param port den Port der Verbindung 
+	 * @param dbh DataBaseHandler 
+	 */
 	public ServSock(int port, DataBaseHandler dbh) {
 		this.port = port;
 		fehler = new DateiHandler("SERVSOCKerrLog.txt");
@@ -31,6 +99,12 @@ public class ServSock {
 		adminID = adminGet.read();
 	}
 	
+	
+	/**
+	 * Stellt Verbindung mit dem Client her
+	 * @return Verbindungsstatus und ob Admin eingelockt ist oder nicht
+	 * @throws IOException
+	 */
 	public boolean startConnection() throws IOException {
 		
 		server = new java.net.ServerSocket(port);
@@ -55,12 +129,24 @@ public class ServSock {
 		}
 	}
 	
+	
+	/**
+	 * Die Aufgebaute Verbindung wird an den ClientSocket weitergereicht
+	 * @param server verbindung mit Server 
+	 * @return Client mit dem Verbindung eingegangen wurde 
+	 * @throws IOException
+	 */
 	public java.net.Socket clientConnect(java.net.ServerSocket server) throws IOException{
 		client = server.accept();
 		
 		return client;
 	}
 	
+	/**
+	 * List Zeilenweise Stings aus dem TCP/IP-Socket
+	 * @return gibt den String der Aufgaben zurück
+	 * @throws IOException
+	 */
 	public String getStr() throws IOException {
 		//BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		char buffer[] = new char[200];
@@ -70,6 +156,11 @@ public class ServSock {
 		return str;
 	}
 	
+	/**
+	 * Schreibt Strings Zeilenweise in eine Textdatei
+	 * @param stringToSend ist der String der Textdatei
+	 * @throws IOException
+	 */
 	public void putStr( String stringToSend) throws IOException {
 		//printWriter = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 		printWriter.print(stringToSend);
@@ -77,10 +168,18 @@ public class ServSock {
 		
 	}
 	
+	/**
+	 * Schließt den ServerSocket der TCP/IP-Verbindung
+	 * @throws IOException
+	 */
 	public void close() throws IOException {
 		server.close();
 	}
 	
+	/**
+	 * hier wird geprueft ob eine Verbindung mit dem Client eingegangen werden kann, anhand der Authentifikationsschluessel
+	 * @return Ist Benutzer eingeloggt oder nicht
+	 */
 	public boolean login() {
 		boolean connAccept;
 			try {
