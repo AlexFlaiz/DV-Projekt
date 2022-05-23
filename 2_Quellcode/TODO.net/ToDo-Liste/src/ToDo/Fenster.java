@@ -50,6 +50,7 @@ public class Fenster {
 	ClientParser pars=new ClientParser();
 	TODOs todo= new TODOs();
 	private String offeneListe;
+	private static String Adminpriv;
 	private static boolean priv;
 	private static boolean AdminBox;
 
@@ -58,7 +59,7 @@ public class Fenster {
 	static DateiHandler ip;
 
 	public static void main(String[] args) {
-
+		
 		String Dateiname = "AuthKey.txt";		
 		Key= new DateiHandler(Dateiname);
 		Key.openDatei(false);
@@ -89,13 +90,17 @@ public class Fenster {
 					empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
 					String [] SplidAdmin = empfangeneNachricht.split("//");
-					priv=Boolean.parseBoolean(SplidAdmin[1]);		//Speichert Admin Status in priv
-		
+					Adminpriv=SplidAdmin[1];
+					priv=Boolean.parseBoolean(Adminpriv);	//Speichert Admin Status in priv
+					
+					while(!empfangeneNachricht.contains("//END//"))
+					{
+						empfangeneNachricht = leseNachricht(socket);
+					}	
+					
 					Fenster window = new Fenster();
 					window.frmTodoListe.setVisible(true);
 
-					window.Aktualisieren();
-					window.Aktualisieren();
 					window.Aktualisieren();
 					
 				} catch (Exception e) {
@@ -111,7 +116,7 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		frmTodoListe.setTitle("To-do Liste");
+		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 802, 631);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
@@ -329,7 +334,7 @@ public class Fenster {
 			{
                  if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
-                	 JOptionPane.showMessageDialog(btnLoeschen , "Admin Einträge können nicht gelöscht werden." , "Fehler",
+                	 JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
  				}
 				else 
@@ -360,7 +365,7 @@ public class Fenster {
 			aendereStatus();
 				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
-					JOptionPane.showMessageDialog(btnLoeschen , "Admin Einträge können nicht bearbeitet werden." , "Fehler",
+					JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
 		}
