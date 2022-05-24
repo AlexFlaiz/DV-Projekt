@@ -131,7 +131,7 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\GitHub\\DV-Projekt\\2_Quellcode\\TODO.net\\ToDo-Liste\\to-do-list.ico\");
+		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\Studium\\Semester\\Semester 2\\DV-Projekt\\to-do-list.ico"));
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -670,6 +670,13 @@ public class Fenster {
 			try {
 				FileWriter writer =new FileWriter(file);
 				
+				try {
+					Zeitstempel();
+					writer.write("Speicherstand: "+dateToStr+"\n"+"\n");
+				   } catch (ParseException e) {
+					e.printStackTrace();
+				}
+				
 				for (int i=0; i<Eintraege.getSize();i++)
 				{
 					String text = Eintraege.get(i)+"\n";
@@ -699,6 +706,13 @@ public class Fenster {
 			{
 				try {
 					FileWriter writer =new FileWriter(file);
+					
+					try {
+						Zeitstempel();
+						writer.write("Speicherstand: "+dateToStr+"\n"+"\n");
+					   } catch (ParseException e) {
+						e.printStackTrace();
+					}
 	
 					for (int i=0; i<Eintraege.getSize();i++)
 					{
@@ -772,21 +786,22 @@ public class Fenster {
 			   Graphics2D g2 = (Graphics2D) pg;
 			   g2.translate(pf.getImageableX(), pf.getImageableY());
 			   int Zeilenabstand= 10;
-			   g2.drawString("To-do Liste:", 50, 100);
+			   g2.drawString("To-do Liste:", 50, 110);
+			   g2.drawString(Drucktext.get(0),50,70);
 			  
 			   try {
 				Zeitstempel();
-				g2.drawString("Gedruckt am: "+dateToStr, 50, 70);
+				g2.drawString("Gedruckt am: "+dateToStr, 50, 50);
 			   } catch (ParseException e) {
 				e.printStackTrace();
 			}
-			   
-			   for (int i=0;i<Drucktext.size();i++)
+			   g2.drawString("Datum:      Status:        Eintrag:", 50, 150);
+			   for (int i=2;i<Drucktext.size();i++)
 			   {
 				   
 				   if (Drucktext.get(i).length()<75)
 				   {
-					  g2.drawString(Drucktext.get(i)+"\n", 50, 120+Zeilenabstand); 
+					  g2.drawString(Drucktext.get(i)+"\n", 50, 160+Zeilenabstand); 
 					  Zeilenabstand = Zeilenabstand+20;
 				   }
 				   else
@@ -813,7 +828,7 @@ public class Fenster {
 		
 		public void Zeitstempel() throws ParseException {
 		{
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy   HH:mm");
 			date = new Date();        
 			dateToStr = dateFormat.format(date);
 		}

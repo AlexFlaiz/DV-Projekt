@@ -2,8 +2,6 @@ package ToDo;
 
 import java.io.*;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
 
 public class DateiHandler {
 	private String dateiname;

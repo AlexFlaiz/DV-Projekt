@@ -14,7 +14,8 @@ public class TODOs {
 	        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 	        df.setLenient( false );
 	        try {
-	          Date d1 = df.parse(Datum);
+	          @SuppressWarnings("unused")
+			Date d1 = df.parse(Datum);
 	          return true;
 	        } catch ( ParseException e ) {
 	            // nichts wenn falsch!
