@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -23,10 +25,19 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.awt.Toolkit;  
 
 
 
@@ -49,11 +60,14 @@ public class Fenster {
 	static PrintWriter printWriter;
 	ClientParser pars=new ClientParser();
 	TODOs todo= new TODOs();
-	private String offeneListe;
+	private static String offeneListe;
 	private static String Adminpriv;
 	private static boolean priv;
 	private static boolean AdminBox;
-
+	ArrayList <String> Drucktext;
+	private String dateToStr;
+	Date date;
+	
 	static DateiHandler Key;
 	static DateiHandler Port;
 	static DateiHandler ip;
@@ -65,6 +79,7 @@ public class Fenster {
 		Key.openDatei(false);
 		authkey= Key.read();
 		
+		authkey= "veryGoodAuthKey";
 		String PortDatei = "Port.txt";
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
@@ -83,7 +98,7 @@ public class Fenster {
 				try {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
-	
+					
 					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
 					schreibeNachricht(socket,Nachricht);
 					String empfangeneNachricht = leseNachricht(socket);
@@ -116,8 +131,9 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
+		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\GitHub\\DV-Projekt\\2_Quellcode\\TODO.net\\ToDo-Liste\\to-do-list.ico\");
 		frmTodoListe.setTitle("TODO.net");
-		frmTodoListe.setBounds(100, 100, 802, 631);
+		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
 		
@@ -160,6 +176,16 @@ public class Fenster {
 		JLabel lblEintraegeListe = new JLabel("Datum | Status | Eintrag");
 		lblEintraegeListe.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		scrollPane_2.setColumnHeaderView(lblEintraegeListe);
+		
+		JButton btnDrucken = new JButton("Drucken");
+		btnDrucken.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drucken();
+			}
+		});
+		btnDrucken.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnDrucken.setBounds(10, 424, 138, 30);
+		Liste.getContentPane().add(btnDrucken);
 		Liste.setVisible(false);
 
 		
@@ -240,9 +266,17 @@ public class Fenster {
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				if (tAEintrag.getText().length()>151)
+				{
+					 JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Maximal 150 Zeichen möglich" , "Fehler",
+	 							JOptionPane.ERROR_MESSAGE );
+				}
+				else
+				{
 				Eintrag=tAEintrag.getText();
 				NeuEintrag();
 				NeuerEintrag.setVisible(false);
+				}
 			}
 		});
 		btnEintragHinzufuegen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -286,7 +320,7 @@ public class Fenster {
 			}
 		});
 		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 189, 178, 21);
+		CBAdminTodo.setBounds(30, 189, 230, 21);
 		NeuerEintrag.getContentPane().add(CBAdminTodo);
 		CBAdminTodo.setVisible(false);
 		if (priv==true)
@@ -319,13 +353,11 @@ public class Fenster {
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		
 		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
-		btnNeuerEintrag.setBounds(37, 511, 151, 31);
+		btnNeuerEintrag.setBounds(37, 511, 175, 31);
 		frmTodoListe.getContentPane().add(btnNeuerEintrag);
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-
 		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelöscht
 		btnLoeschen.setBounds(626, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
@@ -365,7 +397,7 @@ public class Fenster {
 			aendereStatus();
 				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
-					JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+					JOptionPane.showMessageDialog(btnerledigt , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
 		}
@@ -634,7 +666,7 @@ public class Fenster {
 }
 	
 		private void saveTextalle(File file) 
-		{
+		{	
 			try {
 				FileWriter writer =new FileWriter(file);
 				
@@ -667,7 +699,7 @@ public class Fenster {
 			{
 				try {
 					FileWriter writer =new FileWriter(file);
-					
+	
 					for (int i=0; i<Eintraege.getSize();i++)
 					{
 						if (pars.getStatus(eint.get(i))==false)
@@ -696,7 +728,8 @@ public class Fenster {
 		}
 		
 		private void showText (File file)
-		{
+		{	
+			Drucktext=new ArrayList<>();
 			StringBuffer buf = new StringBuffer();
 			if (file.exists())
 			{
@@ -707,6 +740,7 @@ public class Fenster {
 					while ((line = reader.readLine( )) != null)
 					{
 						buf.append(line+"\n");
+						Drucktext.add(line);
 					}
 					reader.close();
 				}
@@ -722,4 +756,67 @@ public class Fenster {
 			
 			  offeneListe= buf.toString();
 		}
-}
+		
+		
+		public void drucken(){						//Druckt Dateien aus
+
+			 PrinterJob pj = PrinterJob.getPrinterJob();
+			 pj.setJobName(" Drucke Liste ");
+
+			 pj.setPrintable (new Printable() {    
+			  public int print(Graphics pg, PageFormat pf, int pageNum){
+			   if (pageNum > 0){
+			   return Printable.NO_SUCH_PAGE;
+			   }
+			   
+			   Graphics2D g2 = (Graphics2D) pg;
+			   g2.translate(pf.getImageableX(), pf.getImageableY());
+			   int Zeilenabstand= 10;
+			   g2.drawString("To-do Liste:", 50, 100);
+			  
+			   try {
+				Zeitstempel();
+				g2.drawString("Gedruckt am: "+dateToStr, 50, 70);
+			   } catch (ParseException e) {
+				e.printStackTrace();
+			}
+			   
+			   for (int i=0;i<Drucktext.size();i++)
+			   {
+				   
+				   if (Drucktext.get(i).length()<75)
+				   {
+					  g2.drawString(Drucktext.get(i)+"\n", 50, 120+Zeilenabstand); 
+					  Zeilenabstand = Zeilenabstand+20;
+				   }
+				   else
+				   { 
+					   g2.drawString(Drucktext.get(i).substring(0, 120)+"\n", 50, 100+Zeilenabstand);
+					   Zeilenabstand = Zeilenabstand+20;
+					   g2.drawString(Drucktext.get(i).substring(121)+"\n", 50, 100+Zeilenabstand);
+					   Zeilenabstand = Zeilenabstand+20;
+				   }
+			   }
+			   
+			   return Printable.PAGE_EXISTS;
+			  }
+			 });
+			 if (pj.printDialog() == false)
+			 return;
+
+			 try {
+			    pj.print();
+			 } catch (PrinterException ex) {
+			    // handle exception
+			 }
+			}
+		
+		public void Zeitstempel() throws ParseException {
+		{
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			date = new Date();        
+			dateToStr = dateFormat.format(date);
+		}
+		}
+		
+	}
