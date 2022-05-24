@@ -131,7 +131,7 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\Studium\\Semester\\Semester 2\\DV-Projekt\\to-do-list.ico"));
+		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\GitHub\\DV-Projekt\\2_Quellcode\\TODO.net\\ToDo-Liste\\to-do-list.ico\");
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
