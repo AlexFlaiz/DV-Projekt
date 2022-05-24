@@ -33,6 +33,11 @@ import java.io.*;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.awt.Toolkit;  
 
 
 
@@ -60,8 +65,9 @@ public class Fenster {
 	private static boolean priv;
 	private static boolean AdminBox;
 	ArrayList <String> Drucktext;
-
-
+	private String dateToStr;
+	Date date;
+	
 	static DateiHandler Key;
 	static DateiHandler Port;
 	static DateiHandler ip;
@@ -73,6 +79,7 @@ public class Fenster {
 		Key.openDatei(false);
 		authkey= Key.read();
 		
+		authkey= "veryGoodAuthKey";
 		String PortDatei = "Port.txt";
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
@@ -124,6 +131,7 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
+		frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\Studium\\Semester\\Semester 2\\DV-Projekt\\to-do-list.ico"));
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -258,9 +266,17 @@ public class Fenster {
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				if (tAEintrag.getText().length()>151)
+				{
+					 JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Maximal 150 Zeichen möglich" , "Fehler",
+	 							JOptionPane.ERROR_MESSAGE );
+				}
+				else
+				{
 				Eintrag=tAEintrag.getText();
 				NeuEintrag();
 				NeuerEintrag.setVisible(false);
+				}
 			}
 		});
 		btnEintragHinzufuegen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -304,7 +320,7 @@ public class Fenster {
 			}
 		});
 		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 189, 178, 21);
+		CBAdminTodo.setBounds(30, 189, 230, 21);
 		NeuerEintrag.getContentPane().add(CBAdminTodo);
 		CBAdminTodo.setVisible(false);
 		if (priv==true)
@@ -337,13 +353,11 @@ public class Fenster {
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		
 		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
-		btnNeuerEintrag.setBounds(37, 511, 151, 31);
+		btnNeuerEintrag.setBounds(37, 511, 175, 31);
 		frmTodoListe.getContentPane().add(btnNeuerEintrag);
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-
 		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelöscht
 		btnLoeschen.setBounds(626, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
@@ -652,7 +666,7 @@ public class Fenster {
 }
 	
 		private void saveTextalle(File file) 
-		{
+		{	
 			try {
 				FileWriter writer =new FileWriter(file);
 				
@@ -685,7 +699,7 @@ public class Fenster {
 			{
 				try {
 					FileWriter writer =new FileWriter(file);
-					
+	
 					for (int i=0; i<Eintraege.getSize();i++)
 					{
 						if (pars.getStatus(eint.get(i))==false)
@@ -757,15 +771,23 @@ public class Fenster {
 			   
 			   Graphics2D g2 = (Graphics2D) pg;
 			   g2.translate(pf.getImageableX(), pf.getImageableY());
-			   
 			   int Zeilenabstand= 10;
-			   g2.drawString("To-do Liste:", 50, 70);
+			   g2.drawString("To-do Liste:", 50, 100);
+			  
+			   try {
+				Zeitstempel();
+				g2.drawString("Gedruckt am: "+dateToStr, 50, 70);
+			   } catch (ParseException e) {
+				e.printStackTrace();
+			}
+			   
 			   for (int i=0;i<Drucktext.size();i++)
 			   {
+				   
 				   if (Drucktext.get(i).length()<75)
 				   {
-				   g2.drawString(Drucktext.get(i)+"\n", 50, 100+Zeilenabstand); 
-				  Zeilenabstand = Zeilenabstand+20;
+					  g2.drawString(Drucktext.get(i)+"\n", 50, 120+Zeilenabstand); 
+					  Zeilenabstand = Zeilenabstand+20;
 				   }
 				   else
 				   { 
@@ -788,4 +810,13 @@ public class Fenster {
 			    // handle exception
 			 }
 			}
+		
+		public void Zeitstempel() throws ParseException {
+		{
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+			date = new Date();        
+			dateToStr = dateFormat.format(date);
+		}
+		}
+		
 	}
