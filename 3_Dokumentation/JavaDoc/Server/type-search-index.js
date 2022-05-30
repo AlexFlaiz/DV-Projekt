@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"Server","l":"DataBaseHandler"},{"p":"Server","l":"DateiHandler"},{"p":"Server","l":"Parser"},{"p":"Server","l":"Server"},{"p":"Server","l":"ServSock"},{"p":"Server","l":"ServThread"}];updateSearchResults();
