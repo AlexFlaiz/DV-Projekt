@@ -37,7 +37,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.Toolkit;  
+//import java.awt.Toolkit;  
 
 
 
@@ -79,7 +79,6 @@ public class Fenster {
 		Key.openDatei(false);
 		authkey= Key.read();
 		
-		authkey= "veryGoodAuthKey";
 		String PortDatei = "Port.txt";
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
@@ -89,6 +88,7 @@ public class Fenster {
 		ip= new DateiHandler(IPaddress);
 		ip.openDatei(false);
 		String IP =ip.read();
+		
 		eint=new ArrayList<>();
 		AdminBox=false;
 		
