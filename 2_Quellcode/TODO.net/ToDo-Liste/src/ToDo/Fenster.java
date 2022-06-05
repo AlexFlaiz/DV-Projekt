@@ -83,23 +83,22 @@ public class Fenster {
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
 		port=Integer.parseInt(Port.read());
-		
+			
 		String IPaddress = "IPaddress.txt";
 		ip= new DateiHandler(IPaddress);
 		ip.openDatei(false);
 		String IP =ip.read();
-		
+	
 		eint=new ArrayList<>();
 		AdminBox=false;
-		
 		
 			EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
-					
-					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
+				
+					String Nachricht="//GETADMIN//"+"\n";		//Frägt Admin Status beim Server nach
 					schreibeNachricht(socket,Nachricht);
 					String empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
@@ -276,6 +275,8 @@ public class Fenster {
 				Eintrag=tAEintrag.getText();
 				NeuEintrag();
 				NeuerEintrag.setVisible(false);
+				leeren();
+				tAEintrag.setText("");
 				}
 			}
 		});
@@ -795,7 +796,7 @@ public class Fenster {
 			   } catch (ParseException e) {
 				e.printStackTrace();
 			}
-			   g2.drawString("Datum:      Status:        Eintrag:", 50, 150);
+			   g2.drawString("Datum:         Status:      Eintrag:", 50, 150);
 			   for (int i=2;i<Drucktext.size();i++)
 			   {
 				   
