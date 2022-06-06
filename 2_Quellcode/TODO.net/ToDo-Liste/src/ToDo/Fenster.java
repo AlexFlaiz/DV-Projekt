@@ -37,7 +37,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-//import java.awt.Toolkit;  
 
 
 
@@ -130,11 +129,11 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\Studium\\Semester\\Semester 2\\DV-Projekt\\to-do-list.ico"));
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
+		
 		
 		
 		//Fenster Liste
@@ -198,7 +197,6 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
 		
-		
 		JLabel lblNeuerEintrag = new JLabel("Neuer Eintrag");
 		lblNeuerEintrag.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNeuerEintrag.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
@@ -257,6 +255,28 @@ public class Fenster {
 		scrollPane_1.setBounds(30, 220, 645, 174);
 		NeuerEintrag.getContentPane().add(scrollPane_1);
 		
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
+		CBAdminTodo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (CBAdminTodo.isSelected()==true)
+				{
+					AdminBox=true;
+				}
+				else
+				{
+					AdminBox=false;
+				}
+			}
+		});
+		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		CBAdminTodo.setBounds(30, 189, 230, 21);
+		NeuerEintrag.getContentPane().add(CBAdminTodo);
+		CBAdminTodo.setVisible(false);
+		if (priv==true)
+		{
+		CBAdminTodo.setVisible(true);	
+		}
+		
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(tAEintrag);
@@ -270,13 +290,33 @@ public class Fenster {
 					 JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Maximal 150 Zeichen möglich" , "Fehler",
 	 							JOptionPane.ERROR_MESSAGE );
 				}
+				else if (tAEintrag.getText().equals(""))
+				{
+					JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Fehlerhafte Texteingabe" , "Fehler",
+ 							JOptionPane.ERROR_MESSAGE );
+				}
 				else
 				{
-				Eintrag=tAEintrag.getText();
-				NeuEintrag();
-				NeuerEintrag.setVisible(false);
-				leeren();
-				tAEintrag.setText("");
+					String Datum;
+					String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
+					String Da= todo.getDate(D);
+					boolean DateGood = todo.statDatum(Da);
+					
+						if (DateGood == true)
+						{
+							Datum=Da;
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(btnEintragHinzufuegen, "Fehlerhaftes Datum eingetragen", "Fehler",
+									JOptionPane.ERROR_MESSAGE ); return;
+						}
+						
+					Eintrag=tAEintrag.getText();
+					NeuEintrag(Datum);
+					NeuerEintrag.setVisible(false);
+					leeren();
+					tAEintrag.setText("");
 				}
 			}
 		});
@@ -310,24 +350,6 @@ public class Fenster {
 		lblJahr_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
-		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
-		CBAdminTodo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (CBAdminTodo.isSelected()==true)
-				{
-					AdminBox=true;
-				}
-			}
-		});
-		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 189, 230, 21);
-		NeuerEintrag.getContentPane().add(CBAdminTodo);
-		CBAdminTodo.setVisible(false);
-		if (priv==true)
-		{
-		CBAdminTodo.setVisible(true);	
-		}
 		
 		NeuerEintrag.setVisible(false);
 		
@@ -502,24 +524,9 @@ public class Fenster {
 	
 	//Methoden der Klasse
 	
-	public void NeuEintrag() 		//Neues ToDo wird erstellt
+	public void NeuEintrag(String Datum) 		//Neues ToDo wird erstellt
 	{
-		String Datum;
-		String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
-		String Da= todo.getDate(D);
-		boolean Status = todo.statDatum(Da);
-		
-		if (Status == true)
-		{
-			Datum=Da;
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe", "Fehler",JOptionPane.ERROR_MESSAGE );
-			return;
-		}
-
-		Status = false;
+		boolean Status = false;
 		sendTodos(socket,Datum,Eintrag, Status);
 		Aktualisieren();
 	}
@@ -575,16 +582,16 @@ public class Fenster {
 			}
 	}
 	
-	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)  //Neue ToDos werden an den Server geschickt
+	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean Status)  //Neue ToDos werden an den Server geschickt
 	{
 		String Nachricht;
 		if (AdminBox==true)
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+false+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+false+"\n";
 		}
 		else
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+true+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+true+"\n";
 		}
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
@@ -833,6 +840,5 @@ public class Fenster {
 			date = new Date();        
 			dateToStr = dateFormat.format(date);
 		}
-		}
-		
+		}	
 	}
