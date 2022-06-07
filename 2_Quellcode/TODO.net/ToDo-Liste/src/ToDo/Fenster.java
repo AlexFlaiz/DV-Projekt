@@ -37,7 +37,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-//import java.awt.Toolkit;  
 
 
 
@@ -83,23 +82,22 @@ public class Fenster {
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
 		port=Integer.parseInt(Port.read());
-		
+			
 		String IPaddress = "IPaddress.txt";
 		ip= new DateiHandler(IPaddress);
 		ip.openDatei(false);
 		String IP =ip.read();
-		
+	
 		eint=new ArrayList<>();
 		AdminBox=false;
-		
 		
 			EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
-					
-					String Nachricht="//GETADMIN//\n";		//Frägt Admin Status beim Server nach
+				
+					String Nachricht="//GETADMIN//"+"\n";		//Frägt Admin Status beim Server nach
 					schreibeNachricht(socket,Nachricht);
 					String empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
@@ -131,11 +129,11 @@ public class Fenster {
 
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		//frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\AlexF\\Documents\\Studium\\Semester\\Semester 2\\DV-Projekt\\to-do-list.ico"));
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 630);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
+		
 		
 		
 		//Fenster Liste
@@ -179,7 +177,8 @@ public class Fenster {
 		
 		JButton btnDrucken = new JButton("Drucken");
 		btnDrucken.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				drucken();
 			}
 		});
@@ -198,7 +197,6 @@ public class Fenster {
 		NeuerEintrag.setBounds(24, 10, 729, 493);
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
-		
 		
 		JLabel lblNeuerEintrag = new JLabel("Neuer Eintrag");
 		lblNeuerEintrag.setHorizontalAlignment(SwingConstants.CENTER);
@@ -258,6 +256,28 @@ public class Fenster {
 		scrollPane_1.setBounds(30, 220, 645, 174);
 		NeuerEintrag.getContentPane().add(scrollPane_1);
 		
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
+		CBAdminTodo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (CBAdminTodo.isSelected()==true)
+				{
+					AdminBox=true;
+				}
+				else
+				{
+					AdminBox=false;
+				}
+			}
+		});
+		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		CBAdminTodo.setBounds(30, 189, 230, 21);
+		NeuerEintrag.getContentPane().add(CBAdminTodo);
+		CBAdminTodo.setVisible(false);
+		if (priv==true)
+		{
+		CBAdminTodo.setVisible(true);	
+		}
+		
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(tAEintrag);
@@ -268,14 +288,36 @@ public class Fenster {
 			{
 				if (tAEintrag.getText().length()>151)
 				{
-					 JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Maximal 150 Zeichen möglich" , "Fehler",
+					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
 	 							JOptionPane.ERROR_MESSAGE );
+				}
+				else if (tAEintrag.getText().equals(""))
+				{
+					JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe" , "Fehler",
+ 							JOptionPane.ERROR_MESSAGE );
 				}
 				else
 				{
-				Eintrag=tAEintrag.getText();
-				NeuEintrag();
-				NeuerEintrag.setVisible(false);
+					String Datum;
+					String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
+					String Da= todo.getDate(D);
+					boolean DateGood = todo.statDatum(Da);
+					
+						if (DateGood == true)
+						{
+							Datum=Da;
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingetragen", "Fehler",
+									JOptionPane.ERROR_MESSAGE ); return;
+						}
+						
+					Eintrag=tAEintrag.getText();
+					NeuEintrag(Datum);
+					NeuerEintrag.setVisible(false);
+					leeren();
+					tAEintrag.setText("");
 				}
 			}
 		});
@@ -289,6 +331,7 @@ public class Fenster {
 			{
 				tAEintrag.setText("");
 				leeren();
+				CBAdminTodo.setSelected(false);
 			}
 		});
 		btnLeeren.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -309,24 +352,6 @@ public class Fenster {
 		lblJahr_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblJahr_1.setBounds(148, 124, 60, 13);
 		NeuerEintrag.getContentPane().add(lblJahr_1);
-		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
-		CBAdminTodo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (CBAdminTodo.isSelected()==true)
-				{
-					AdminBox=true;
-				}
-			}
-		});
-		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 189, 230, 21);
-		NeuerEintrag.getContentPane().add(CBAdminTodo);
-		CBAdminTodo.setVisible(false);
-		if (priv==true)
-		{
-		CBAdminTodo.setVisible(true);	
-		}
 		
 		NeuerEintrag.setVisible(false);
 		
@@ -366,12 +391,12 @@ public class Fenster {
 			{
                  if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
-                	 JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zum löschen freigegeben." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
  				}
 				else 
 				{
-				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
+				int response = JOptionPane.showConfirmDialog(frmTodoListe, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
 							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
 					
 					if (response==JOptionPane.YES_OPTION) 
@@ -397,7 +422,7 @@ public class Fenster {
 			aendereStatus();
 				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
-					JOptionPane.showMessageDialog(btnerledigt , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
 		}
@@ -422,6 +447,8 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(true);
+				CBAdminTodo.setSelected(false);
+				AdminBox=false;
 			}
 		});
 		
@@ -501,24 +528,9 @@ public class Fenster {
 	
 	//Methoden der Klasse
 	
-	public void NeuEintrag() 		//Neues ToDo wird erstellt
+	public void NeuEintrag(String Datum) 		//Neues ToDo wird erstellt
 	{
-		String Datum;
-		String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
-		String Da= todo.getDate(D);
-		boolean Status = todo.statDatum(Da);
-		
-		if (Status == true)
-		{
-			Datum=Da;
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(null, "Fehlerhafte Eingabe", "Fehler",JOptionPane.ERROR_MESSAGE );
-			return;
-		}
-
-		Status = false;
+		boolean Status = false;
 		sendTodos(socket,Datum,Eintrag, Status);
 		Aktualisieren();
 	}
@@ -528,6 +540,7 @@ public class Fenster {
 		tFTagErled.setText("");
 		tFMonatErled.setText("");
 		tFJahrErled.setText("");	
+		AdminBox=false;
 	}
 	
 	 static void schreibeNachricht(java.net.Socket socket, String nachricht) //Nachricht wird an Server geschickt  
@@ -574,16 +587,16 @@ public class Fenster {
 			}
 	}
 	
-	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean S)  //Neue ToDos werden an den Server geschickt
+	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean Status)  //Neue ToDos werden an den Server geschickt
 	{
 		String Nachricht;
-		if (AdminBox==true)
+		if (AdminBox==false)
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+false+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+true+"\n";
 		}
 		else
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+S+"//"+true+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+false+"\n";
 		}
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
@@ -795,7 +808,7 @@ public class Fenster {
 			   } catch (ParseException e) {
 				e.printStackTrace();
 			}
-			   g2.drawString("Datum:      Status:        Eintrag:", 50, 150);
+			   g2.drawString("Datum:         Status:      Eintrag:", 50, 150);
 			   for (int i=2;i<Drucktext.size();i++)
 			   {
 				   
@@ -832,6 +845,5 @@ public class Fenster {
 			date = new Date();        
 			dateToStr = dateFormat.format(date);
 		}
-		}
-		
+		}	
 	}

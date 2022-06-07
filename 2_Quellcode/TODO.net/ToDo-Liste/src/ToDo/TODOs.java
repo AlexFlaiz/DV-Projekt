@@ -32,7 +32,7 @@ public class TODOs {
 		
 		if (Integer.parseInt(teilstr[0])<10)
 		{
-		  Tag = "0"+teilstr[0];
+		  Tag = "0"+Integer.parseInt(teilstr[0]);
 		}	
 		else
 		{
@@ -41,7 +41,7 @@ public class TODOs {
 		
 		if (Integer.parseInt(teilstr[1])<10)
 		{
-		  Monat = "0"+teilstr[1];
+		  Monat = "0"+Integer.parseInt(teilstr[1]);
 		}	
 		else
 		{
@@ -52,8 +52,5 @@ public class TODOs {
 		
 		return Tag+"-"+Monat+"-"+Jahr;
 	}
-			
-		
-	
-	
+
 }
