@@ -29,6 +29,7 @@ public class ServThread implements Runnable{
 	 private DateiHandler fehler;
 	 private  DataBaseHandler dbh ;
 	 private boolean adminLoggedIn;
+	 private String aknString;
 	 
 	 /**
 	  * Konstruktor fuer die Klasse ServThread. 
@@ -165,6 +166,7 @@ public class ServThread implements Runnable{
 			while(!(buffer[0] == null)) {
 				i++;
 				putStr("::" +buffer[0]+ "::" + buffer[1] + "::" + buffer[2]+ "::" + buffer[3] + "::" + "\n");
+				aknString = getStr();
 				buffer = dbh.getEntry(i);
 			}
 			
