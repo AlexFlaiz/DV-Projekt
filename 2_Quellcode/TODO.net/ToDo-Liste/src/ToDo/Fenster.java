@@ -1,3 +1,8 @@
+/** 
+ * 
+ * @author alexflaiz tobiasaberle
+ * 
+ * */
 package ToDo;
 
 
@@ -42,36 +47,39 @@ import java.util.Date;
 
 public class Fenster {
 	
-	private JList<String> list;
-	private  int index;
-	private String Eintrag;
-	private JFrame frmTodoListe;
-	private JTextField tFTagErled;
-	private JTextField tFMonatErled;
-	private JTextField tFJahrErled;
-	private static java.net.Socket socket;
-	static String buffer;
-	private static String authkey;
-	private static int port;
-	static ArrayList <String> eint;
-	DefaultListModel<String>Eintraege;
-	static BufferedReader bufferedReader;
-	static PrintWriter printWriter;
+	private JList<String> list;  // Liste mit ToDos
+	private  int index; // Index fuer ToDo aus der Liste
+	private String Eintrag; // Notiz, ohne Datum oder Status
+	private JFrame frmTodoListe;  // Fensterdarstellung
+	private JTextField tFTagErled;  // Textfeld Erledigungstag
+	private JTextField tFMonatErled; // Textfeld Erledigungsmonat
+	private JTextField tFJahrErled; // Textfeld Erledigungsjahr
+	private static java.net.Socket socket; // TCP/IP-Verbindung zum Server
+	static String buffer; // Buffer zum  uebertragen des ToDos
+	private static String authkey; // Benutzeridentifizierung
+	private static int port; // Port fuer die Verbindung
+	static ArrayList <String> eint; // Notiz mit Status
+	DefaultListModel<String>Eintraege; // Liste von Notizen fuer das GUI
+	static BufferedReader bufferedReader; // Erstellt Ausgabedaten in allgemein lesbarer Form
+	static PrintWriter printWriter; // Nummer des Threads
 	ClientParser pars=new ClientParser();
 	TODOs todo= new TODOs();
 	private static String offeneListe;
-	private static String Adminpriv;
-	private static boolean priv;
-	private static boolean AdminBox;
+	private static String Adminpriv; // Uebergabe des Adminstatus
+	private static boolean priv; // Rolle des Benutzers 1=Admin 0=Default
+	private static boolean AdminBox; // Admin-Checkbox bei ToDo vorhanden/ nicht vorhanden
 	ArrayList <String> Drucktext;
 	private String dateToStr;
 	Date date;
 	
-	static DateiHandler Key;
-	static DateiHandler Port;
-	static DateiHandler ip;
+	static DateiHandler Key; // Dateihandler fuer Benutzer-ID
+	static DateiHandler Port; // Dateihandler fuer den Benutzer-Port
+	static DateiHandler ip; // Dateihandler fuer die IP-Adresse des Benutzers
 
 	public static void main(String[] args) {
+		/**
+		 * Benutzer-ID, Port und IP-Adresse werden aus der jeweiligen Textdatei ausgelesen.
+		 */
 		
 		String Dateiname = "AuthKey.txt";		
 		Key= new DateiHandler(Dateiname);
@@ -91,6 +99,13 @@ public class Fenster {
 		eint=new ArrayList<>();
 		AdminBox=false;
 		
+		/**
+		 * Admin-Status wird bei Server abgefragt und in priv gespeichert.
+		 * @param IP IP-Adresse Client
+		 * @param port Port Client
+		 * @param socket
+		 * @param authkey Benutzer-ID 
+		 */
 			EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -122,11 +137,17 @@ public class Fenster {
 			}
 		});
 	}
-
+	
+	/**
+	 *  Initialisiert das Fenster
+	 */
 	public Fenster() {
 		initialize();
 	}
 
+	/**
+	 * Darstellungsparameter werden gesetzt, Buttonverarbeitung
+	 */
 	private void initialize() {
 		frmTodoListe = new JFrame();
 		frmTodoListe.setTitle("TODO.net");
@@ -136,8 +157,7 @@ public class Fenster {
 		
 		
 		
-		//Fenster Liste
-		
+		// Darstellung der Liste
 		JInternalFrame Liste = new JInternalFrame("Liste");
 		Liste.setClosable(true);
 		Liste.setResizable(true);
@@ -151,11 +171,12 @@ public class Fenster {
 		lblListe.setBounds(10, 10, 453, 62);
 		Liste.getContentPane().add(lblListe);
 		
+		// Liste in GUI schliessen
 		JButton btnSchliessen = new JButton("Schlie\u00DFen");
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);				//schließt Fenster Liste
+				Liste.setVisible(false);			
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -186,11 +207,9 @@ public class Fenster {
 		btnDrucken.setBounds(10, 424, 138, 30);
 		Liste.getContentPane().add(btnDrucken);
 		Liste.setVisible(false);
-
+	
 		
-		
-        //Fenster Neuer Eintrag
-        
+        // Fenster Neuer Eintrag
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
 		NeuerEintrag.setClosable(true);
 		NeuerEintrag.setResizable(true);
@@ -198,17 +217,19 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
 		
+		// Darstellung Fenster NeuerEintrag
 		JLabel lblNeuerEintrag = new JLabel("Neuer Eintrag");
 		lblNeuerEintrag.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNeuerEintrag.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
 		lblNeuerEintrag.setBounds(10, 21, 697, 71);
 		NeuerEintrag.getContentPane().add(lblNeuerEintrag);
 		
+		// Fenster mit NeuerEintrag schliessen
 		JButton btnAbbrechen = new JButton("Abbrechen");
 		btnAbbrechen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				NeuerEintrag.setVisible(false);				//schließt fenster NeuerEintrag
+				NeuerEintrag.setVisible(false);		
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -256,7 +277,8 @@ public class Fenster {
 		scrollPane_1.setBounds(30, 220, 645, 174);
 		NeuerEintrag.getContentPane().add(scrollPane_1);
 		
-		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");  //CheckBox für Admin
+		// CheckBox fuer Admin
+		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar"); 
 		CBAdminTodo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (CBAdminTodo.isSelected()==true)
@@ -282,7 +304,8 @@ public class Fenster {
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		scrollPane_1.setViewportView(tAEintrag);
 		
-		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufügen
+		// Befehl zum Eintrag hinzufuegen
+		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -325,7 +348,8 @@ public class Fenster {
 		btnEintragHinzufuegen.setBounds(30, 409, 178, 30);
 		NeuerEintrag.getContentPane().add(btnEintragHinzufuegen);
 		
-		JButton btnLeeren = new JButton("Leeren");				//Leere Einträge in Fenster Neuer Eintrag
+		// Leere Eintraege in Fenster Neuer Eintrag
+		JButton btnLeeren = new JButton("Leeren");			
 		btnLeeren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -357,33 +381,36 @@ public class Fenster {
 		
 		
 		
-		//Fenster mit To Do Liste
-		
+		// Fenster mit ToDo Liste
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 93, 768, 375);
 		frmTodoListe.getContentPane().add(scrollPane);
 		
+		// Index des ausgewaehlten ToDos
 		Eintraege=new DefaultListModel<>();
 		JList<String> list = new JList<>(Eintraege);
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();					//Index des ausgewählten ToDos
+				index=list.getSelectedIndex();				
 			}
 		});
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		
+		// Darstellung der Eintraege
 		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
+		// Darstellung Button Neuer Eintrag
 		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
 		btnNeuerEintrag.setBounds(37, 511, 175, 31);
 		frmTodoListe.getContentPane().add(btnNeuerEintrag);
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		
-		JButton btnLoeschen = new JButton("L\u00F6schen");				//Eintrag wird gelöscht
+		// Darstellung Button loeschen, loeschen des Eintrags
+		JButton btnLoeschen = new JButton("L\u00F6schen");			
 		btnLoeschen.setBounds(626, 513, 117, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
 		btnLoeschen.addActionListener(new ActionListener() {
@@ -415,7 +442,8 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(lblToDoList);
 		lblToDoList.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
 		
-		JButton btnerledigt = new JButton("Erledigt");					//Stratus wird geändert
+		// Status des ToDos wird geaendert
+		JButton btnerledigt = new JButton("Erledigt");					
 		btnerledigt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -443,7 +471,8 @@ public class Fenster {
 		lblAdmin.setVisible(true);	
 		}
 		
-		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geöffnet
+		// Fenster fuer neuer Eintrag wird geoeffnet
+		btnNeuerEintrag.addActionListener(new ActionListener() {		
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(true);
@@ -458,7 +487,8 @@ public class Fenster {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
-		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");	//Fenster neuer Eintrag wird geöffnet (in Menüleiste)
+		// Fenster neuer Eintrag wird in Menueleiste geoeffnet
+		JMenuItem mntmNeuerEintrag = new JMenuItem("Neuer Eintrag");
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -502,7 +532,8 @@ public class Fenster {
 		JSeparator separator = new JSeparator();
 		mnDatei.add(separator);
 		
-		JMenuItem mntmBeenden = new JMenuItem("Beenden");			//Anwendung wird beendet
+		// Anwendung wird beendet
+		JMenuItem mntmBeenden = new JMenuItem("Beenden");	
 		mntmBeenden.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -514,7 +545,8 @@ public class Fenster {
 		JMenu mnListe = new JMenu("Liste");
 		menuBar.add(mnListe);
 		
-		JMenuItem mntmAktualisieren = new JMenuItem("Aktualisieren");		//Liste wird Aktualisiert 
+		// Liste wird aktualisiert
+		JMenuItem mntmAktualisieren = new JMenuItem("Aktualisieren");	
 		mntmAktualisieren.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -526,16 +558,23 @@ public class Fenster {
 	
 	
 	
-	//Methoden der Klasse
+	// Methoden der Klasse
 	
-	public void NeuEintrag(String Datum) 		//Neues ToDo wird erstellt
+	/**
+	 * Neues ToDo wird erstellt
+	 * @param Datum Datum in dd-mm-yyyy Format
+	 */
+	public void NeuEintrag(String Datum) 		
 	{
 		boolean Status = false;
 		sendTodos(socket,Datum,Eintrag, Status);
 		Aktualisieren();
 	}
 	
-	public void leeren()				//Fenster NeuerEintrag wird geleert
+	/**
+	 * Das Fenster NeuerEintrag wird geleert
+	 */
+	public void leeren()			
 	{
 		tFTagErled.setText("");
 		tFMonatErled.setText("");
@@ -543,7 +582,12 @@ public class Fenster {
 		AdminBox=false;
 	}
 	
-	 static void schreibeNachricht(java.net.Socket socket, String nachricht) //Nachricht wird an Server geschickt  
+	/**
+	 * Nachricht wird an Server geschickt
+	 * @param socket
+	 * @param nachricht String bestehend aus der Nachricht
+	 */
+	 static void schreibeNachricht(java.net.Socket socket, String nachricht) 
 	 {	
 		try {
 			printWriter = new PrintWriter(
@@ -557,14 +601,18 @@ public class Fenster {
 		}	
 	}
 	
-	static String leseNachricht(java.net.Socket socket)  	//Nachricht vom Server wird gelesen 
+	 /** Nachricht wird vom Server gelesen
+	  * @param socket
+	  * @return nachricht Uebertragene Nachricht
+	  */
+	static String leseNachricht(java.net.Socket socket)   
 	{
 		try {
 			bufferedReader = new BufferedReader(
 				new InputStreamReader(
 					socket.getInputStream()));
 			char[] buffer = new char[200];
-		int anzahlZeichen = bufferedReader.read(buffer, 0, 200); // blockiert bis Nachricht empfangen
+		int anzahlZeichen = bufferedReader.read(buffer, 0, 200);
 		String nachricht = new String(buffer, 0, anzahlZeichen);
 		return nachricht;
 		} 
@@ -575,7 +623,11 @@ public class Fenster {
 		}
 	}
 	
-	public static void getTodos(java.net.Socket socket) 	//Liste der Todos wird vom Server geholt und in ArrayList gespeichert
+	/**
+	 * Liste der ToDos wird vom Server geholt und in ArrayList gespeichert
+	 * @param socket
+	 */
+	public static void getTodos(java.net.Socket socket) 
 	{ 
 		schreibeNachricht(socket,"//UPDATE//\n");
 		String empfangeneNachricht = leseNachricht(socket);
@@ -587,7 +639,14 @@ public class Fenster {
 			}
 	}
 	
-	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean Status)  //Neue ToDos werden an den Server geschickt
+	/**
+	 * Neue ToDos werden an Server geschickt.
+	 * @param socket
+	 * @param Datum Erledigungsdatum String dd-mm-YYYY
+	 * @param Eintrag Notiz, ohne Datum oder Status
+	 * @param Status Erledigungsstatus
+	 */
+	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean Status) 
 	{
 		String Nachricht;
 		if (AdminBox==false)
@@ -607,7 +666,12 @@ public class Fenster {
 			}	
 	}
 	
-	public static void loescheTodo(java.net.Socket socket,int i)	//ToDos werden durch den gesendeten Befehl im Server gelöscht
+	/**
+	 * ToDos werden durch den gesendeten Befehl im Server geloescht
+	 * @param socket
+	 * @param i Index der zu loeschenden Nachricht 
+	 */
+	public static void loescheTodo(java.net.Socket socket,int i)
 	{
 		String Nachricht="//DELETE//"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
@@ -619,7 +683,10 @@ public class Fenster {
 			}
 	}
 	
-	public void fuelleListe()					//Liste in GUI neu befüllen
+	/**
+	 * Liste in GUI neu befuellen
+	 */ 
+	public void fuelleListe()
 	{
 		for (int i=0; i<(eint.size()-1);i++)
 		{
@@ -628,20 +695,29 @@ public class Fenster {
 		}	  
 	}
 	
-	public void loescheListe()			//ArrayLists werden geleert 
+	/**
+	 * ArrayLists leeren
+	 */
+	public void loescheListe()
 	{
 		Eintraege.clear();
 		eint.clear();	
 	}
 	
-	public void Aktualisieren()		//Liste in GUI wird Aktualisiert
+	/**
+	 * Liste in GUI wird aktualisiert
+	 */
+	public void Aktualisieren()
 	{
 		loescheListe();
 		getTodos(socket);	
 		fuelleListe();
 	}
 	
-	public void aendereStatus()	//Erledigungsstatus der ToDos werden geändert
+	/**
+	 * Erledigungsstatus des ToDos wird geaendert
+	 */
+	public void aendereStatus()
 	{
 		int i=index;
 		int j= (index+1);
@@ -666,7 +742,10 @@ public class Fenster {
 		Aktualisieren();
 	}
 	
-	protected void SpeichernAlle()						//Speichere alle ToDos in Liste
+	/**
+	 * Speichern aller ToDos in Liste
+	 */
+	protected void SpeichernAlle()
 	{
 		final JFileChooser fc = new JFileChooser();
 		int returnVal= fc.showSaveDialog(list);
@@ -678,6 +757,10 @@ public class Fenster {
 		}
 }
 	
+		/**
+		 * Eintrag wird mit aktuellem Datum gespeichert
+		 * @param file Datei zum lesen fuer den writer
+		 */
 		private void saveTextalle(File file) 
 		{	
 			try {
@@ -703,7 +786,10 @@ public class Fenster {
 			}
 		}
 		
-		protected void SpeichernOffene()						//Speichere alle ToDos in Liste
+		/**
+		 * Speichern aller offenen ToDos in Liste
+		 */
+		protected void SpeichernOffene()
 		{
 			final JFileChooser fc = new JFileChooser();
 			int returnVal= fc.showSaveDialog(list);
@@ -714,7 +800,11 @@ public class Fenster {
 				saveTextoffene(file);
 			}
 	}
-		
+			
+		/**
+		 * Speichern aller offenen Eintraege in text
+		 * @param file Datei zum lesen fuer den writer
+		 */
 			private void saveTextoffene(File file) 
 			{
 				try {
@@ -743,7 +833,10 @@ public class Fenster {
 				}
 			}
 		
-		protected void Laden()				//Öffnet gespeicherte Dateien
+		/**
+		 * Oeffnet gespeicherte Dateien 
+		 */
+		protected void Laden()				
 		{
 			final JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(list);   
@@ -754,6 +847,10 @@ public class Fenster {
 			}
 		}
 		
+		/**
+		 * Liest die Datei Zeilenweise aus
+		 * @param file Datei die ausgelesen wird. 
+		 */
 		private void showText (File file)
 		{	
 			Drucktext=new ArrayList<>();
@@ -784,13 +881,22 @@ public class Fenster {
 			  offeneListe= buf.toString();
 		}
 		
-		
-		public void drucken(){						//Druckt Dateien aus
+		/**
+		 * Zum Drucken von Dateien
+		 */
+		public void drucken(){
 
 			 PrinterJob pj = PrinterJob.getPrinterJob();
 			 pj.setJobName(" Drucke Liste ");
 
-			 pj.setPrintable (new Printable() {    
+			 pj.setPrintable (new Printable() {   
+				 /**
+				  * Ueberpruefung des zu druckenden Bereichs
+				  * @param pg Grafik
+				  * @param pf Seitenformat
+				  * @param pageNum Seitennummer
+				  * @return Printable Ob die Seite existiert oder nicht
+				  */
 			  public int print(Graphics pg, PageFormat pf, int pageNum){
 			   if (pageNum > 0){
 			   return Printable.NO_SUCH_PAGE;
@@ -839,6 +945,10 @@ public class Fenster {
 			 }
 			}
 		
+		/**
+		 * Zeitstempel wird erstellt
+		 * @throws ParseException
+		 */
 		public void Zeitstempel() throws ParseException {
 		{
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy   HH:mm");
