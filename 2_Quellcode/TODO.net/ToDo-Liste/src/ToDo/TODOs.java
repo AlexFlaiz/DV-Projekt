@@ -9,8 +9,15 @@ public class TODOs {
 	
 	
 	public boolean statDatum(String Datum)
-	{
-		
+	{ 
+		String teilstr[];
+		teilstr = Datum.split("-");
+		int Jahr= Integer.parseInt(teilstr[2]);
+		if(Jahr<1900||Jahr>2200)
+		{
+			return false;
+		}
+		else {
 	        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 	        df.setLenient( false );
 	        try {
@@ -23,6 +30,7 @@ public class TODOs {
 	        
 	        return false;
 	   }
+	}
 
 	public String getDate(String Datum)
 	{

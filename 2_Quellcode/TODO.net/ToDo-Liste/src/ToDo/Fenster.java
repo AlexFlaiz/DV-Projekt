@@ -86,7 +86,7 @@ public class Fenster {
 		String IPaddress = "IPaddress.txt";
 		ip= new DateiHandler(IPaddress);
 		ip.openDatei(false);
-		String IP =ip.read();
+		String IP = ip.read();
 	
 		eint=new ArrayList<>();
 		AdminBox=false;
@@ -280,13 +280,15 @@ public class Fenster {
 		
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		tAEintrag.setLineWrap(true);
+		tAEintrag.setWrapStyleWord(true);
 		scrollPane_1.setViewportView(tAEintrag);
 		
 		JButton btnEintragHinzufuegen = new JButton("Eintrag hinzuf\u00FCgen");	//Befehl zum Eintrag hinzufügen
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				if (tAEintrag.getText().length()>151)
+				if (tAEintrag.getText().length()>150)
 				{
 					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
 	 							JOptionPane.ERROR_MESSAGE );
@@ -467,7 +469,6 @@ public class Fenster {
 		});
 		mnDatei.add(mntmNeuerEintrag);
 		
-		
 		JMenuItem mntmOeffnen = new JMenuItem("\u00D6ffnen");
 		mntmOeffnen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -584,6 +585,10 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);	
+				if (!empfangeneNachricht.contains("//END//"))
+				{
+				schreibeNachricht(socket, "//OK//\n");
+				}
 			}
 	}
 	
@@ -799,31 +804,39 @@ public class Fenster {
 			   Graphics2D g2 = (Graphics2D) pg;
 			   g2.translate(pf.getImageableX(), pf.getImageableY());
 			   int Zeilenabstand= 10;
-			   g2.drawString("To-do Liste:", 50, 110);
-			   g2.drawString(Drucktext.get(0),50,70);
+			   g2.drawString("To-do Liste:", 45, 110);
+			   g2.drawString(Drucktext.get(0),45,70);
 			  
 			   try {
 				Zeitstempel();
-				g2.drawString("Gedruckt am: "+dateToStr, 50, 50);
+				g2.drawString("Gedruckt am: "+dateToStr, 45, 50);
 			   } catch (ParseException e) {
 				e.printStackTrace();
 			}
-			   g2.drawString("Datum:         Status:      Eintrag:", 50, 150);
+			   g2.drawString("Datum:         Status:      Eintrag:", 45, 140);
+			   g2.drawString("-------------------------------------------", 45, 150);
 			   for (int i=2;i<Drucktext.size();i++)
 			   {
 				   
-				   if (Drucktext.get(i).length()<75)
+				   if (Drucktext.get(i).length()<85)
 				   {
-					  g2.drawString(Drucktext.get(i)+"\n", 50, 160+Zeilenabstand); 
-					  Zeilenabstand = Zeilenabstand+20;
+					  g2.drawString(Drucktext.get(i)+"\n", 45, 160+Zeilenabstand); 
+				   }
+				   else if(Drucktext.get(i).length()>85 && Drucktext.get(i).length()<143)
+				   { 
+					   g2.drawString(Drucktext.get(i).substring(0, 85)+"\n", 45, 160+Zeilenabstand);
+					   Zeilenabstand = Zeilenabstand+20;
+					   g2.drawString("                                      "+Drucktext.get(i).substring(85)+"\n", 45, 160+Zeilenabstand);
 				   }
 				   else
-				   { 
-					   g2.drawString(Drucktext.get(i).substring(0, 120)+"\n", 50, 100+Zeilenabstand);
+				   {
+					   g2.drawString(Drucktext.get(i).substring(0, 85)+"\n", 45, 160+Zeilenabstand);
 					   Zeilenabstand = Zeilenabstand+20;
-					   g2.drawString(Drucktext.get(i).substring(121)+"\n", 50, 100+Zeilenabstand);
+					   g2.drawString("                                      "+Drucktext.get(i).substring(85, 143)+"\n", 45, 160+Zeilenabstand);
 					   Zeilenabstand = Zeilenabstand+20;
+					   g2.drawString("                                      "+Drucktext.get(i).substring(143)+"\n", 45, 160+Zeilenabstand);
 				   }
+				   Zeilenabstand = Zeilenabstand+20;
 			   }
 			   
 			   return Printable.PAGE_EXISTS;
