@@ -177,7 +177,8 @@ public class Fenster {
 		
 		JButton btnDrucken = new JButton("Drucken");
 		btnDrucken.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				drucken();
 			}
 		});
@@ -287,12 +288,12 @@ public class Fenster {
 			{
 				if (tAEintrag.getText().length()>151)
 				{
-					 JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Maximal 150 Zeichen möglich" , "Fehler",
+					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
 	 							JOptionPane.ERROR_MESSAGE );
 				}
 				else if (tAEintrag.getText().equals(""))
 				{
-					JOptionPane.showMessageDialog(btnEintragHinzufuegen , "Fehlerhafte Texteingabe" , "Fehler",
+					JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe" , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
 				}
 				else
@@ -308,7 +309,7 @@ public class Fenster {
 						}
 						else
 						{
-							JOptionPane.showMessageDialog(btnEintragHinzufuegen, "Fehlerhaftes Datum eingetragen", "Fehler",
+							JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingetragen", "Fehler",
 									JOptionPane.ERROR_MESSAGE ); return;
 						}
 						
@@ -330,6 +331,7 @@ public class Fenster {
 			{
 				tAEintrag.setText("");
 				leeren();
+				CBAdminTodo.setSelected(false);
 			}
 		});
 		btnLeeren.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -389,12 +391,12 @@ public class Fenster {
 			{
                  if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
-                	 JOptionPane.showMessageDialog(btnLoeschen , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zum löschen freigegeben." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
  				}
 				else 
 				{
-				int response = JOptionPane.showConfirmDialog(btnLoeschen, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
+				int response = JOptionPane.showConfirmDialog(frmTodoListe, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
 							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
 					
 					if (response==JOptionPane.YES_OPTION) 
@@ -420,7 +422,7 @@ public class Fenster {
 			aendereStatus();
 				if (pars.getAdmin(eint.get(index))==true && priv==false)
 				{
-					JOptionPane.showMessageDialog(btnerledigt , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
+					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 				}
 		}
@@ -445,6 +447,8 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(true);
+				CBAdminTodo.setSelected(false);
+				AdminBox=false;
 			}
 		});
 		
@@ -536,6 +540,7 @@ public class Fenster {
 		tFTagErled.setText("");
 		tFMonatErled.setText("");
 		tFJahrErled.setText("");	
+		AdminBox=false;
 	}
 	
 	 static void schreibeNachricht(java.net.Socket socket, String nachricht) //Nachricht wird an Server geschickt  
@@ -585,13 +590,13 @@ public class Fenster {
 	public static void sendTodos(java.net.Socket socket, String Datum, String Eintrag, boolean Status)  //Neue ToDos werden an den Server geschickt
 	{
 		String Nachricht;
-		if (AdminBox==true)
+		if (AdminBox==false)
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+false+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+true+"\n";
 		}
 		else
 		{
-			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+true+"\n";
+			Nachricht="//INSERT//"+Eintrag+"//"+Datum+"//"+Status+"//"+false+"\n";
 		}
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
