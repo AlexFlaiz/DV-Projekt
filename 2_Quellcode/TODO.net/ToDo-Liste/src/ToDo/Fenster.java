@@ -45,7 +45,7 @@ import java.awt.event.KeyEvent;
 public class Fenster {
 	
 	private JList<String> list;
-	private  int index;
+	private int index;
 	private String Eintrag;
 	private JFrame frmTodoListe;
 	private JTextField tFTagErled;
@@ -67,8 +67,8 @@ public class Fenster {
 	private static boolean AdminBox;
 	ArrayList <String> Drucktext;
 	private String dateToStr;
-	Date date;
-	int counter;
+	private Date date;
+	private int counter;
 	
 	static DateiHandler Key;
 	static DateiHandler Port;
@@ -307,7 +307,6 @@ public class Fenster {
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
-				Aktualisieren();
 				if (tAEintrag.getText().length()>150)
 				{
 					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
@@ -334,7 +333,7 @@ public class Fenster {
 							JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingetragen", "Fehler",
 									JOptionPane.ERROR_MESSAGE ); return;
 						}
-						
+					Aktualisieren();	
 					Eintrag=tAEintrag.getText();
 					NeuEintrag(Datum);
 					NeuerEintrag.setVisible(false);
