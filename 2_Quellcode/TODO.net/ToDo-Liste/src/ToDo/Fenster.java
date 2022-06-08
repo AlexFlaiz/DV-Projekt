@@ -282,8 +282,8 @@ public class Fenster {
 		{
 		CBAdminTodo.setVisible(true);	
 		}
-		
-		JLabel lblCounter = new JLabel("0/150");
+
+		JLabel lblCounter = new JLabel(0+"/150");
 		lblCounter.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCounter.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCounter.setBounds(615, 189, 60, 30);
@@ -291,8 +291,7 @@ public class Fenster {
 		
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e)
+			public void keyTyped(KeyEvent e)
 			{
 				counter=tAEintrag.getText().length();
 				lblCounter.setText(counter+"/150");
