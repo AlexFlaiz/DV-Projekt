@@ -37,6 +37,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 
@@ -66,6 +68,7 @@ public class Fenster {
 	ArrayList <String> Drucktext;
 	private String dateToStr;
 	Date date;
+	int counter;
 	
 	static DateiHandler Key;
 	static DateiHandler Port;
@@ -155,7 +158,8 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);				//schließt Fenster Liste
+				Liste.setVisible(false);	//schließt Fenster Liste
+				Aktualisieren();
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -209,6 +213,7 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(false);				//schließt fenster NeuerEintrag
+				Aktualisieren();
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -278,7 +283,21 @@ public class Fenster {
 		CBAdminTodo.setVisible(true);	
 		}
 		
+		JLabel lblCounter = new JLabel("0/150");
+		lblCounter.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCounter.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblCounter.setBounds(615, 189, 60, 30);
+		NeuerEintrag.getContentPane().add(lblCounter);
+		
 		JTextArea tAEintrag = new JTextArea();
+		tAEintrag.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				counter=tAEintrag.getText().length();
+				lblCounter.setText(counter+"/150");
+			}
+		});
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		tAEintrag.setLineWrap(true);
 		tAEintrag.setWrapStyleWord(true);
@@ -288,6 +307,7 @@ public class Fenster {
 		btnEintragHinzufuegen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				if (tAEintrag.getText().length()>150)
 				{
 					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
@@ -370,7 +390,7 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();					//Index des ausgewählten ToDos
+				index=list.getSelectedIndex();	//Index des ausgewählten ToDos
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -448,6 +468,7 @@ public class Fenster {
 		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geöffnet
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 				CBAdminTodo.setSelected(false);
 				AdminBox=false;
@@ -464,6 +485,7 @@ public class Fenster {
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 			}
 		});
@@ -475,6 +497,7 @@ public class Fenster {
 				Laden();
 				tAListe.setText(offeneListe);
 				Liste.setVisible(true);	
+				Aktualisieren();
 			}
 		});
 		
@@ -485,6 +508,7 @@ public class Fenster {
 		mntmAlle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				SpeichernAlle();
 			}
 		});
@@ -494,6 +518,7 @@ public class Fenster {
 		mntmOffene.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				SpeichernOffene();
 			}
 		});
