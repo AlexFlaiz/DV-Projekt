@@ -389,7 +389,22 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();	//Index des ausgewählten ToDos
+				int i=list.getSelectedIndex();
+				String a= eint.get(i);
+				eint.clear();
+				getTodos(socket);
+				String b=eint.get(i);
+				
+				if (a.equals(b))
+				{
+					index=list.getSelectedIndex();	//Index des ausgewählten ToDos
+				}
+				else
+				{
+					Aktualisieren();
+					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen" , "Warnung",
+	 							JOptionPane.WARNING_MESSAGE );
+				}	
 			}
 		});
 		scrollPane.setViewportView(list);
