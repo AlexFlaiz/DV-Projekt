@@ -37,13 +37,15 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 
 public class Fenster {
 	
 	private JList<String> list;
-	private  int index;
+	private int index;
 	private String Eintrag;
 	private JFrame frmTodoListe;
 	private JTextField tFTagErled;
@@ -65,7 +67,8 @@ public class Fenster {
 	private static boolean AdminBox;
 	ArrayList <String> Drucktext;
 	private String dateToStr;
-	Date date;
+	private Date date;
+	private int counter;
 	
 	static DateiHandler Key;
 	static DateiHandler Port;
@@ -155,7 +158,8 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				Liste.setVisible(false);				//schlieﬂt Fenster Liste
+				Liste.setVisible(false);	//schlieﬂt Fenster Liste
+				Aktualisieren();
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -209,6 +213,7 @@ public class Fenster {
 			public void actionPerformed(ActionEvent e) 
 			{
 				NeuerEintrag.setVisible(false);				//schlieﬂt fenster NeuerEintrag
+				Aktualisieren();
 			}
 		});
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -278,7 +283,21 @@ public class Fenster {
 		CBAdminTodo.setVisible(true);	
 		}
 		
+		JLabel lblCounter = new JLabel("0/150");
+		lblCounter.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblCounter.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblCounter.setBounds(615, 189, 60, 30);
+		NeuerEintrag.getContentPane().add(lblCounter);
+		
 		JTextArea tAEintrag = new JTextArea();
+		tAEintrag.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				counter=tAEintrag.getText().length();
+				lblCounter.setText(counter+"/150");
+			}
+		});
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		tAEintrag.setLineWrap(true);
 		tAEintrag.setWrapStyleWord(true);
@@ -314,7 +333,7 @@ public class Fenster {
 							JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingetragen", "Fehler",
 									JOptionPane.ERROR_MESSAGE ); return;
 						}
-						
+					Aktualisieren();	
 					Eintrag=tAEintrag.getText();
 					NeuEintrag(Datum);
 					NeuerEintrag.setVisible(false);
@@ -370,7 +389,7 @@ public class Fenster {
 		list.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) 
 			{
-				index=list.getSelectedIndex();					//Index des ausgew‰hlten ToDos
+				index=list.getSelectedIndex();	//Index des ausgew‰hlten ToDos
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -448,6 +467,7 @@ public class Fenster {
 		btnNeuerEintrag.addActionListener(new ActionListener() {		//Fenster neuer Eintrag wird geˆffnet
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 				CBAdminTodo.setSelected(false);
 				AdminBox=false;
@@ -464,6 +484,7 @@ public class Fenster {
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 			}
 		});
@@ -475,6 +496,7 @@ public class Fenster {
 				Laden();
 				tAListe.setText(offeneListe);
 				Liste.setVisible(true);	
+				Aktualisieren();
 			}
 		});
 		
@@ -485,6 +507,7 @@ public class Fenster {
 		mntmAlle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				SpeichernAlle();
 			}
 		});
@@ -494,6 +517,7 @@ public class Fenster {
 		mntmOffene.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) 
 			{
+				Aktualisieren();
 				SpeichernOffene();
 			}
 		});
