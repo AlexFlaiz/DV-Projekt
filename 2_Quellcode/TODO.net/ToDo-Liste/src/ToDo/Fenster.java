@@ -1,6 +1,6 @@
 /**
  *
- * @author alexflaiz tobiasaberle
+ * @author alex flaiz, tobias aberle
  * @version 1.0.0
  *
  */
@@ -13,7 +13,10 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -31,6 +34,7 @@ import java.awt.Color;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
@@ -75,6 +79,7 @@ public class Fenster {
 	private String dateToStr;
 	private Date date;
 	private int counter;
+	private BufferedImage logo;
 
 	static DateiHandler Key; // Dateihandler fuer Benutzer-ID
 	static DateiHandler Port; // Dateihandler fuer den Benutzer-Port
@@ -239,7 +244,7 @@ public class Fenster {
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
 		NeuerEintrag.setClosable(true);
 		NeuerEintrag.setResizable(true);
-		NeuerEintrag.setBounds(24, 10, 729, 493);
+		NeuerEintrag.setBounds(31, 22, 729, 458);
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
 
@@ -247,7 +252,7 @@ public class Fenster {
 		JLabel lblNeuerEintrag = new JLabel("Neuer Eintrag");
 		lblNeuerEintrag.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNeuerEintrag.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
-		lblNeuerEintrag.setBounds(10, 21, 697, 71);
+		lblNeuerEintrag.setBounds(10, 10, 697, 71);
 		NeuerEintrag.getContentPane().add(lblNeuerEintrag);
 
 		// Fenster NeuerEintrag schliessen
@@ -265,7 +270,7 @@ public class Fenster {
 		});
 		// Darstellung Abbrechen-Button
 		btnAbbrechen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnAbbrechen.setBounds(520, 409, 155, 30);
+		btnAbbrechen.setBounds(30, 369, 178, 30);
 		NeuerEintrag.getContentPane().add(btnAbbrechen);
 
 		// Darstellung Erledigungsdatum
@@ -274,7 +279,7 @@ public class Fenster {
 		lblErledigungsdatum.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
 		lblErledigungsdatum.setBounds(30, 90, 199, 25);
 		NeuerEintrag.getContentPane().add(lblErledigungsdatum);
-
+		
 		// Darstellung Textfeld Erledigungstag
 		tFTagErled = new JTextField();
 		tFTagErled.setHorizontalAlignment(SwingConstants.CENTER);
@@ -307,11 +312,11 @@ public class Fenster {
 		JLabel lblEintrag = new JLabel("Eintrag");
 		lblEintrag.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEintrag.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
-		lblEintrag.setBounds(30, 185, 645, 25);
+		lblEintrag.setBounds(253, 90, 431, 25);
 		NeuerEintrag.getContentPane().add(lblEintrag);
-
+		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(30, 220, 645, 174);
+		scrollPane_1.setBounds(253, 142, 431, 257);
 		NeuerEintrag.getContentPane().add(scrollPane_1);
 
 		// CheckBox fuer Admin-ToDo
@@ -333,9 +338,9 @@ public class Fenster {
 			}
 		});
 
-		// Darstellung Admin-ToDo
+		// Darstellung Admin-ToDo Ceckbox
 		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 189, 230, 21);
+		CBAdminTodo.setBounds(30, 185, 217, 21);
 		NeuerEintrag.getContentPane().add(CBAdminTodo);
 		CBAdminTodo.setVisible(false);
 		if (priv==true)
@@ -346,9 +351,9 @@ public class Fenster {
 		JLabel lblCounter = new JLabel(0+"/150");
 		lblCounter.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCounter.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblCounter.setBounds(615, 189, 60, 30);
+		lblCounter.setBounds(624, 115, 60, 30);
 		NeuerEintrag.getContentPane().add(lblCounter);
-
+		
 		// Darstellung Textfeld Eintrag
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.addKeyListener(new KeyAdapter() {
@@ -359,9 +364,17 @@ public class Fenster {
 			 */
 			public void keyTyped(KeyEvent e)
 			{
-				counter=tAEintrag.getText().length();
+				counter=tAEintrag.getText().length();         
+				if (counter>150)
+				{
+					lblCounter.setForeground(Color.red);
+				}
+				else
+				{
+					lblCounter.setForeground(Color.black);
+				}
 				lblCounter.setText(counter+"/150");
-			}
+			}												
 		});
 		tAEintrag.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		tAEintrag.setLineWrap(true);
@@ -377,47 +390,65 @@ public class Fenster {
 			 * das Erledigungsdatum in Da gespeichert.
 			 * @param e Wenn Button Eintrag hinzufuegen gedrueckt wurde
 			 */
-			public void actionPerformed(ActionEvent e)
+		public void actionPerformed(ActionEvent e) 
+		{
+			boolean isNumericT = tFTagErled.getText().chars().allMatch( Character::isDigit );
+			boolean isNumericM = tFMonatErled.getText().chars().allMatch( Character::isDigit );
+			boolean isNumericJ = tFJahrErled.getText().chars().allMatch( Character::isDigit );
+			
+			if (tAEintrag.getText().length()>150)
 			{
-				if (tAEintrag.getText().length()>150)
-				{
-					 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen mï¿½glich" , "Fehler",
-	 							JOptionPane.ERROR_MESSAGE );
-				}
-				else if (tAEintrag.getText().equals(""))
-				{
-					JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe" , "Fehler",
+				 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
-				}
-				else
-				{
-					String Datum;
-					String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
-					String Da= todo.getDate(D);
-					boolean DateGood = todo.statDatum(Da);
-
-						if (DateGood == true)
-						{
-							Datum=Da;
-						}
-						else
-						{
-							JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingetragen", "Fehler",
-									JOptionPane.ERROR_MESSAGE ); return;
-						}
-					Aktualisieren();
-					Eintrag=tAEintrag.getText();
-					NeuEintrag(Datum);
-					NeuerEintrag.setVisible(false);
-					leeren();
-					tAEintrag.setText("");
-					lblCounter.setText(counter+"/150");
-				}
 			}
+			else if (isNumericT==false||isNumericM==false||isNumericJ==false) 	
+			{
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben" , "Fehler",
+							JOptionPane.ERROR_MESSAGE );
+			}																								
+			else if (tFTagErled.getText().equals("")||tFMonatErled.getText().equals("")||tFJahrErled.getText().equals("")) 
+			{
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben" , "Fehler",
+							JOptionPane.ERROR_MESSAGE );
+			}																								
+			else if (tAEintrag.getText().equals(""))
+			{
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe" , "Fehler",
+							JOptionPane.ERROR_MESSAGE );
+			}
+			else
+			{
+				String Datum;
+				String D = tFTagErled.getText()+"-"+tFMonatErled.getText()+"-"+tFJahrErled.getText();
+				String Da= todo.getDate(D);
+				boolean DateGood = todo.statDatum(Da);
+				
+					if (DateGood == true)
+					{
+						Datum=Da;
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingegeben", "Fehler",
+								JOptionPane.ERROR_MESSAGE ); return;
+					}
+				Aktualisieren();	
+				String inputtext = tAEintrag.getText();      
+			    inputtext = inputtext.replace("ä","ae");
+			    inputtext = inputtext.replace("ö","oe");
+			    inputtext = inputtext.replace("ü","ue");
+				Eintrag=inputtext;							
+				NeuEintrag(Datum);
+				NeuerEintrag.setVisible(false);
+				leeren();
+				tAEintrag.setText("");
+				lblCounter.setText(counter+"/150");
+			}
+		}
 		});
 		// Darstellung Button Eintrag Hinzufuegen
 		btnEintragHinzufuegen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnEintragHinzufuegen.setBounds(30, 409, 178, 30);
+		btnEintragHinzufuegen.setBounds(30, 237, 178, 30);
 		NeuerEintrag.getContentPane().add(btnEintragHinzufuegen);
 
 		// Leert Eintraege in Fenster Neuer Eintrag
@@ -438,7 +469,7 @@ public class Fenster {
 
 		// Darstellung Button Leeren
 		btnLeeren.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnLeeren.setBounds(218, 409, 120, 30);
+		btnLeeren.setBounds(30, 277, 178, 30);
 		NeuerEintrag.getContentPane().add(btnLeeren);
 
 		JLabel lblTag_1 = new JLabel("Tag");
@@ -492,7 +523,7 @@ public class Fenster {
 				else
 				{
 					Aktualisieren();
-					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswï¿½hlen" , "Warnung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen" , "Warnung",
 	 							JOptionPane.WARNING_MESSAGE );
 				}
 			}
@@ -507,13 +538,13 @@ public class Fenster {
 
 		// Darstellung Button Neuer Eintrag
 		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
-		btnNeuerEintrag.setBounds(37, 511, 175, 31);
+		btnNeuerEintrag.setBounds(10, 502, 200, 31);
 		frmTodoListe.getContentPane().add(btnNeuerEintrag);
 		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 
 		// Darstellung Button Loeschen
 		JButton btnLoeschen = new JButton("L\u00F6schen");
-		btnLoeschen.setBounds(626, 513, 117, 31);
+		btnLoeschen.setBounds(638, 502, 140, 31);
 		frmTodoListe.getContentPane().add(btnLoeschen);
 		btnLoeschen.addActionListener(new ActionListener() {
 			/**
@@ -523,25 +554,33 @@ public class Fenster {
 			 * Hat der Nutzer die Berechtigung wird das ToDo auf dem Server geloescht und die GUI wird aktualisiert
 			 * @param e Wenn der Button Loeschen betaetigt wird
 			 */
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent e) 
 			{
+				if (index==-1)
+				{
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Warnung",
+ 							JOptionPane.WARNING_MESSAGE );
+				}
+				else 
+				{
                  if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
-                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zum lï¿½schen freigegeben." , "Fehler",
+                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zum löschen freigegeben." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
  				}
-				else
+				else 
 				{
-				int response = JOptionPane.showConfirmDialog(frmTodoListe, "Soll der Eintrag wirklich gelï¿½scht werden?  " + "","Eintrag lï¿½schen",
-							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-					if (response==JOptionPane.YES_OPTION)
+				int response = JOptionPane.showConfirmDialog(frmTodoListe, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
+							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
+					
+					if (response==JOptionPane.YES_OPTION) 
 					{
 						loescheTodo(socket,(index+1));
 						Aktualisieren();
 					}
 				}
-			}
+			}	
+		}									
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
 
@@ -561,19 +600,28 @@ public class Fenster {
 			 * bei vorhandener Berechtigung wird der Erledigungsstatus geandert.
 			 * @param e Wenn der Button Erledigt betaetigt wird
 			 */
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent e) 
 			{
-			aendereStatus();
-				if (pars.getAdmin(eint.get(index))==true && priv==false)
+				if (index==-1)						
 				{
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Warnung",
+ 							JOptionPane.WARNING_MESSAGE );
+				}
+				else
+				{
+					int i=index;
+					aendereStatus();
+					if (pars.getAdmin(eint.get(i))==true && priv==false)
+					{
 					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
+					}
 				}
 		}
 		});
 		// Darstellung Button Erledigt
 		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnerledigt.setBounds(499, 513, 117, 31);
+		btnerledigt.setBounds(488, 502, 140, 31);
 		frmTodoListe.getContentPane().add(btnerledigt);
 
 		// Darstellung Admin-Anzeige. Wird nur angezeigt, wenn der Nutzer Admin-Rechte hat.
@@ -588,7 +636,19 @@ public class Fenster {
 		{
 		lblAdmin.setVisible(true);
 		}
-
+		
+		//Erstellt HFU Logo
+		try {															
+			JLabel lblLogo = new JLabel();								
+			lblLogo.setHorizontalAlignment(SwingConstants.RIGHT);
+			logo = ImageIO.read(new File("Bilder/HFU-Logo.png"));
+			lblLogo.setIcon(new ImageIcon(logo));
+			lblLogo.setBounds(563, 10, 213, 78);
+			frmTodoListe.getContentPane().add(lblLogo);	
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}		
+		
 		btnNeuerEintrag.addActionListener(new ActionListener() {
 			/**
 			 * Wenn der Button NeuerEintrag betaetigt wird, werden die ToDos aktualisiert
@@ -870,6 +930,7 @@ public class Fenster {
 		loescheListe();
 		getTodos(socket);
 		fuelleListe();
+		index=-1;
 	}
 
 	/**
