@@ -6,7 +6,7 @@ import java.util.*;
 
 
 /**
- * Diese Klasse ist für den Start des Servers verantwortlich
+ * Diese Klasse ist fÃ¼r den Start des Servers verantwortlich
  * @author Lukas Rumpel
  * @author Tobias Ohnmacht
  * @version 1.0
@@ -14,7 +14,7 @@ import java.util.*;
 public class Server {
 	
 	private static int port; 
-	static DateiHandler Port;
+	private static DateiHandler Port;
 	
 	
 	/**
@@ -26,7 +26,7 @@ public class Server {
 	}
 	
 	/**
-	 * Erzeugt das Objekt DataBaseHandler und den ServerSocket für TCP/IP-Verbindung
+	 * Erzeugt das Objekt DataBaseHandler und den ServerSocket fÃ¼r TCP/IP-Verbindung
 	 */
 	public static void normalMode() {
 		DataBaseHandler dbh;
