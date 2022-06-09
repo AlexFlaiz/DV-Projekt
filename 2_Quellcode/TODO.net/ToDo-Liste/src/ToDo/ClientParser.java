@@ -17,7 +17,13 @@ public class ClientParser {
 			String Datum[];
 			Datum = teilstr[2].split("-");
 			
-			eventstr = Datum[0]+"."+Datum[1]+"."+Datum[2]+"   " + teilstr[3]+"     " + teilstr[1];
+			String inputtext = teilstr[1];     						 
+		    inputtext = inputtext.replace("ae","ä");
+		    inputtext = inputtext.replace("oe","ö");
+		    inputtext = inputtext.replace("ue","ü");
+			String Eintrag=inputtext;								
+			
+			eventstr = Datum[0]+"."+Datum[1]+"."+Datum[2]+"   " + teilstr[3]+"     " + Eintrag;
 			
 			return eventstr;
 		}
