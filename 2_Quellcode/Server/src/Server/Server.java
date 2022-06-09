@@ -13,6 +13,9 @@ import java.util.*;
  */
 public class Server {
 	
+	private static int port; 
+	static DateiHandler Port;
+	
 	
 	/**
 	 * Dies ist die Main Methode sie Startet notrmalMode()
@@ -28,7 +31,11 @@ public class Server {
 	public static void normalMode() {
 		DataBaseHandler dbh;
 		dbh = new DataBaseHandler("jdbc:sqlite:TODO.db");
-		ServSock server = new ServSock(1112, dbh);
+		String PortDatei = "Port.txt";
+		Port= new DateiHandler(PortDatei);
+		Port.openDatei(false);
+		port=Integer.parseInt(Port.read());
+		ServSock server = new ServSock(port, dbh);
 		System.out.println("Server gestartet!");
 		while(true) {
 			server.login();
