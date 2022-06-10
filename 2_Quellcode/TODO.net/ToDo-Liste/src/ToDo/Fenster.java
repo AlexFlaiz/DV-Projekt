@@ -48,7 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
+import javax.swing.Timer;
 
 
 public class Fenster {
@@ -80,7 +80,8 @@ public class Fenster {
 	private int counter;
 	private BufferedImage logo;
 	private static String Zwischenspeicher="";
-
+	private static Timer timer;
+	
 	static DateiHandler Key; // Dateihandler fuer Benutzer-ID
 	static DateiHandler Port; // Dateihandler fuer den Benutzer-Port
 	static DateiHandler ip; // Dateihandler fuer die IP-Adresse des Benutzers
@@ -146,6 +147,15 @@ public class Fenster {
 					window.frmTodoListe.setVisible(true);
 
 					window.Aktualisieren();
+					
+					//Alle 30s wird Aktualisiert
+					timer = new Timer(30000, new ActionListener() { 
+						public void actionPerformed(ActionEvent e) {
+							System.out.println("start timer");
+							window.Aktualisieren();
+						}
+					});
+					timer.start();
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -168,14 +178,13 @@ public class Fenster {
 		frmTodoListe = new JFrame();
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 610);
-		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frmTodoListe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
 
 
 
 		// Darstellung der Liste
 		JInternalFrame Liste = new JInternalFrame("Liste");
-		Liste.setClosable(true);
 		Liste.setResizable(true);
 		Liste.setBounds(114, 10, 549, 493);
 		frmTodoListe.getContentPane().add(Liste);
@@ -199,6 +208,7 @@ public class Fenster {
 			{
 				Liste.setVisible(false);
 				Aktualisieren();
+				timer.start();
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -242,7 +252,6 @@ public class Fenster {
 
         //Fenster NeuerEintrag
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
-		NeuerEintrag.setClosable(true);
 		NeuerEintrag.setResizable(true);
 		NeuerEintrag.setBounds(31, 22, 724, 458);
 		frmTodoListe.getContentPane().add(NeuerEintrag);
@@ -266,6 +275,7 @@ public class Fenster {
 			{
 				NeuerEintrag.setVisible(false);
 				Aktualisieren();
+				timer.start();
 			}
 		});
 		// Darstellung Abbrechen-Button
@@ -422,17 +432,17 @@ public class Fenster {
 			}
 			else if (isNumericT==false||isNumericM==false||isNumericJ==false) 	
 			{
-				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben" , "Fehler",
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 			}																								
 			else if (tFTagErled.getText().equals("")||tFMonatErled.getText().equals("")||tFJahrErled.getText().equals("")) 
 			{
-				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben" , "Fehler",
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhaftes Datum eingegeben." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 			}																								
 			else if (tAEintrag.getText().equals(""))
 			{
-				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe" , "Fehler",
+				JOptionPane.showMessageDialog(NeuerEintrag , "Fehlerhafte Texteingabe." , "Fehler",
 							JOptionPane.ERROR_MESSAGE );
 			}
 			else
@@ -448,7 +458,7 @@ public class Fenster {
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingegeben", "Fehler",
+						JOptionPane.showMessageDialog(NeuerEintrag, "Fehlerhaftes Datum eingegeben.", "Fehler",
 								JOptionPane.ERROR_MESSAGE ); return;
 					}
 				Aktualisieren();	
@@ -458,6 +468,7 @@ public class Fenster {
 				leeren();
 				tAEintrag.setText("");
 				lblCounter.setText(counter+"/150");
+				timer.start();
 			}
 		}
 		});
@@ -525,6 +536,7 @@ public class Fenster {
 			 */
 			public void mouseClicked(MouseEvent e)
 			{
+				timer.stop();
 				int i=list.getSelectedIndex();
 				String a= eint.get(i);
 				eint.clear();
@@ -541,6 +553,7 @@ public class Fenster {
 					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen." , "Achtung",
 	 							JOptionPane.INFORMATION_MESSAGE);
 				}
+				timer.start();
 			}
 		});
 		scrollPane.setViewportView(list);
@@ -550,12 +563,6 @@ public class Fenster {
 		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
-
-		// Darstellung Button Neuer Eintrag
-		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
-		btnNeuerEintrag.setBounds(10, 502, 200, 31);
-		frmTodoListe.getContentPane().add(btnNeuerEintrag);
-		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 
 		// Darstellung Button Loeschen
 		JButton btnLoeschen = new JButton("L\u00F6schen");
@@ -571,9 +578,10 @@ public class Fenster {
 			 */
 			public void actionPerformed(ActionEvent e) 
 			{
+				timer.stop();
 				if (index==-1)
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt." , "Achtung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt oder die Zeit wurde überschritten. \n Bitte Eintrag auswählen." , "Achtung",
  							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else 
@@ -596,6 +604,7 @@ public class Fenster {
 					}
 				}
 			}	
+			timer.start();	
 		}									
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -618,9 +627,10 @@ public class Fenster {
 			 */
 			public void actionPerformed(ActionEvent e) 
 			{
+				timer.stop();
 				if (index==-1)						
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt." , "Achtung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt oder die Zeit wurde überschritten. \n Bitte Eintrag auswählen." , "Achtung",
  							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else
@@ -633,6 +643,7 @@ public class Fenster {
 							JOptionPane.WARNING_MESSAGE );
 					}
 				}
+				timer.start();
 		}
 		});
 		// Darstellung Button Erledigt
@@ -665,6 +676,11 @@ public class Fenster {
 			e1.printStackTrace();
 		}		
 		
+		// Darstellung Button Neuer Eintrag
+		JButton btnNeuerEintrag = new JButton("Neuer Eintrag");
+		btnNeuerEintrag.setBounds(10, 502, 200, 31);
+		frmTodoListe.getContentPane().add(btnNeuerEintrag);
+		btnNeuerEintrag.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnNeuerEintrag.addActionListener(new ActionListener() {
 			/**
 			 * Wenn der Button NeuerEintrag betaetigt wird, werden die ToDos aktualisiert
@@ -673,6 +689,7 @@ public class Fenster {
 			 */
 			public void actionPerformed(ActionEvent e)
 			{
+				timer.stop();
 				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 				CBAdminTodo.setSelected(false);
@@ -696,6 +713,7 @@ public class Fenster {
 			 */
 			public void actionPerformed(ActionEvent e)
 			{
+				timer.stop();
 				Aktualisieren();
 				NeuerEintrag.setVisible(true);
 			}
@@ -709,9 +727,11 @@ public class Fenster {
 			 * @param e Wenn Menuepunkt Oeffnen betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e) {
+				timer.stop();
 				Laden();
 				tAListe.setText(offeneListe);
 				Liste.setVisible(true);
+				NeuerEintrag.setVisible(false);
 				Aktualisieren();
 			}
 		});
@@ -883,7 +903,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))	 
+				if (!empfangeneNachricht.contains("//END//"))	 				
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
