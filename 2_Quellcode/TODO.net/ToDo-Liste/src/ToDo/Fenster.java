@@ -79,6 +79,7 @@ public class Fenster {
 	private Date date;
 	private int counter;
 	private BufferedImage logo;
+	private static String Zwischenspeicher="";
 
 	static DateiHandler Key; // Dateihandler fuer Benutzer-ID
 	static DateiHandler Port; // Dateihandler fuer den Benutzer-Port
@@ -166,7 +167,7 @@ public class Fenster {
 	private void initialize() {
 		frmTodoListe = new JFrame();
 		frmTodoListe.setTitle("TODO.net");
-		frmTodoListe.setBounds(100, 100, 800, 630);
+		frmTodoListe.setBounds(100, 100, 800, 610);
 		frmTodoListe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
 
@@ -176,7 +177,7 @@ public class Fenster {
 		JInternalFrame Liste = new JInternalFrame("Liste");
 		Liste.setClosable(true);
 		Liste.setResizable(true);
-		Liste.setBounds(131, 10, 485, 493);
+		Liste.setBounds(114, 10, 549, 493);
 		frmTodoListe.getContentPane().add(Liste);
 		Liste.getContentPane().setLayout(null);
 
@@ -184,7 +185,7 @@ public class Fenster {
 		JLabel lblListe = new JLabel("Liste");
 		lblListe.setHorizontalAlignment(SwingConstants.CENTER);
 		lblListe.setFont(new Font("Monotype Corsiva", Font.PLAIN, 50));
-		lblListe.setBounds(10, 10, 453, 62);
+		lblListe.setBounds(10, 10, 517, 62);
 		Liste.getContentPane().add(lblListe);
 
 		// Liste in GUI schliessen
@@ -201,12 +202,12 @@ public class Fenster {
 			}
 		});
 		btnSchliessen.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSchliessen.setBounds(325, 424, 138, 30);
+		btnSchliessen.setBounds(377, 424, 150, 30);
 		Liste.getContentPane().add(btnSchliessen);
 
 		// Scrollfunktion
 		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(10, 70, 453, 344);
+		scrollPane_2.setBounds(10, 70, 517, 344);
 		Liste.getContentPane().add(scrollPane_2);
 
 		// Textfeld-Darstellung
@@ -233,7 +234,7 @@ public class Fenster {
 			}
 		});
 		btnDrucken.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnDrucken.setBounds(10, 424, 138, 30);
+		btnDrucken.setBounds(10, 424, 150, 30);
 		Liste.getContentPane().add(btnDrucken);
 		Liste.setVisible(false);
 
@@ -243,7 +244,7 @@ public class Fenster {
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
 		NeuerEintrag.setClosable(true);
 		NeuerEintrag.setResizable(true);
-		NeuerEintrag.setBounds(31, 22, 729, 458);
+		NeuerEintrag.setBounds(31, 22, 724, 458);
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
 
@@ -311,11 +312,11 @@ public class Fenster {
 		JLabel lblEintrag = new JLabel("Eintrag");
 		lblEintrag.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEintrag.setFont(new Font("Monotype Corsiva", Font.PLAIN, 25));
-		lblEintrag.setBounds(253, 90, 431, 25);
+		lblEintrag.setBounds(239, 90, 445, 25);
 		NeuerEintrag.getContentPane().add(lblEintrag);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(253, 142, 431, 257);
+		scrollPane_1.setBounds(236, 142, 448, 257);
 		NeuerEintrag.getContentPane().add(scrollPane_1);
 
 		// CheckBox fuer Admin-ToDo
@@ -339,7 +340,7 @@ public class Fenster {
 
 		// Darstellung Admin-ToDo Ceckbox
 		CBAdminTodo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		CBAdminTodo.setBounds(30, 185, 217, 21);
+		CBAdminTodo.setBounds(30, 185, 199, 21);
 		NeuerEintrag.getContentPane().add(CBAdminTodo);
 		CBAdminTodo.setVisible(false);
 		if (priv==true)
@@ -507,7 +508,7 @@ public class Fenster {
 
 		// Fenster mit ToDo-Liste
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 93, 768, 375);
+		scrollPane.setBounds(10, 93, 768, 399);
 		frmTodoListe.getContentPane().add(scrollPane);
 
 		// Index des ausgewaehlten ToDos
@@ -748,6 +749,23 @@ public class Fenster {
 		});
 		mnSpeichern.add(mntmOffene);
 		mnDatei.add(mntmOeffnen);
+		
+		JMenuItem mntmWiederherstellen = new JMenuItem("Wiederherstellen");
+		mntmWiederherstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) 
+			{
+				if (Zwischenspeicher.equals(""))
+				{
+					JOptionPane.showMessageDialog(frmTodoListe , "Es befindet sich kein Eintarg im Zwischenspeicher." , "Warnung",
+							JOptionPane.WARNING_MESSAGE );
+				}
+				else
+				{
+					Wiederherstellen();
+				}
+			}
+		});
+		mnDatei.add(mntmWiederherstellen);
 
 		JSeparator separator = new JSeparator();
 		mnDatei.add(separator);
@@ -865,7 +883,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))	
+				if (!empfangeneNachricht.contains("//END//"))	 
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
@@ -906,6 +924,7 @@ public class Fenster {
 	 */
 	public static void loescheTodo(java.net.Socket socket,int i)
 	{
+		Zwischenspeicher=eint.get(i-1);
 		String Nachricht="//DELETE//"+i+"\n";
 		schreibeNachricht(socket,Nachricht);
 		String empfangeneNachricht = leseNachricht(socket);
@@ -947,7 +966,23 @@ public class Fenster {
 		fuelleListe();
 		index=-1;
 	}
-
+	/**
+	 * gelöschtes ToDo wird aus dem zwischenspeicher geholt
+	 */
+	public void Wiederherstellen()
+	{
+		String teilstr[];
+		teilstr = Zwischenspeicher.split("::");
+		String Nachricht="//INSERT//"+teilstr[1]+"//"+teilstr[2]+"//"+teilstr[3]+"//"+teilstr[4]+"\n";
+		schreibeNachricht(socket,Nachricht);
+		String empfangeneNachricht = leseNachricht(socket);
+		while(!empfangeneNachricht.contains("//END//"))
+		{
+			empfangeneNachricht = leseNachricht(socket);
+		}
+		Aktualisieren();
+		Zwischenspeicher="";
+	}
 	/**
 	 * Erledigungsstatus des ToDos wird geaendert
 	 */
