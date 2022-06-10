@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -93,7 +92,6 @@ public class Fenster {
 		 * Benutzer-ID, Port und IP-Adresse werden aus der jeweiligen Textdatei ausgelesen.
 		 */
 
-
 		String Dateiname = "AuthKey.txt";
 		Key= new DateiHandler(Dateiname);
 		Key.openDatei(false);
@@ -128,8 +126,9 @@ public class Fenster {
 					socket = new java.net.Socket(IP,port);
 					schreibeNachricht(socket,authkey);
 
-					String Nachricht="//GETADMIN//"+"\n";
+					String Nachricht="//GETADMIN//\n";
 					schreibeNachricht(socket,Nachricht);
+					
 					String empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
@@ -523,8 +522,8 @@ public class Fenster {
 				else
 				{
 					Aktualisieren();
-					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen" , "Warnung",
-	 							JOptionPane.WARNING_MESSAGE );
+					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen" , "Achtung",
+	 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
 		});
@@ -558,20 +557,21 @@ public class Fenster {
 			{
 				if (index==-1)
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Warnung",
- 							JOptionPane.WARNING_MESSAGE );
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Achtung",
+ 							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else 
 				{
                  if (pars.getAdmin(eint.get(index))==true && priv==false)
  				{
-                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zum löschen freigegeben." , "Fehler",
- 							JOptionPane.ERROR_MESSAGE );
+                	 JOptionPane.showMessageDialog(frmTodoListe , "Eintrag wurde nicht zum löschen freigegeben." , "Warnung",
+ 							JOptionPane.WARNING_MESSAGE );
  				}
 				else 
 				{
+				ImageIcon icon = new ImageIcon("Bilder/mulleimer.png");
 				int response = JOptionPane.showConfirmDialog(frmTodoListe, "Soll der Eintrag wirklich gelöscht werden?  " + "","Eintrag löschen",
-							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);         
+							JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE,icon);         
 					
 					if (response==JOptionPane.YES_OPTION) 
 					{
@@ -604,8 +604,8 @@ public class Fenster {
 			{
 				if (index==-1)						
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Warnung",
- 							JOptionPane.WARNING_MESSAGE );
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Achtung",
+ 							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else
 				{
@@ -613,8 +613,8 @@ public class Fenster {
 					aendereStatus();
 					if (pars.getAdmin(eint.get(i))==true && priv==false)
 					{
-					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag ist nicht zur Bearbeitung freigegeben." , "Fehler",
-							JOptionPane.ERROR_MESSAGE );
+					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag wurde nicht zur Bearbeitung freigegeben." , "Warnung",
+							JOptionPane.WARNING_MESSAGE );
 					}
 				}
 		}
