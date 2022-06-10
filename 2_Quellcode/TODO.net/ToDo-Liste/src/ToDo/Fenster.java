@@ -363,7 +363,16 @@ public class Fenster {
 			 */
 			public void keyTyped(KeyEvent e)
 			{
-				counter=tAEintrag.getText().length();         
+				String inputtext = tAEintrag.getText();      
+				inputtext = inputtext.replace("ä","ae");
+				inputtext = inputtext.replace("ö","oe");
+				inputtext = inputtext.replace("ü","ue");
+				inputtext = inputtext.replace("Ä","Ae");
+				inputtext = inputtext.replace("Ö","Oe");
+				inputtext = inputtext.replace("Ü","Ue");
+				inputtext = inputtext.replace("/", "*~");
+				inputtext = inputtext.replace(":", "$~");
+				counter=inputtext.length();         
 				if (counter>150)
 				{
 					lblCounter.setForeground(Color.red);
@@ -394,10 +403,20 @@ public class Fenster {
 			boolean isNumericT = tFTagErled.getText().chars().allMatch( Character::isDigit );
 			boolean isNumericM = tFMonatErled.getText().chars().allMatch( Character::isDigit );
 			boolean isNumericJ = tFJahrErled.getText().chars().allMatch( Character::isDigit );
-			
-			if (tAEintrag.getText().length()>150)
+		
+			String inputtext = tAEintrag.getText();      
+			inputtext = inputtext.replace("ä","ae");
+			inputtext = inputtext.replace("ö","oe");
+			inputtext = inputtext.replace("ü","ue");
+			inputtext = inputtext.replace("Ä","Ae");
+			inputtext = inputtext.replace("Ö","Oe");
+			inputtext = inputtext.replace("Ü","Ue");
+			inputtext = inputtext.replace("/", "*~");
+			inputtext = inputtext.replace(":", "$~");
+			    
+			if (inputtext.length()>150)
 			{
-				 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich" , "Fehler",
+				 JOptionPane.showMessageDialog(NeuerEintrag , "Maximal 150 Zeichen möglich."+"\n"+"Die Zeichen: ä,ö, ü, '/', ':' zählen doppelt." , "Fehler",
  							JOptionPane.ERROR_MESSAGE );
 			}
 			else if (isNumericT==false||isNumericM==false||isNumericJ==false) 	
@@ -432,12 +451,6 @@ public class Fenster {
 								JOptionPane.ERROR_MESSAGE ); return;
 					}
 				Aktualisieren();	
-				String inputtext = tAEintrag.getText();      
-			    inputtext = inputtext.replace("ä","ae");
-			    inputtext = inputtext.replace("ö","oe");
-			    inputtext = inputtext.replace("ü","ue");
-			    inputtext = inputtext.replace("/", "><$*+");
-			    inputtext = inputtext.replace(":", "><$*-");
 				Eintrag=inputtext;							
 				NeuEintrag(Datum);
 				NeuerEintrag.setVisible(false);
@@ -524,7 +537,7 @@ public class Fenster {
 				else
 				{
 					Aktualisieren();
-					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen" , "Achtung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen." , "Achtung",
 	 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
@@ -559,7 +572,7 @@ public class Fenster {
 			{
 				if (index==-1)
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Achtung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt." , "Achtung",
  							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else 
@@ -606,7 +619,7 @@ public class Fenster {
 			{
 				if (index==-1)						
 				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt" , "Achtung",
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt." , "Achtung",
  							JOptionPane.INFORMATION_MESSAGE );
 				}
 				else
@@ -852,7 +865,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))
+				if (!empfangeneNachricht.contains("//END//"))	
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
