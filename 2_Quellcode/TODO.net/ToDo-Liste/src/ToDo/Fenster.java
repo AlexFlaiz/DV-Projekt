@@ -436,6 +436,8 @@ public class Fenster {
 			    inputtext = inputtext.replace("ä","ae");
 			    inputtext = inputtext.replace("ö","oe");
 			    inputtext = inputtext.replace("ü","ue");
+			    inputtext = inputtext.replace("/", "><$*+");
+			    inputtext = inputtext.replace(":", "><$*-");
 				Eintrag=inputtext;							
 				NeuEintrag(Datum);
 				NeuerEintrag.setVisible(false);

@@ -21,6 +21,8 @@ public class ClientParser {
 		    inputtext = inputtext.replace("ae","ä");
 		    inputtext = inputtext.replace("oe","ö");
 		    inputtext = inputtext.replace("ue","ü");
+		    inputtext = inputtext.replace("><$*+","/");
+		    inputtext = inputtext.replace("><$*-",":");
 			String Eintrag=inputtext;								
 			
 			eventstr = Datum[0]+"."+Datum[1]+"."+Datum[2]+"   " + teilstr[3]+"     " + Eintrag;
