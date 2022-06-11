@@ -68,27 +68,25 @@ public class Fenster {
 	DefaultListModel<String>Eintraege; // Liste von Notizen fuer das GUI
 	static BufferedReader bufferedReader; // Erstellt Ausgabedaten in allgemein lesbarer Form
 	static PrintWriter printWriter; // Nummer des Threads
-	ClientParser pars=new ClientParser();
-	TODOs todo= new TODOs();
+	ClientParser pars=new ClientParser(); // Objekt für Klasse Client Parser
+	TODOs todo= new TODOs();	// Objekt für Klasse TODOs
 	private static String offeneListe;
 	private static String Adminpriv; // Uebergabe des Adminstatus
 	private static boolean priv; // Rolle des Benutzers 1=Admin 0=Default
 	private static boolean AdminBox; // Admin-Checkbox bei ToDo vorhanden/ nicht vorhanden
-	ArrayList <String> Drucktext;
-	private String dateToStr;
-	private Date date;
-	private int counter;
-	private BufferedImage logo;
-	private static String Zwischenspeicher="";
-	private static Timer timer;
+	ArrayList <String> Drucktext; // Erstellt ArrayListt mit Text der Ausgedruckt wird
+	private String dateToStr; // String der das Datum des Zeitstempels ausgibt
+	private Date date;	// Datenformat für das Aktuelle Datum
+	private int counter; // Variable die die Anzahl an Zeichen im Eingabetextfeld anzeigt
+	private BufferedImage logo; // Lädt das HFU Logo
+	private static String Zwischenspeicher=""; // Speichert eine geköschtes Todo kurzzeitig zum Wiederherstellen
+	private static Timer timer; // Timer zur automatischen Aktualisierung
 	
 	static DateiHandler Key; // Dateihandler fuer Benutzer-ID
 	static DateiHandler Port; // Dateihandler fuer den Benutzer-Port
 	static DateiHandler ip; // Dateihandler fuer die IP-Adresse des Benutzers
 
-	/**
-	 * Benutzer-ID, Port und IP-Adresse werden aus der jeweiligen Textdatei ausgelesen.
-	 */
+	
 	public static void main(String[] args) {
 		/**
 		 * Benutzer-ID, Port und IP-Adresse werden aus der jeweiligen Textdatei ausgelesen.
@@ -120,9 +118,6 @@ public class Fenster {
 		 * @param authkey Benutzer-ID
 		 */
 			EventQueue.invokeLater(new Runnable() {
-				/**
-				 * Admin-Status wird bei Server abgefragt und in priv gespeichert.
-				 */
 			public void run() {
 				try {
 					socket = new java.net.Socket(IP,port);
@@ -182,7 +177,8 @@ public class Fenster {
 		frmTodoListe.getContentPane().setLayout(null);
 
 
-
+		//Fenster mit geöffneter Liste
+		
 		// Darstellung der Liste
 		JInternalFrame Liste = new JInternalFrame("Liste");
 		Liste.setResizable(true);
@@ -202,6 +198,7 @@ public class Fenster {
 		btnSchliessen.addActionListener(new ActionListener() {
 			/**
 			 * Liste im GUI schliessen wenn der Button "Schliessen" betaetigt wird
+			 * Liste wird Aktualisiert
 			 * @param e Wenn der Button schliessen betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e)
@@ -250,7 +247,8 @@ public class Fenster {
 
 
 
-        //Fenster NeuerEintrag
+        //Fenster für den neuen Eintrag
+		
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
 		NeuerEintrag.setResizable(true);
 		NeuerEintrag.setBounds(31, 22, 724, 458);
@@ -269,6 +267,7 @@ public class Fenster {
 		btnAbbrechen.addActionListener(new ActionListener() {
 			/**
 			 * Fenster NeuerEintrag wird geschlossen, wenn Button "Abbrechen" betaetigt wird
+			 * Liste wird Aktualisiert.
 			 * @param e Wenn Button "Abbrechen" betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e)
@@ -333,7 +332,8 @@ public class Fenster {
 		JCheckBox CBAdminTodo = new JCheckBox("Von Benutzer \u00E4nderbar");
 		CBAdminTodo.addActionListener(new ActionListener() {
 			/**
-			 * Entscheidung ob ToDo eine AdminBox hat oder nicht
+			 * Admin kann mit der Admin Checkbox entscheiden ob ein Todo von einem Benutzer
+			 * bearbeitet werden kann oder nicht.
 			 * @param e Ob ToDo von Benutzer aenderbar sein soll oder nicht
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -358,17 +358,19 @@ public class Fenster {
 		CBAdminTodo.setVisible(true);
 		}
 
+		//Darstellung des Counters der Textzeichen im Eingabefeld
 		JLabel lblCounter = new JLabel(0+"/150");
 		lblCounter.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCounter.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCounter.setBounds(624, 115, 60, 30);
 		NeuerEintrag.getContentPane().add(lblCounter);
 		
-		// Darstellung Textfeld Eintrag
+		// Darstellung Textfeld für neuen Eintrag
 		JTextArea tAEintrag = new JTextArea();
 		tAEintrag.addKeyListener(new KeyAdapter() {
 			/**
 			 * Zaehlt die eingegebenen Zeichen und gibt die Anzahl im GUI aus.
+			 * Ersetzt Umlaute und Sonderzeichen, die fuer Kommunikation mit dem Server wichtig sind
 			 * Maximal 150 Zeichen sind erlaubt.
 			 * @param e Wenn eine Taste der Tastatur betaetigt wird
 			 */
@@ -407,6 +409,7 @@ public class Fenster {
 			 * Gibt je nach Anzahl der eingegebenen Zeichen fuer Eintrag einen Fehler im GUI aus.
 			 * Das eingegebene Erledigungsdatum wird ebenfalls ueberprueft. Bei korrektem Datum wird
 			 * das Erledigungsdatum in Da gespeichert.
+			 * Ersetzt Umlaute und Sonderzeichen, die fuer Kommunikation mit dem Server wichtig sind.
 			 * @param e Wenn Button Eintrag hinzufuegen gedrueckt wurde
 			 */
 		public void actionPerformed(ActionEvent e) 
@@ -481,7 +484,8 @@ public class Fenster {
 		JButton btnLeeren = new JButton("Leeren");
 		btnLeeren.addActionListener(new ActionListener() {
 			/**
-			 * Wenn der Button "Leeren" geklickt wird, wird der Eintrag geleert
+			 * Wenn der Button "Leeren" geklickt wird, werden alle Eingaben im
+			 * Fenster fuer einen neuen Eintrag geleert
 			 * @param e Wenn der "Loeschen" Button betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e)
@@ -497,7 +501,7 @@ public class Fenster {
 		btnLeeren.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnLeeren.setBounds(30, 277, 178, 30);
 		NeuerEintrag.getContentPane().add(btnLeeren);
-
+		
 		JLabel lblTag_1 = new JLabel("Tag");
 		lblTag_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTag_1.setBounds(30, 124, 60, 13);
@@ -518,20 +522,61 @@ public class Fenster {
 
 
 		// Fenster mit ToDo-Liste
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 93, 768, 399);
 		frmTodoListe.getContentPane().add(scrollPane);
+
+		JButton btnerledigt = new JButton("Erledigt");
+		btnerledigt.addActionListener(new ActionListener() {
+			/**
+			 * Wenn der Button Erledigt betaetigt wird,
+			 * zunaechst geprueft ob ein Eintrag ausgewaehlt wurde, dann wird die Berechtigung des Nutzers
+			 * zum veraendern des Erledigungsstatus ueberprueft. Bei nicht vorhandener
+			 * Berechtigung wird eine Fehlermeldung ausgegeben,
+			 * bei vorhandener Berechtigung wird der Erledigungsstatus geandert.
+			 * @param e Wenn der Button Erledigt betaetigt wird
+			 */
+			public void actionPerformed(ActionEvent e) 
+			{
+				timer.stop();
+				if (index==-1)						
+				{
+					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt oder die Zeit wurde überschritten. \n Bitte Eintrag auswählen." , "Achtung",
+ 							JOptionPane.INFORMATION_MESSAGE );
+				}
+				else
+				{
+					int i=index;
+					aendereStatus();
+					if (pars.getAdmin(eint.get(i))==true && priv==false)
+					{
+					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag wurde nicht zur Bearbeitung freigegeben." , "Warnung",
+							JOptionPane.WARNING_MESSAGE );
+					}
+				}
+				btnerledigt.setText("Erledigt");
+				timer.start();
+		}
+		});
+		// Darstellung Button Erledigt
+		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnerledigt.setBounds(488, 502, 140, 31);
+		frmTodoListe.getContentPane().add(btnerledigt);
 
 		// Index des ausgewaehlten ToDos
 		Eintraege=new DefaultListModel<>();
 		JList<String> list = new JList<>(Eintraege);
 		list.addMouseListener(new MouseAdapter() {
 			/**
-			 * Wenn die Maus im Bereich Eintraege geklickt wird,
-			 * wird das ToDo mit dem ToDo mit gleichem Index vom Server verglichen.
-			 * Wenn die Indizes uebereinstimmen, wird der Index gespeichert.
+			 * Wenn die Maus in der ToDo Liste einen eintrag auswaehlt,
+			 * wird geschaut ob das ausgewaehlte Todo noch mit den Todos in der sql Datei zusammenpassen.
+			 * Wenn die Eintraege uebereinstimmen kann der Index gespeichert werden
+			 * und der Eintrag kann mit Hilfe des Indexes bearbeitet weden. 
 			 * Anderenfalls wird die Liste aktualisiert und der Nutzer wird aufgefordert,
 			 * den Eintrag erneut auszuwaehlen.
+			 * Der Text des Erledigen Buttons wird ebenfalls je nach status des 
+			 * ausgewaehlten ToDos geaendert.
 			 * @param e Wenn die Maus im Bereich Eintraege betaetigt wird
 			 */
 			public void mouseClicked(MouseEvent e)
@@ -553,13 +598,27 @@ public class Fenster {
 					JOptionPane.showMessageDialog(frmTodoListe , "Liste wurde Aktualisiert, bitte Eintrag erneut auswählen." , "Achtung",
 	 							JOptionPane.INFORMATION_MESSAGE);
 				}
+				String teilstr[];
+				teilstr = eint.get(index).split("::");
+				String ButtonText= teilstr[3];
+				if (ButtonText.equals("true"))
+				{
+					btnerledigt.setText("Offen");
+				}
+				else if (ButtonText.equals(""))
+				{
+					btnerledigt.setText("Erledigt");
+				}
+				else 
+				{
+					btnerledigt.setText("Erledigt");
+				}
 				timer.start();
 			}
 		});
 		scrollPane.setViewportView(list);
 		list.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
-		// Darstellung der Eintraege
 		JLabel Eintraege = new JLabel("Datum | Status | Eintrag");
 		scrollPane.setColumnHeaderView(Eintraege);
 		Eintraege.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -570,6 +629,7 @@ public class Fenster {
 		frmTodoListe.getContentPane().add(btnLoeschen);
 		btnLoeschen.addActionListener(new ActionListener() {
 			/**
+			 * Es wird zunaechst ueberprueft ob ein Todo ausgewaehlt wurde
 			 * Wenn ein ToDo geloescht werden soll wird die Berechtigung des Nutzers
 			 * zum loeschen des ToDos ueberprueft.
 			 * Ist der Nutzer nicht berechtigt, wird eine Fehlermeldung ausgegeben.
@@ -609,47 +669,12 @@ public class Fenster {
 		});
 		btnLoeschen.setFont(new Font("Tahoma", Font.PLAIN, 18));
 
-		// Darstellung der ToDo-Liste
+		// Darstellung Überschrift der ToDo-Liste
 		JLabel lblToDoList = new JLabel("To-do Liste");
 		lblToDoList.setHorizontalAlignment(SwingConstants.CENTER);
 		lblToDoList.setBounds(0, 22, 788, 65);
 		frmTodoListe.getContentPane().add(lblToDoList);
 		lblToDoList.setFont(new Font("Monotype Corsiva", Font.BOLD, 50));
-
-		JButton btnerledigt = new JButton("Erledigt");
-		btnerledigt.addActionListener(new ActionListener() {
-			/**
-			 * Wenn der Button Erledigt betaetigt wird, wird die Berechtigung des Nutzers
-			 * zum veraendern des Erledigungsstatus ueberprueft. Bei nicht vorhandener
-			 * Berechtigung wird eine Fehlermeldung ausgegeben,
-			 * bei vorhandener Berechtigung wird der Erledigungsstatus geandert.
-			 * @param e Wenn der Button Erledigt betaetigt wird
-			 */
-			public void actionPerformed(ActionEvent e) 
-			{
-				timer.stop();
-				if (index==-1)						
-				{
-					JOptionPane.showMessageDialog(frmTodoListe , "Es wurde kein Eintrag ausgewählt oder die Zeit wurde überschritten. \n Bitte Eintrag auswählen." , "Achtung",
- 							JOptionPane.INFORMATION_MESSAGE );
-				}
-				else
-				{
-					int i=index;
-					aendereStatus();
-					if (pars.getAdmin(eint.get(i))==true && priv==false)
-					{
-					JOptionPane.showMessageDialog(frmTodoListe , "Eintrag wurde nicht zur Bearbeitung freigegeben." , "Warnung",
-							JOptionPane.WARNING_MESSAGE );
-					}
-				}
-				timer.start();
-		}
-		});
-		// Darstellung Button Erledigt
-		btnerledigt.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnerledigt.setBounds(488, 502, 140, 31);
-		frmTodoListe.getContentPane().add(btnerledigt);
 
 		// Darstellung Admin-Anzeige. Wird nur angezeigt, wenn der Nutzer Admin-Rechte hat.
 		JLabel lblAdmin = new JLabel("Admin");
@@ -696,7 +721,8 @@ public class Fenster {
 				AdminBox=false;
 			}
 		});
-
+		
+		//Darstellung Menüleiste
 		JMenuBar menuBar = new JMenuBar();
 		frmTodoListe.setJMenuBar(menuBar);
 
@@ -708,7 +734,8 @@ public class Fenster {
 		mntmNeuerEintrag.addActionListener(new ActionListener() {
 			/**
 			 * Wenn ueber die Menueleiste auf NeuerEintrag geklickt wird,
-			 * soll sich das Fenster aktualisieren und sich oeffnen
+			 * soll sich das Fenster aktualisieren und sich das Fenster
+			 * fuer einen neuen Eintrag oeffnen
 			 * @param e Wenn Menuepunkt NeuerEintrag betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e)
@@ -723,7 +750,7 @@ public class Fenster {
 		JMenuItem mntmOeffnen = new JMenuItem("\u00D6ffnen");
 		mntmOeffnen.addActionListener(new ActionListener() {
 			/**
-			 * Wenn in der Menueleiste auf Oeffnen geklickt wird sollen die offenen ToDos angezeigt werden.
+			 * Wenn in der Menueleiste auf Oeffnen geklickt wird kann eine Datei zu oeffnen ausgewaehlt werden
 			 * @param e Wenn Menuepunkt Oeffnen betaetigt wird
 			 */
 			public void actionPerformed(ActionEvent e) {
@@ -760,7 +787,8 @@ public class Fenster {
 		mntmOffene.addActionListener(new ActionListener() {
 			/**
 			 * Offene Eintraege speichern, wenn im Menue unter "Speichern" "Alle Eintraege" geklickt wird
-			 * @param e Wenn im Menue unter "Speichern" "Offene Eintraege" geklickt wird.  */
+			 * @param e Wenn im Menue unter "Speichern" "Offene Eintraege" geklickt wird. 
+			 */
 			public void actionPerformed(ActionEvent e)
 			{
 				Aktualisieren();
@@ -772,6 +800,12 @@ public class Fenster {
 		
 		JMenuItem mntmWiederherstellen = new JMenuItem("Wiederherstellen");
 		mntmWiederherstellen.addActionListener(new ActionListener() {
+		/**
+		 * Mit wiederherstellen kann ein geloeschtes Todo, das sch noch im Zwischenspeicher befinder
+		 * wiederhergestellt werden
+		 * Befindet sich kein Todo im Zwischenspeicher, wird eine Fehlermeldung ausgegeben
+		 * @param e Wenn im Menue unter "Wiederherstellen" geklickt wird. 
+		 */
 			public void actionPerformed(ActionEvent e) 
 			{
 				if (Zwischenspeicher.equals(""))
@@ -827,7 +861,7 @@ public class Fenster {
 	// Methoden der Klasse
 
 	/**
-	 * Neues ToDo wird erstellt
+	 * Neues ToDo wird erstellt.
 	 * @param Datum Datum in dd-mm-yyyy Format
 	 */
 	public void NeuEintrag(String Datum)
@@ -903,7 +937,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))	 				
+				if (!empfangeneNachricht.contains("//END//"))	 			
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
@@ -939,6 +973,7 @@ public class Fenster {
 
 	/**
 	 * ToDos werden durch den gesendeten Befehl im Server geloescht
+	 * Geloeschtes todo wird im Zwischenspeicher zur Wiederherstellung kurzzeitig gespeichert.
 	 * @param socket
 	 * @param i Index der zu loeschenden Nachricht
 	 */
@@ -987,7 +1022,7 @@ public class Fenster {
 		index=-1;
 	}
 	/**
-	 * gelöschtes ToDo wird aus dem zwischenspeicher geholt
+	 * Geloeschtes ToDo wird aus dem zwischenspeicher geholt
 	 */
 	public void Wiederherstellen()
 	{
