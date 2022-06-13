@@ -155,6 +155,9 @@ public class Fenster {
 					timer.start();
 
 				} catch (Exception e) {
+					JOptionPane.showMessageDialog(null , "Es konnte keine Verbindung mit dem Server hergestellt werden." , "Fehler",
+							JOptionPane.ERROR_MESSAGE );
+					System.exit(0);
 					e.printStackTrace();
 				}
 			}
@@ -973,7 +976,9 @@ public class Fenster {
 			printWriter.print(nachricht);
 			printWriter.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			JOptionPane.showMessageDialog(null , "Verbindung zum Server wurde unterbrochen." , "Fehler",
+					JOptionPane.ERROR_MESSAGE );
+			System.exit(0);
 			e.printStackTrace();
 		}
 	}
@@ -994,9 +999,11 @@ public class Fenster {
 		return nachricht;
 		}
 	catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "";
+		JOptionPane.showMessageDialog(null , "Verbindung zum Server wurde unterbrochen." , "Fehler",
+				JOptionPane.ERROR_MESSAGE );
+		System.exit(0);
+		e.printStackTrace();
+		return "";
 		}
 	}
 
@@ -1013,7 +1020,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))	 		
+				if (!empfangeneNachricht.contains("//END//"))	 			
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
@@ -1365,5 +1372,3 @@ public class Fenster {
 		}
 		}
 	}
-
-

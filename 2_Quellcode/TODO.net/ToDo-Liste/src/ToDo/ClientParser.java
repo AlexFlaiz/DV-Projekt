@@ -29,12 +29,12 @@ public class ClientParser {
         Datum = teilstr[2].split("-");
 
         String inputtext = teilstr[1];
-        inputtext = inputtext.replace("ae","Ã¤");
-        inputtext = inputtext.replace("oe","Ã¶");
-        inputtext = inputtext.replace("ue","Ã¼");
-        inputtext = inputtext.replace("Ae","Ã„");
-        inputtext = inputtext.replace("Oe","Ã–");
-        inputtext = inputtext.replace("Ue","Ãœ");
+        inputtext = inputtext.replace("ae","ä");
+        inputtext = inputtext.replace("oe","ö");
+        inputtext = inputtext.replace("ue","ü");
+        inputtext = inputtext.replace("Ae","Ä");
+        inputtext = inputtext.replace("Oe","Ö");
+        inputtext = inputtext.replace("Ue","Ü");
         inputtext = inputtext.replace("*~","/");
         inputtext = inputtext.replace("$~",":");
         String Eintrag=inputtext;
