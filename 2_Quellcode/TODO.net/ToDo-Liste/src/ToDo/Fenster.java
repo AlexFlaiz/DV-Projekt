@@ -49,6 +49,8 @@ import java.util.Date;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.Timer;
+import javax.swing.JEditorPane;
+import java.awt.Toolkit;
 
 
 public class Fenster {
@@ -70,7 +72,7 @@ public class Fenster {
 	static PrintWriter printWriter; // Nummer des Threads
 	ClientParser pars=new ClientParser(); // Objekt für Klasse Client Parser
 	TODOs todo= new TODOs();	// Objekt für Klasse TODOs
-	private static String offeneListe;
+	private static String offeneListe; // Speichert die geöffnete Textdatei in einem String
 	private static String Adminpriv; // Uebergabe des Adminstatus
 	private static boolean priv; // Rolle des Benutzers 1=Admin 0=Default
 	private static boolean AdminBox; // Admin-Checkbox bei ToDo vorhanden/ nicht vorhanden
@@ -171,17 +173,78 @@ public class Fenster {
 	 */
 	private void initialize() {
 		frmTodoListe = new JFrame();
+		File TodoLogo = new File("Bilder/to-do-list.png");
+		frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage(TodoLogo.toString()));
+		frmTodoListe.setResizable(false);
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 610);
 		frmTodoListe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoListe.getContentPane().setLayout(null);
 
+		
+		//Fenster mit Handbuch
+		
+		//Darstellung des Hilfe Fensters
+		JInternalFrame FensterHilfe = new JInternalFrame("Hilfe");
+		FensterHilfe.setResizable(false);
+		FensterHilfe.setBounds(10, 0, 768, 541);
+		frmTodoListe.getContentPane().add(FensterHilfe);
+		FensterHilfe.getContentPane().setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Handbuch");
+		lblNewLabel.setBounds(10, 0, 736, 57);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("Monotype Corsiva", Font.PLAIN, 50));
+		FensterHilfe.getContentPane().add(lblNewLabel);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(10, 53, 736, 409);
+		FensterHilfe.getContentPane().add(scrollPane_3);
+		
+		//Darstellung der Html Datei in einer EditorPane
+		JEditorPane editorPane = new JEditorPane();
+		editorPane.setEditable(false);
+		   try {
+	       File Handbuch =  new File("Handbuch/index.html");
+			   editorPane.setPage(Handbuch.toURI().toURL());
+	        } 
+	        catch (IOException ioe) {
+	            // HTML wird als Texttyp vorgegeben.
+	            editorPane.setContentType("text/html");
+	 
+	            // Text für Fehlermeldung wird
+	            // im HTML-Format übergeben.
+	            editorPane.setText("<html> <center>"
+	                    + "<h1>Page not found.</h1>"
+	                    + "</center> </html>.");
+	        }
+		scrollPane_3.setViewportView(editorPane);
+		
+		JButton btnSchliessen_1 = new JButton("Schlie\u00DFen");
+		btnSchliessen_1.setEnabled(true);
+		btnSchliessen_1.addActionListener(new ActionListener() {
+			/**
+			 * FensterHilfe im GUI schliessen wenn der Button "Schliessen" betaetigt wird
+			 * @param e Wenn der Button schliessen betaetigt wird
+			 */
+			public void actionPerformed(ActionEvent e) {
+				FensterHilfe.setVisible(false);
+				timer.start();
+			}
+		});
+		//Darstellung Button Schließen
+		btnSchliessen_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSchliessen_1.setBounds(303, 472, 150, 30);
+		FensterHilfe.getContentPane().add(btnSchliessen_1);
+		FensterHilfe.setVisible(false);
 
+		
+		
 		//Fenster mit geöffneter Liste
 		
 		// Darstellung der Liste
 		JInternalFrame Liste = new JInternalFrame("Liste");
-		Liste.setResizable(true);
+		Liste.setResizable(false);
 		Liste.setBounds(114, 10, 549, 493);
 		frmTodoListe.getContentPane().add(Liste);
 		Liste.getContentPane().setLayout(null);
@@ -250,7 +313,7 @@ public class Fenster {
         //Fenster für den neuen Eintrag
 		
 		JInternalFrame NeuerEintrag = new JInternalFrame("Neuer Eintrag");
-		NeuerEintrag.setResizable(true);
+		NeuerEintrag.setResizable(false);
 		NeuerEintrag.setBounds(31, 22, 724, 458);
 		frmTodoListe.getContentPane().add(NeuerEintrag);
 		NeuerEintrag.getContentPane().setLayout(null);
@@ -854,6 +917,19 @@ public class Fenster {
 			}
 		});
 		mnListe.add(mntmAktualisieren);
+		
+		JMenu mnHilfe = new JMenu("Hilfe");
+		menuBar.add(mnHilfe);
+		
+		JMenuItem mntmHandbuch = new JMenuItem("Handbuch");
+		mntmHandbuch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Aktualisieren();
+				FensterHilfe.setVisible(true);
+				timer.stop();
+			}
+		});
+		mnHilfe.add(mntmHandbuch);
 	}
 
 
@@ -937,7 +1013,7 @@ public class Fenster {
 			{
 				empfangeneNachricht = leseNachricht(socket);
 				eint.add(empfangeneNachricht);
-				if (!empfangeneNachricht.contains("//END//"))	 			
+				if (!empfangeneNachricht.contains("//END//"))	 		
 				{
 				schreibeNachricht(socket, "//OK//\n");
 				}
@@ -1289,3 +1365,5 @@ public class Fenster {
 		}
 		}
 	}
+
+
