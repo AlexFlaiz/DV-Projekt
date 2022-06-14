@@ -30,6 +30,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JInternalFrame;
 import javax.swing.JTextField;
 import java.awt.Color;
+import java.awt.Desktop;
 import javax.swing.JTextArea;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -39,6 +40,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -764,9 +766,22 @@ public class Fenster {
 		lblAdmin.setVisible(true);
 		}
 		
-		//Erstellt HFU Logo
+		//Erstellt HFU Logo und verlinkt auf HFU Internetseite
 		try {															
 			JLabel lblLogo = new JLabel();								
+			lblLogo.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					  try 
+				        {
+				            Desktop d=Desktop.getDesktop();
+				            d.browse(new URI("https://www.hs-furtwangen.de/")); 
+				        }
+				        catch(Exception ex) 
+				        {
+				            ex.printStackTrace();
+				        }
+				}
+			});
 			lblLogo.setHorizontalAlignment(SwingConstants.RIGHT);
 			logo = ImageIO.read(new File("Bilder/HFU-Logo.png"));
 			lblLogo.setIcon(new ImageIcon(logo));
