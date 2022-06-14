@@ -37,7 +37,7 @@ public class ServSock {
 	private java.net.ServerSocket server;
 	
 	/**
-	 *BufferedReader für TCP/IT-Verbindung
+	 *BufferedReader fuer TCP/IT-Verbindung
 	 */
 	private BufferedReader reader;
 	
@@ -67,12 +67,12 @@ public class ServSock {
 	private DataBaseHandler dbh ;
 	
 	/**
-	 * Schluessel für die Anmeldung als normaler Nutzer
+	 * Schluessel fuer die Anmeldung als normaler Nutzer
 	 */
 	private DateiHandler authGet;
 	
 	/**
-	 * Schluessel für die Anmeldung als Admin
+	 * Schluessel fuer die Anmeldung als Admin
 	 */
 	private DateiHandler adminGet;
 	
@@ -144,7 +144,7 @@ public class ServSock {
 	
 	/**
 	 * List Zeilenweise Stings aus dem TCP/IP-Socket
-	 * @return gibt den String der Aufgaben zurück
+	 * @return gibt den String der Aufgaben zurueck
 	 * @throws IOException
 	 */
 	public String getStr() throws IOException {
@@ -169,7 +169,7 @@ public class ServSock {
 	}
 	
 	/**
-	 * Schließt den ServerSocket der TCP/IP-Verbindung
+	 * Schliesst den ServerSocket der TCP/IP-Verbindung
 	 * @throws IOException
 	 */
 	public void close() throws IOException {

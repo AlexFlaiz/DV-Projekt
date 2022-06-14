@@ -95,7 +95,7 @@ public class DateiHandler {
 	}
 	
 	/**
-	 * Schließt die Datei
+	 * Schliesst die Datei
 	 */
 	public void close() {
 		try {
