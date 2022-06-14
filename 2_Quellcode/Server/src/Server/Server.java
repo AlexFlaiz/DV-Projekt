@@ -35,6 +35,7 @@ public class Server {
 		Port= new DateiHandler(PortDatei);
 		Port.openDatei(false);
 		port=Integer.parseInt(Port.read());
+		Port.close();
 		ServSock server = new ServSock(port, dbh);
 		System.out.println("Server gestartet!");
 		while(true) {
