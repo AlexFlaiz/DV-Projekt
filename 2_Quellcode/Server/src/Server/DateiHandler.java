@@ -19,7 +19,7 @@ public class DateiHandler {
 	private String dateiname;
 	
 	/**
-	 * FileWrite fuer zu schreibende Daten
+	 * FileWrite fuer zu schreibende Daten 
 	 */
 	private FileWriter writer;
 	

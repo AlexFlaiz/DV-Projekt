@@ -7,11 +7,15 @@ import java.util.*;
 
 /**
  * Diese Klasse ist fuer den Start des Servers verantwortlich
+
  * @author Lukas Rumpel
  * @author Tobias Ohnmacht
  * @version 1.0
  */
 public class Server {
+	
+	private static int port; 
+	private static DateiHandler Port;
 	
 	
 	/**
@@ -28,7 +32,12 @@ public class Server {
 	public static void normalMode() {
 		DataBaseHandler dbh;
 		dbh = new DataBaseHandler("jdbc:sqlite:TODO.db");
-		ServSock server = new ServSock(1112, dbh);
+		String PortDatei = "Port.txt";
+		Port= new DateiHandler(PortDatei);
+		Port.openDatei(false);
+		port=Integer.parseInt(Port.read());
+		Port.close();
+		ServSock server = new ServSock(port, dbh);
 		System.out.println("Server gestartet!");
 		while(true) {
 			server.login();

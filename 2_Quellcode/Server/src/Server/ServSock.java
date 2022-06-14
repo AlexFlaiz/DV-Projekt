@@ -8,7 +8,7 @@ import java.io.*;
  * @author Lukas Rumpel
  * @author Tobias Ohnmacht
  * @version 1.0
- */
+ */ 
 public class ServSock {
 	
 	/**
