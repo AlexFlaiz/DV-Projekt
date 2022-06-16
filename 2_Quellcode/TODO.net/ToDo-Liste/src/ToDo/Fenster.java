@@ -153,7 +153,6 @@ public class Fenster {
 					//Alle 30s wird Aktualisiert
 					timer = new Timer(30000, new ActionListener() { 
 						public void actionPerformed(ActionEvent e) {
-							System.out.println("start timer");
 							window.Aktualisieren();
 						}
 					});
@@ -199,11 +198,12 @@ public class Fenster {
 		//Fenster mit Handbuch
 		
 		//Darstellung des Hilfe Fensters
-		JInternalFrame FensterHilfe = new JInternalFrame("Hilfe");
+		JFrame FensterHilfe = new JFrame("Hilfe");
+		FensterHilfe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		FensterHilfe.setResizable(false);
-		FensterHilfe.setBounds(10, 0, 768, 541);
-		frmTodoListe.getContentPane().add(FensterHilfe);
+		FensterHilfe.setBounds(10, 0, 768, 550);
 		FensterHilfe.getContentPane().setLayout(null);
+		FensterHilfe.setLocationRelativeTo(frmTodoListe);
 		
 		JLabel lblNewLabel = new JLabel("Handbuch");
 		lblNewLabel.setBounds(10, 0, 736, 57);
@@ -243,7 +243,6 @@ public class Fenster {
 			 */
 			public void actionPerformed(ActionEvent e) {
 				FensterHilfe.setVisible(false);
-				timer.start();
 			}
 		});
 		//Darstellung Button Schlieﬂen
@@ -953,9 +952,7 @@ public class Fenster {
 		JMenuItem mntmHandbuch = new JMenuItem("Handbuch");
 		mntmHandbuch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Aktualisieren();
 				FensterHilfe.setVisible(true);
-				timer.stop();
 			}
 		});
 		mnHilfe.add(mntmHandbuch);
