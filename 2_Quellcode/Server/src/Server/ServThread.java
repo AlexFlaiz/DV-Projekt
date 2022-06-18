@@ -55,6 +55,7 @@ public class ServThread implements Runnable{
 				fehler.openDatei(true);
 				fehler.writeErr(e.getMessage()+ "\n");
 				fehler.close();
+				System.exit(0);
 			}
 	    }
 	

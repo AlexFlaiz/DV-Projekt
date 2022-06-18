@@ -203,6 +203,7 @@ public class ServSock {
 				fehler.openDatei(true);
 				fehler.writeErr(e.getMessage() + "\n");
 				fehler.close();
+				System.exit(0);
 				return false;
 			}
 		
