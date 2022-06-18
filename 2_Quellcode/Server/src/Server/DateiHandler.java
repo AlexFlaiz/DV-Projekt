@@ -19,7 +19,7 @@ public class DateiHandler {
 	private String dateiname;
 	
 	/**
-	 * FileWrite fuer zu schreibende Daten
+	 * FileWrite fuer zu schreibende Daten 
 	 */
 	private FileWriter writer;
 	
@@ -95,7 +95,7 @@ public class DateiHandler {
 	}
 	
 	/**
-	 * Schließt die Datei
+	 * Schliesst die Datei
 	 */
 	public void close() {
 		try {
@@ -122,7 +122,7 @@ public class DateiHandler {
 	}
 	
 	/**
-	 * Erstellt String Arrays für Aufgabenelemente
+	 * Erstellt String Arrays fuer Aufgabenelemente
 	 * @param elements die Aufgaben
 	 * @return str den String der Elemente
 	 */
