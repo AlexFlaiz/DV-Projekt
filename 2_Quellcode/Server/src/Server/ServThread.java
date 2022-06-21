@@ -77,6 +77,7 @@ public class ServThread implements Runnable{
 				fehler.openDatei(true);
 				fehler.writeErr(e.getMessage()+ "\n");
 				fehler.close();
+				System.exit(0);
 			}
 		}
 	}
@@ -132,6 +133,7 @@ public class ServThread implements Runnable{
 				fehler.openDatei(true);
 				fehler.writeErr(e1.getMessage()+ "\n");
 				fehler.close();
+				System.exit(0);
 			}
 			Thread.currentThread().stop();
 			break;
@@ -148,6 +150,7 @@ public class ServThread implements Runnable{
 			fehler.openDatei(true);
 			fehler.writeErr(e.getMessage()+ "\n");
 			fehler.close();
+			System.exit(0);
 		}
 	}	
 	
