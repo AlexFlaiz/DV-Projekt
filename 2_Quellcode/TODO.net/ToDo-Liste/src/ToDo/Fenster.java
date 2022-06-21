@@ -134,6 +134,12 @@ public class Fenster {
 					schreibeNachricht(socket,Nachricht);
 					
 					String empfangeneNachricht = leseNachricht(socket);
+					if (empfangeneNachricht.equals("denied!"))
+					{
+						JOptionPane.showMessageDialog(null , "Fehlerhafter Authentifikationsschlüssel." , "Fehler",
+								JOptionPane.ERROR_MESSAGE );
+						System.exit(0);
+					}
 					empfangeneNachricht = leseNachricht(socket);
 					empfangeneNachricht = leseNachricht(socket);
 					String [] SplidAdmin = empfangeneNachricht.split("//");
