@@ -51,6 +51,13 @@ import java.util.Date;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.Timer;
+
+import Breakout.Board;
+import Pacman.Pacman;
+import Snake.SnakeGame;
+import SpaceInvaders.SpaceInvaders;
+import Tetris.Tetris;
+
 import javax.swing.JEditorPane;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -186,7 +193,6 @@ public class Fenster {
 	 */
 	private void initialize() {
 		frmTodoListe = new JFrame();
-		frmTodoListe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoListe.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				schreibeNachricht(socket, "//ENDCON//\n");
@@ -195,6 +201,7 @@ public class Fenster {
 		});
 		File TodoLogo = new File("Bilder/to-do-list.png");
 		frmTodoListe.setIconImage(Toolkit.getDefaultToolkit().getImage(TodoLogo.toString()));
+		frmTodoListe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoListe.setResizable(false);
 		frmTodoListe.setTitle("TODO.net");
 		frmTodoListe.setBounds(100, 100, 800, 610);
@@ -951,6 +958,95 @@ public class Fenster {
 			}
 		});
 		mnListe.add(mntmAktualisieren);
+		
+		JMenu mnGame = new JMenu("Spiele");
+		menuBar.add(mnGame);
+		
+		//Fenster mit Spiel "Snake" wird erzeugt
+		JMenuItem mntmSnake = new JMenuItem("Snake");
+		mntmSnake.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(() -> {
+		           JFrame frm = new JFrame();
+		           SnakeGame Game=new SnakeGame();
+		           frm. add(Game);
+		           frm.setResizable(false);
+		           frm.pack();
+		           frm.setTitle("Snake");
+		           frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		           frm.setVisible(true);
+		           frm.setLocationRelativeTo(frmTodoListe);
+				});
+			
+			}
+		});
+		mnGame.add(mntmSnake);
+		
+		JMenuItem mntmPacman = new JMenuItem("Pacman");
+		mntmPacman.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(() -> {
+		            JFrame frm = new JFrame();
+		            Pacman Game=new Pacman();
+		            frm.add(Game);
+		            frm.setResizable(false);
+		            frm.setVisible(true);
+		            frm.setTitle("Pacman");
+		            frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            frm.setSize(380, 420);
+		            frm.setLocationRelativeTo(frmTodoListe);
+				});
+			}
+		});
+		mnGame.add(mntmPacman);
+		
+		JMenuItem mntmSpaceInvaders = new JMenuItem("Space Invaders");
+		mntmSpaceInvaders.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(() -> {
+		            JFrame frm = new JFrame();
+		            SpaceInvaders Game=new SpaceInvaders();
+		            frm.add(Game);
+		            frm.setResizable(false);
+		            frm.setVisible(true);
+		            frm.setTitle("Space Invaders");
+		            frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            frm.setSize(358, 350);
+		            frm.setLocationRelativeTo(frmTodoListe);
+				});
+			}
+		});
+		
+		JMenuItem mntmTetris = new JMenuItem("Tetris");
+		mntmTetris.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				   EventQueue.invokeLater(() -> {
+
+			            var game = new Tetris();
+			            game.setVisible(true);
+				   });
+			}
+		});
+		mnGame.add(mntmTetris);
+		mnGame.add(mntmSpaceInvaders);
+		
+		JMenuItem mntmBreakout = new JMenuItem("Breakout");
+		mntmBreakout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(() -> {
+		            JFrame game = new JFrame();
+		            game.setVisible(true);
+		            game.add(new Board());
+		            game.setTitle("Breakout");
+		            game.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		            game.setLocationRelativeTo(frmTodoListe);
+		            game.setResizable(false);
+		            game.pack();
+		        });
+				
+			}
+		});
+		mnGame.add(mntmBreakout);
 		
 		JMenu mnHilfe = new JMenu("Hilfe");
 		menuBar.add(mnHilfe);
