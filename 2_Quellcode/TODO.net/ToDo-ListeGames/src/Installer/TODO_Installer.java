@@ -162,10 +162,24 @@ public class TODO_Installer {
 			JButton btnNewButton = new JButton("Speichern");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
+					if (tFIPAdress.getText().equals("")||tFPort.getText().equals("")||tFSchluessel.getText().equals(""))
+					{
+						JOptionPane.showMessageDialog(frmTodoInstaller , "Bitte alle Felder ausfüllen." , "Achtung",
+								JOptionPane.WARNING_MESSAGE);
+					}
+					else
+					{
 					DateiSchreiben();
 					ImageIcon icon = new ImageIcon("Bilder/diskette.png");
 					JOptionPane.showMessageDialog(frmTodoInstaller , "Einstellungen wurden erfolgreich gespeichert." , "Gespeichert",
 							JOptionPane.INFORMATION_MESSAGE,icon );
+					try {
+						Laden();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					}
 				}
 			});
 			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -227,15 +241,20 @@ public class TODO_Installer {
 		
 		try {
 			writerSchluessel = new FileWriter(dateiSchluessel);
-			writerSchluessel.write(tFSchluessel.getText());
+			String result = tFSchluessel.getText().replace(" ", "");
+			writerSchluessel.write(result);
 			writerSchluessel.flush();
 			writerSchluessel.close();
+			
 			writerIP = new FileWriter(dateiIP);
-			writerIP.write(tFIPAdress.getText());
+			String result2 = tFIPAdress.getText().replace(" ", "");
+			writerIP.write(result2);
 			writerIP.flush();
 			writerIP.close();
+			
 			writerPort = new FileWriter(dateiPort);
-			writerPort.write(tFPort.getText());
+			String result3 = tFPort.getText().replace(" ", "");
+			writerPort.write(result3);
 			writerPort.flush();
 			writerPort.close();
 		}catch(IOException e) {
@@ -251,6 +270,7 @@ public class TODO_Installer {
 		    FileReader readerIP;
 		    FileReader readerPort;
 			try {
+	
 				readerSchluessel = new FileReader("AuthKey.txt");
 				readerIP = new FileReader("IPaddress.txt");
 				readerPort = new FileReader("Port.txt");
@@ -269,14 +289,12 @@ public class TODO_Installer {
 				String strPort = Port.readLine();
 				tFPort.setText(strPort);
 				Port.close();
-		    
+
 			} catch (FileNotFoundException e) {
 				tFIPAdress.setText("");
 				tFPort.setText("");
 				tFSchluessel.setText("");
 			}
-			
-			
 	}
 	
 }
