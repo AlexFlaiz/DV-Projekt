@@ -15,6 +15,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -72,6 +73,8 @@ public class TODO_Installer {
 		frmTodoInstaller = new JFrame();
 		frmTodoInstaller.setResizable(false);
 		frmTodoInstaller.setTitle("TODO Installer");
+		File TodoInstallerLogo = new File("Bilder/repair-tools.png");
+		frmTodoInstaller.setIconImage(Toolkit.getDefaultToolkit().getImage(TodoInstallerLogo.toString()));
 		frmTodoInstaller.setBounds(100, 100, 489, 375);
 		frmTodoInstaller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoInstaller.getContentPane().setLayout(null);
@@ -83,6 +86,8 @@ public class TODO_Installer {
 				JFrame FensterHilfe = new JFrame("Hilfe");
 				FensterHilfe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				FensterHilfe.setResizable(false);
+				File HilfeLogo = new File("Bilder/question.png");
+				FensterHilfe.setIconImage(Toolkit.getDefaultToolkit().getImage(HilfeLogo.toString()));
 				FensterHilfe.setBounds(10, 0, 768, 550);
 				FensterHilfe.getContentPane().setLayout(null);
 				FensterHilfe.setLocationRelativeTo(frmTodoInstaller);

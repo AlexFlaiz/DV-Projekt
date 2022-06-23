@@ -1,3 +1,9 @@
+/**
+ * 
+ *  @author alex flaiz, tobias aberle
+ *  @version 1.0.0
+ *  
+ */
 package Installer;
 
 
@@ -9,6 +15,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -35,7 +42,7 @@ public class TODO_Installer {
 	private JTextField tFPort;
 
 	/**
-	 * Launch the application.
+	 * Anwendung starten
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -52,20 +59,22 @@ public class TODO_Installer {
 	}
 
 	/**
-	 * Create the application.
+	 * Anwendung initialisieren.
 	 */
 	public TODO_Installer() {
 		initialize();
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Rahmen wird initialisiert.
 	 */
 	private void initialize() {
 		
 		frmTodoInstaller = new JFrame();
 		frmTodoInstaller.setResizable(false);
 		frmTodoInstaller.setTitle("TODO Installer");
+		File TodoInstallerLogo = new File("Bilder/repair-tools.png");
+		frmTodoInstaller.setIconImage(Toolkit.getDefaultToolkit().getImage(TodoInstallerLogo.toString()));
 		frmTodoInstaller.setBounds(100, 100, 489, 375);
 		frmTodoInstaller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmTodoInstaller.getContentPane().setLayout(null);
@@ -77,6 +86,8 @@ public class TODO_Installer {
 				JFrame FensterHilfe = new JFrame("Hilfe");
 				FensterHilfe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				FensterHilfe.setResizable(false);
+				File HilfeLogo = new File("Bilder/question.png");
+				FensterHilfe.setIconImage(Toolkit.getDefaultToolkit().getImage(HilfeLogo.toString()));
 				FensterHilfe.setBounds(10, 0, 768, 550);
 				FensterHilfe.getContentPane().setLayout(null);
 				FensterHilfe.setLocationRelativeTo(frmTodoInstaller);
@@ -113,6 +124,7 @@ public class TODO_Installer {
 				JButton btnSchliessen_1 = new JButton("Schlie\u00DFen");
 				btnSchliessen_1.setEnabled(true);
 				btnSchliessen_1.addActionListener(new ActionListener() {
+					
 					/**
 					 * FensterHilfe im GUI schliessen wenn der Button "Schliessen" betaetigt wird
 					 * @param e Wenn der Button schliessen betaetigt wird
@@ -161,6 +173,10 @@ public class TODO_Installer {
 			
 			JButton btnNewButton = new JButton("Speichern");
 			btnNewButton.addActionListener(new ActionListener() {
+				/** 
+				 * Speichere Einstellungen, wenn IP, Port oder Schluessel nicht leer sind
+				 * @param e Wenn der Speichern-Button betaetigt wird
+				 */
 				public void actionPerformed(ActionEvent e) {
 					
 					if (tFIPAdress.getText().equals("")||tFPort.getText().equals("")||tFSchluessel.getText().equals(""))
@@ -188,6 +204,10 @@ public class TODO_Installer {
 			
 			JButton btnAbbrechen = new JButton("Abbrechen");
 			btnAbbrechen.addActionListener(new ActionListener() {
+				/**
+				 * Installer-Fenster schliesst sich
+				 * @param e Wenn der Abbrechen-Button betaetigt wird 
+				 */
 				public void actionPerformed(ActionEvent e) {
 					System.exit(0);
 				}
@@ -229,6 +249,10 @@ public class TODO_Installer {
 		mnHilfe.add(mntmHandbuch);
 	}
 	
+	
+	/**
+	 * Datei wird umgeschrieben oder neue Datei wird erstellt
+	 */
 	public void DateiSchreiben()
 	{
 		FileWriter writerSchluessel;
@@ -263,6 +287,10 @@ public class TODO_Installer {
 		
 	}
 	
+	/**
+	 * Gibt Text aus bereits gespeicherten Dateien in den Feldern aus
+	 * @throws IOException
+	 */
 	public void Laden() throws IOException
 	{
 		
