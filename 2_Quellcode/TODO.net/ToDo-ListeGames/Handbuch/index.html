@@ -1,28 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Benutzerhandbuch</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benutzerhandbuch</title>
 </head>
 <body>
-	<header>
-		<img src="images/HFU-Logo.png">
-		<h1>Benutzerhandbuch</h1>
-		<h2>Projekt: </h2>
-		<h2>Semester: WS/SS 20XX</h2>
-		<b>Teammitglieder:</b>
+    <header>
+        <img src="images/HFU-Logo.png">
+        <h1>Benutzerhandbuch</h1>
+        <h2>Projekt: DV-Projekt "TODO-Liste"</h2>
+        <h2>Semester: SS 2022</h2>
+        <b>Teammitglieder:</b>
+        <ul>
+            <li>Lukas Rumpel</li>
+            <li>Alex Flaiz</li>
+            <li>Tobias Ohnmacht</li>
+			<li>Markus Schlatter</li>
+			<li>Tobias Aberle</li>
+			<li>Jan Bechtel</li>
+        </ul>
+    </header>
+    <main>
+        <h2>Benutzerhandbuch zur Verwendung der Anwendung.</h2>
+        Im folgenden Handbuch wird beschrieben, wie die TODO-Liste in Form einer Server-Client Anwendung zu verwenden ist.
+		
+		<h2>Server</h2>
+		<b>Serverinstallation:</b>Zip-Archiv entpacken und Dateien müssen in selbe Datei wie der Server<br />
+		<b>Port Einstellen:</b>Ganzzahl in der einzeiligen Datei "Port.txt"<br />
+		<b>Authentifikationsschlüssel:</b>"veryGoodAuthKey" und für den Admin:"veryGoodAdminAuthKey"<br />
+		
+		<h2>Client</h2>
+		<b>Clientinstallation:</b>Folgende Datein müssen in einen Ordner gepackt werden: Bilder, Handbuch, TODO.net, TODOInstaller.
+		Öffnen Sie nun den TODOInstaller und füllen Sie die Felder mit den unten stehenden Angaben aus.<br />
+		<b>Schlüssel:</b>"veryGoodAuthKey" und für den Admin:"veryGoodAdminAuthKey"<br />
+		<b>IP-Adresse:</b>"127.0.0.1"<br />
+		<b>Port:</b>"1112"<br />
+		<img src="images/OrdnerTODO.net.png">
+		<img src="images/TODOInstaller.png"><br /><br />
+		<li>Anschließend kann die Anwendung TODO.net geöffnet werden.</li>
+		<h2>Anwendung</h2>
+		<b>Einen neuen Eintrag erstellen:</b><br />
+		<img src="images/Hauptfenster.png"><br />		
 		<ul>
-			<li>Student 1 (student.1@hs-furtwangen.de)</li>
-			<li>Student 2 (student.1@hs-furtwangen.de)</li>
-			<li>Student 3 (student.1@hs-furtwangen.de)</li>
-		</ul>
-	</header>
-	<main>
-		<h2>Einleitung</h2>
-		TODO: Benutzerhandbuch zur Verwendung Ihrer Anwendung
-	</main>
-	<footer></footer>
-	
+			<li>Klicken Sie auf den Button "Neuer Eintrag". Dabei öffnet sich das Fenster "Neuer Eintrag".</li> 
+			<li>Geben Sie nun in die Felder unter "Erledigungsdatum" den "Tag", den "Monat" und das "Jahr" in Zahlenform ein. </li> 
+			<li>Als Admin können Sie mit der Checkbox auswählen, ob ein Benutz in der Lage sein soll ein TODO zu ändern.</li> 
+			<li>Geben Sie nun den TODO in das Feld unter "Eintrag" ein.</li> 
+			<li>Sollten Sie den kompletten TODO während des Erstellens erneurn wollen, klicken Sie auf den Button "leeren".</li> 
+			<li>Sollten Sie doch keinen TODO erstellen wollen, klicken Sie auf den Button "Abbrechen".</li>
+			<li>Um den TODO in der Liste zu speichern, klicken Sie auf den Button "Eintrag hinzufügen". </li>
+			<img src="images/FensterNeuerEintrag.png">
+		</ul><br />
+		Nun wird der TODO in der TODO-List angezeigt.<br />
+		<b>Einen Eintrag als "erledigt" einbuchen </b><br />		
+		<ul>
+			<li>Wählen Sie zunächst ein gewünschtes TODO aus und klicken Sie dann auf den Button "erledigt".</li>
+			<li>Sollte der Admin den TODO auf "nicht änderbar" gesetzt haben sind Sie als normaler Benutzer</li>
+			<li>nicht in der Lage diesen zu bearbeiten.</li>
+		</ul><br />
+		<b>Einen Eintrag löschen:</b><br /> 
+		<ul>
+			<li>Klicken Sie auf den Button "Löschen".</li>
+			<li>Nun werden Sie nochmals gefragt "Soll der Eintrag wirklich gelöscht werden?"</li>
+			<li>Klicken Sie auf "Ja" um den Eintrag entgültig zu löschen.</li>
+			<li>Klicken Sie auf "Nein" um den Eintrag wieterhin in der TODO-List zu behalten.</li>
+			<li>Sollte der Admin den TODO auf "nicht änderbar" gesetzt haben sind Sie als normaler Benutzer</li>
+			<li>nicht in der Lage diesen zu löschen.</li>
+			<img src="images/Löschen.png"><br />
+		</ul><br />
+		<b>Einen Eintrag wiederherstellen:</b><br /> 
+		<ul>
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Wiederherstellen", um ein vor kurzem gelöshtes</li>	
+			<li>TODO wiederherzustellen.</li>	
+		</ul><br />
+		<b>Einen Eintrag speichern:</b><br />
+		<ul>
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Speichern".</li>
+			<li>Nun können Sie auswählen ob Sie "Alle Einträge" oder nur "Offene Einträge" speichern wollen.</li>
+			<li>Die Textdatei der TODO Liste kann danach in einem beliebigen Verzeichnis gespeichert werden.</li>
+			<img src="images/MenüDatei.png">
+			<img src="images/Speichern.png"><br />
+		</ul><br />
+		<b>Einen Eintrag öffnen:</b><br />
+		<ul>
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Öffnen".</li>
+			<li>Nun können Sie den Ordner auswählen, indem Sie die Textdatei der gespeicherten Liste öffnen wollen.</li>
+			<li>Die Liste wird dann direkt in der Anwendung angezeigt.</li>
+			<img src="images/ÖffnenDateiauswahl.png"><br />			
+		</ul><br />
+		<b>Einen Eintrag drucken:</b><br />
+		<ul>
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Öffnen".</li>
+			<li>Dann müssen Sie eine zuvor gespeicherte Liste auswählen, die Sie gerne drucken möchten.</li>
+			<li>Klicken Sie anschließend auf den Button "Drucken", um einen Drucker auszuwählen und die Liste zu drucken.</li>
+			<img src="images/FensterOffeneListe.png"><br />
+		</ul><br />
+		<b>TODO-Liste aktualisieren:</b><br />
+		<ul>
+			<li>Klicken Sie auf den Button "Liste". Danach auf "Aktualisieren".</li>
+			<li>Die Liste wird allerdings auch bei jeder Aktion oder jeweils nach 30 Sekunden automatisch Aktualisiert.</li>
+			<img src="images/MenüListe.png"><br />			
+		</ul><br />
+		<b>Hilfe:</b><br />
+		<ul>
+			<li>Sollten Sie Hilfe benötigen Klicken Sie auf "Hilfe".Dort können Sie unter "Handbuch" nach Ihrem Problem suchen.</li>	
+		</ul><br />
+		<b>Hilfe bei Langeweile:</b><br />
+		<ul>
+			<li>Bei akuter Langeweile während dem TODOs erstellen, empfiehlt sich eines unserer kleinen Spiele die sich"</li>
+			<li>unter dem Menüpunkt "Spiele" befinden.</li>
+			<img src="images/Spiele.png"><br />			
+		</ul><br />
+		<b>TODO-List beenden:</b><br />
+		Um die TODO-List zu beenden klicken Sie auf "Datei" und "Beenden".
+    </main>
+    <footer></footer>
+
 </body>
 </html>

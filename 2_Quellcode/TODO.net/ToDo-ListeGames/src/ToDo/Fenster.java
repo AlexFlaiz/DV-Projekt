@@ -214,6 +214,8 @@ public class Fenster {
 		JFrame FensterHilfe = new JFrame("Hilfe");
 		FensterHilfe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		FensterHilfe.setResizable(false);
+		File HilfeLogo = new File("Bilder/question.png");
+		FensterHilfe.setIconImage(Toolkit.getDefaultToolkit().getImage(HilfeLogo.toString()));
 		FensterHilfe.setBounds(10, 0, 768, 550);
 		FensterHilfe.getContentPane().setLayout(null);
 		FensterHilfe.setLocationRelativeTo(frmTodoListe);
