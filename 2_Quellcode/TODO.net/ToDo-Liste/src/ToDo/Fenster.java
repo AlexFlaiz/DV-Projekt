@@ -136,7 +136,9 @@ public class Fenster {
 					String empfangeneNachricht = leseNachricht(socket);
 					if (empfangeneNachricht.equals("denied!"))
 					{
-						JOptionPane.showMessageDialog(null , "Fehlerhafter Authentifikationsschlüssel." , "Fehler",
+						JOptionPane.showMessageDialog(null , "Verbindung zum Server wurde abgelehnt!\n\n"
+								+ "Versuchen Sie das Programm erneut zu starten oder \n"
+								+ "kontrollieren Sie den Authentifikationsschlüssel." , "Fehler",
 								JOptionPane.ERROR_MESSAGE );
 						System.exit(0);
 					}
