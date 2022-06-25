@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,43 +33,44 @@
 			</p>
 		<b>Serverinstallation:</b>
 							<li>Der Server der TODO Liste ist als .tar-Archiv verpackt und kann direkt nach entpacken verwendet werden.</li>
-							<li>Um den Server zu starten zu koennen muss lediglich die JRE in der Version 17 auf dem Zielsystem installiert sein.</li>
+							<li>Um den Server starten zu koennen muss lediglich die JRE in der Version 17 auf dem Zielsystem installiert sein.</li>
 							<li>Es wird empfohlen den Server mithilfe eines Shellskriptes zu starten (-> Autostartskript). </li>
 							<li>Im Verzeichnis der .jar Datei muessen sich die Konfiguartionsdatein und die Datenbank befinden!</li>
 							<li>Die Konfiguration erfolgt ueber Konfigurationsdateien (Port.txt, AuthKey.txt, AdminAuthKey.txt). </li>
 							<li>Die Ausgabe von Fehlermeldungen erfolgt auch ueber dieses Verzeichnis. </li>
 		<b>Port.txt:</b>ueber diese Datei kann der Port des Servers eingestellt werden(Ganzzahl, einzeilig, Standard: Port 1112)<br />
 		<b>AuthKey.txt:</b>in dieser Datei wird der Authentifikationsschluessel festgelegt<br />
-		<b>AuthKey.txt:</b>in dieser Datei wird der Authentifikationsschluessel fuer den Admin der Liste festgelegt<br />
+		<b>AdminAuthKey.txt:</b>in dieser Datei wird der Authentifikationsschluessel fuer den Admin der Liste festgelegt<br />
 		
 		<h2>Client</h2>
-		<b>Clientinstallation:</b>Folgende Datein müssen in einen Ordner gepackt werden: Bilder, Handbuch, TODO.net, TODOInstaller.
+		<b>Clientinstallation:</b> Zunächst den ZIP Ordner "TODO.net" entpacken. Folgende Datein müssen in einem Ordner gespeichert sein: Bilder, Handbuch, TODO.net.jar, TODOInstaller.jar.<br />
 		Öffnen Sie nun den TODOInstaller und füllen Sie die Felder mit den unten stehenden Angaben aus.<br />
-		<b>Schlüssel:</b>"veryGoodAuthKey" und für den Admin:"veryGoodAdminAuthKey"<br />
-		<b>IP-Adresse:</b>"todonet.hopto.org"<br />
-		<b>Port:</b>"1112"<br />
-		<img src="images/TODOordner.jpeg" width="244" height="244"><img src="images/TODOInstaller.png" width="352" height="273"><br /><br />
-
+		<b>Schlüssel:</b>Schlüssel,der vorher individuell im Server angelegt wurde.<br />
+		<b>IP-Adresse:</b>"127.0.0.1"<br />
+		<b>Port:</b>Port des Servers (Standard: "1112")<br />
+		<img src="images/OrdnerTODO.net.png">
+		<img src="images/TODOInstaller.png"><br /><br />
+		<li>Anschließend kann die Anwendung TODO.net geöffnet werden.</li>
+		
 		<h2>Anwendung</h2>
 		<b>Einen neuen Eintrag erstellen:</b><br />
-		<img src="images/DVB6.jpeg" width="391" height="298"><br />		
+		<img src="images/Hauptfenster.png"><br />		
 		<ul>
 			<li>Klicken Sie auf den Button "Neuer Eintrag". Dabei öffnet sich das Fenster "Neuer Eintrag".</li> 
 			<li>Geben Sie nun in die Felder unter "Erledigungsdatum" den "Tag", den "Monat" und das "Jahr" in Zahlenform ein. </li> 
-			<li>Klicken Sie auf das Kästchen "Von Benutzer änderbar", wenn Sie das TODO später vielleicht ändern möchten. </li> 
+			<li>Als Admin können Sie mit der Checkbox auswählen, ob ein Benutz in der Lage sein soll ein TODO zu ändern.</li> 
 			<li>Geben Sie nun den TODO in das Feld unter "Eintrag" ein.</li> 
 			<li>Sollten Sie den kompletten TODO während des Erstellens erneurn wollen, klicken Sie auf den Button "leeren".</li> 
 			<li>Sollten Sie doch keinen TODO erstellen wollen, klicken Sie auf den Button "Abbrechen".</li>
-			<li>Ist der TODO eingestellt, kann er nun mit dem Button "Eintrag Hinzufügen" in die TODO-List eingetragen werden. </li>
-			<img src="images/DVB4.jpeg" width="371" height="235">
+			<li>Um den TODO in der Liste zu speichern, klicken Sie auf den Button "Eintrag hinzufügen". </li>
+			<img src="images/FensterNeuerEintrag.png">
 		</ul><br />
 		Nun wird der TODO in der TODO-List angezeigt.<br />
 		<b>Einen Eintrag als "erledigt" einbuchen </b><br />		
 		<ul>
-			<li>Klicken Sie auf den Button "erledigt".</li>
-			<li>Nun werden Sie nochmals gefragt "Ist der Eintrag erledigt?"</li>
-			<li>Klicken Sie auf "Ja" um den Eintrag entgültig als erleigt einzubuchen.</li>
-			<li>Klicken Sie auf "Nein" um den Eintrag wieterhin in der TODO-List zu behalten.</li>
+			<li>Wählen Sie zunächst ein gewünschtes TODO aus und klicken Sie dann auf den Button "erledigt".</li>
+			<li>Sollte der Admin den TODO auf "nicht änderbar" gesetzt haben sind Sie als normaler Benutzer</li>
+			<li>nicht in der Lage diesen zu bearbeiten.</li>
 		</ul><br />
 		<b>Einen Eintrag löschen:</b><br /> 
 		<ul>
@@ -77,35 +78,42 @@
 			<li>Nun werden Sie nochmals gefragt "Soll der Eintrag wirklich gelöscht werden?"</li>
 			<li>Klicken Sie auf "Ja" um den Eintrag entgültig zu löschen.</li>
 			<li>Klicken Sie auf "Nein" um den Eintrag wieterhin in der TODO-List zu behalten.</li>
-			<img src="images/DVB7.jpeg" width="390" height="299"><br />
+			<li>Sollte der Admin den TODO auf "nicht änderbar" gesetzt haben sind Sie als normaler Benutzer</li>
+			<li>nicht in der Lage diesen zu löschen.</li>
+			<img src="images/Löschen.png"><br />
 		</ul><br />
 		<b>Einen Eintrag wiederherstellen:</b><br /> 
 		<ul>
-			<li>Klicken Sie auf den Button "Datei". Danach auf "Wiederherstellen".</li>		
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Wiederherstellen", um ein vor kurzem gelöshtes</li>	
+			<li>TODO wiederherzustellen.</li>	
 		</ul><br />
 		<b>Einen Eintrag speichern:</b><br />
 		<ul>
-			<li>Klicken Sie auf den Button "Datei". Danach auf "speichern".</li>
-			<li>Nun können Sie auswählen ob Sie "Alle Einträge" oder "Offene Einträge" speichern wollen.</li>
-			<img src="images/DVB8.jpeg" width="174" height="104">
-			<img src="images/DVB3.jpeg" width="391" height="299"><br />
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Speichern".</li>
+			<li>Nun können Sie auswählen ob Sie "Alle Einträge" oder nur "Offene Einträge" speichern wollen.</li>
+			<li>Die Textdatei der TODO Liste kann danach in einem beliebigen Verzeichnis gespeichert werden.</li>
+			<img src="images/MenüDatei.png">
+			<img src="images/Speichern.png"><br />
 		</ul><br />
 		<b>Einen Eintrag öffnen:</b><br />
 		<ul>
 			<li>Klicken Sie auf den Button "Datei". Danach auf "Öffnen".</li>
-			<li>Nun können Sie den ordner auswählen, den Sie öffnen möchten.</li>
-			<img src="images/DVB2.jpeg" width="391" height="298"><br />			
+			<li>Nun können Sie den Ordner auswählen, indem Sie die Textdatei der gespeicherten Liste öffnen wollen.</li>
+			<li>Die Liste wird dann direkt in der Anwendung angezeigt.</li>
+			<img src="images/ÖffnenDateiauswahl.png"><br />			
 		</ul><br />
 		<b>Einen Eintrag drucken:</b><br />
 		<ul>
-			<li>Klicken Sie auf den Button "Liste".</li>
-			<li>Danach öffnet sich das Fenster "Liste". Hier können Sie den TODO auswählen, welchen Sie drucken möchten und klicken auf "Drucken".</li>
-			<img src="images/DVB5.jpeg" width="289" height="253"><br />
+			<li>Klicken Sie auf den Button "Datei". Danach auf "Öffnen".</li>
+			<li>Dann müssen Sie eine zuvor gespeicherte Liste auswählen, die Sie gerne drucken möchten.</li>
+			<li>Klicken Sie anschließend auf den Button "Drucken", um einen Drucker auszuwählen und die Liste zu drucken.</li>
+			<img src="images/FensterOffeneListe.png"><br />
 		</ul><br />
 		<b>TODO-Liste aktualisieren:</b><br />
 		<ul>
 			<li>Klicken Sie auf den Button "Liste". Danach auf "Aktualisieren".</li>
-			<img src="images/DVB1.jpeg" width="165" height="88"><br />			
+			<li>Die Liste wird allerdings auch bei jeder Aktion oder jeweils nach 30 Sekunden automatisch Aktualisiert.</li>
+			<img src="images/MenüListe.png"><br />			
 		</ul><br />
 		<b>Hilfe:</b><br />
 		<ul>
