@@ -9,7 +9,7 @@
     <header>
         <img src="images/HFU-Logo.png">
         <h1>Benutzerhandbuch</h1>
-        <h2>Projekt: DV-Projekt "TODO-Liste"</h2>
+        <h2>Projekt: DV-Projekt "TODO.net"</h2>
         <h2>Semester: SS 2022</h2>
         <b>Teammitglieder:</b>
         <ul>
@@ -26,9 +26,21 @@
         Im folgenden Handbuch wird beschrieben, wie die TODO-Liste in Form einer Server-Client Anwendung zu verwenden ist.
 		
 		<h2>Server</h2>
-		<b>Serverinstallation:</b>Zip-Archiv entpacken und Dateien müssen in selbe Datei wie der Server<br />
-		<b>Port Einstellen:</b>Ganzzahl in der einzeiligen Datei "Port.txt"<br />
-		<b>Authentifikationsschlüssel:</b>"veryGoodAuthKey" und für den Admin:"veryGoodAdminAuthKey"<br />
+		<b>Kurzbeschreibung:</b>
+			<p>	Der TODO.net Server (nachfolgend: Server) verwaltet, als zentraler Bestandteil, die Datenbank mit den TODO Listen Eintragen. Da der Server nebenlaeufig ist koennen simultan mehere Benutzeranfragen und Verbindungen verarbeitet werden. 
+				Die Kommunikation erfolgt ueber eine unverschluesselte TCP/IP Verbindung. Innerhalb der Datenbank werden erledigte und aus der Liste geloeschte TODOs archiviert. Die Listeneintraege werden nur zentral gespeichert, dies hat mehrere
+				Gruende, zum einen ist so gewaehrleistet dass es zu keinen "Versionskonflikten" von einzelnen Eintragen kommt, zum anderen stellt dieses Vorgehen eine Form der Datensicherung dar.
+			</p>
+		<b>Serverinstallation:</b>
+							<li>Der Server der TODO Liste ist als .tar-Archiv verpackt und kann direkt nach entpacken verwendet werden.</li>
+							<li>Um den Server zu starten zu koennen muss lediglich die JRE in der Version 17 auf dem Zielsystem installiert sein.</li>
+							<li>Es wird empfohlen den Server mithilfe eines Shellskriptes zu starten (-> Autostartskript). </li>
+							<li>Im Verzeichnis der .jar Datei muessen sich die Konfiguartionsdatein und die Datenbank befinden!</li>
+							<li>Die Konfiguration erfolgt ueber Konfigurationsdateien (Port.txt, AuthKey.txt, AdminAuthKey.txt). </li>
+							<li>Die Ausgabe von Fehlermeldungen erfolgt auch ueber dieses Verzeichnis. </li>
+		<b>Port.txt:</b>ueber diese Datei kann der Port des Servers eingestellt werden(Ganzzahl, einzeilig, Standard: Port 1112)<br />
+		<b>AuthKey.txt:</b>in dieser Datei wird der Authentifikationsschluessel festgelegt<br />
+		<b>AuthKey.txt:</b>in dieser Datei wird der Authentifikationsschluessel fuer den Admin der Liste festgelegt<br />
 		
 		<h2>Client</h2>
 		<b>Clientinstallation:</b>Folgende Datein müssen in einen Ordner gepackt werden: Bilder, Handbuch, TODO.net, TODOInstaller.
@@ -36,7 +48,7 @@
 		<b>Schlüssel:</b>"veryGoodAuthKey" und für den Admin:"veryGoodAdminAuthKey"<br />
 		<b>IP-Adresse:</b>"todonet.hopto.org"<br />
 		<b>Port:</b>"1112"<br />
-		<img src="images/TODOordner.jpeg" width="244" height="244"><img src="images/TODOInstaller.jpeg" width="352" height="273"><br /><br />
+		<img src="images/TODOordner.jpeg" width="244" height="244"><img src="images/TODOInstaller.png" width="352" height="273"><br /><br />
 
 		<h2>Anwendung</h2>
 		<b>Einen neuen Eintrag erstellen:</b><br />
