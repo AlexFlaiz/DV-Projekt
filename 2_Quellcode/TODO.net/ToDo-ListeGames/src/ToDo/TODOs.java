@@ -22,8 +22,29 @@ public class TODOs {
 	{
 		String teilstr[];
 		teilstr = Datum.split("-");
-		int Jahr= Integer.parseInt(teilstr[2]);
-		if(Jahr<1900||Jahr>2200)
+		int Tag=Integer.parseInt(teilstr[0]);
+		int Monat=Integer.parseInt(teilstr[1])-1;
+		int Jahr= Integer.parseInt(teilstr[2])-1900;
+		
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = new Date();
+		String DateH = dateFormat.format(date);
+		
+		String teilstr2[];
+		teilstr2 = DateH.split("-");
+		int TagHeute=Integer.parseInt(teilstr2[0]);
+		int MonatHeute=Integer.parseInt(teilstr2[1])-1;
+		int JahrHeute= Integer.parseInt(teilstr2[2])-1900;
+		
+		@SuppressWarnings("deprecation")
+		Date dateHeute = new Date(JahrHeute,MonatHeute,TagHeute);
+		
+		@SuppressWarnings("deprecation")
+		Date dateEingabe = new Date(Jahr,Monat,Tag);
+		
+		int comparison=dateEingabe.compareTo(dateHeute);  
+
+		if(comparison<0||Jahr>300)
 		{
 			return false;
 		}
